@@ -4,6 +4,7 @@
     ViewData["Title"] = "Details";
     ViewData["Routing"] = "Surat Tugas";
     ViewData["Routing2"] = "Detail Surat Tugas";
+    var status = Model.Status;
 }
 <style>
     /* Styling tambahan untuk timeline */
@@ -81,7 +82,7 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Surattuga</h4>
+    <h4>Surat tugas</h4>
     <hr />
     <table class="table table-bordered">
         <tr>
@@ -95,17 +96,6 @@
         <tr>
             <th>Bukti Pendukung</th>
             <td>
-                @*@if (Model.Buktipendukung != null)
-                {
-                var base64 = Convert.ToBase64String(Model.Buktipendukung);
-                var imgSrc = $"data:image/png;base64,{base64}";
-
-                // Displaying the image
-                <img src="@imgSrc" alt="Proof Document" class="img-fluid" />
-
-                // If the document is a PDF, you can use the following code instead of displaying the image
-                <-- <embed src="@imgSrc" type="application/pdf" width="100%" height="600px" /> -->
-                }*@
                 @Html.DisplayFor(model => model.Namafile)
                 @if (!string.IsNullOrEmpty(Model.Namafile))
                 {
@@ -115,7 +105,24 @@
         </tr>
         <tr>
             <th>Status</th>
-            <td>@Html.DisplayFor(model => model.Status)</td>
+            <td>
+                @if (status == 0)
+                {
+                    <span>belum diajukan</span>
+                }
+                else if (status == 1)
+                {
+                    <span>Menunggu Konfirmasi</span>
+                }
+                else if (status == 2)
+                {
+                    <span>Diterima</span>
+                }
+                else if (status == 3)
+                {
+                    <span>Ditolak</span>
+                }
+            </td>
         </tr>
         <tr>
             <th>Keterangan</th>
@@ -131,11 +138,13 @@
         </tr>
         <tr>
             <th>Surat Tugas</th>
-            <td>@Html.DisplayFor(model => model.Namafilesurat)</td>
-            @if (!string.IsNullOrEmpty(Model.Namafilesurat))
-            {
-                <a asp-action="Download" asp-route-fileName="@Model.Namafilesurat">Download</a>
-            }
+            <td>
+                @Html.DisplayFor(model => model.Namafilesurat)
+                @if (!string.IsNullOrEmpty(Model.Namafilesurat))
+                {
+                    <a asp-action="Download" asp-route-fileName="@Model.Namafilesurat">Download</a>
+                }
+            </td>
         </tr>
         <tr>
             <th>Edit By</th>
