@@ -1,0 +1,111 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["Routing"] = "Dashboard";
+    Layout = "_Layout";
+}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    .border-container {
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    .border-container-inner {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+</style>
+<center>
+    <div class="row mb-5">
+        <div class="col-lg-4 mt-2">
+            <div class="border-container">
+                <div class="border-container-inner">
+                    <div class="fa fa-users fa-lg fa-pull-left">
+                        <span style="font-size: Larger; font-weight: bold;">Pengabdian Masyarakat</span>
+                    </div>
+                    <div>
+                        <span style="font-weight: bold; text-align: center; font-size: 40px;">10</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mt-2">
+            <div class="border-container">
+                <div class="border-container-inner">
+                    <div class="fa fa-users fa-lg fa-pull-left">
+                        <span style="font-size: Larger; font-weight: bold;">Pengajuan Surat</span>
+                    </div>
+                    <div>
+                        <span style="font-weight: bold; text-align: center; font-size: 40px;">20</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mt-2">
+            <div class="border-container">
+                <div class="border-container-inner">
+                    <div class="fa fa-users fa-lg fa-pull-left">
+                        <span style="font-size: Larger; font-weight: bold;">Publikasi</span>
+                    </div>
+                    <div>
+                        <span style="font-weight: bold; text-align: center; font-size: 40px;">15</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</center>
+
+
+
+<center>
+    <span style="font-size: Larger; font-weight: bold;">Data Publikasi</span>
+</center>
+<br>
+<div class="row mb-3 text-center">
+    <div class="col-12">
+        <a href="<?php echo site_url('Dashboard/getExcel'); ?>" class="btn btn-success">
+            <i class="fa fa-file-excel-o"></i>&nbsp;Export ke Excel
+        </a>
+    </div>
+</div>
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">&nbsp;&nbsp;Line Chart</h5>
+
+            <!-- Line Chart -->
+            <canvas id="myLineChart" width="400" height="100"></canvas>
+            <script>
+                // Mengambil referensi ke elemen canvas
+                var ctx = document.getElementById('myLineChart').getContext('2d');
+
+                // Membuat grafik line dengan data yang telah diberikan
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'Data Sample',
+                            data: [150, 230, 224, 218, 135, 147, 260],
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 2,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            </script>
+            <!-- End Line Chart -->
+
+        </div>
+    </div>
+</div>

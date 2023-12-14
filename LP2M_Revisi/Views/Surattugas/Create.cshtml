@@ -1,0 +1,61 @@
+﻿@model LP2M_Revisi.Models.Surattuga
+
+@{
+    ViewData["Title"] = "Tambah Surat Tugas";
+    ViewData["Routing"] = "Surat Tugas";
+    ViewData["Routing2"] = "Tambah Surat Tugas";
+    // Konversi ViewData["ListPengguna"] menjadi IEnumerable<SelectListItem>
+    var listPengguna = ViewData["ListPengguna"] as IEnumerable<SelectListItem>;
+}
+
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Tambah Surat Tugas</h2>
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input type="hidden" asp-for="Id" class="form-control" value="@Model.Id" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Namakegiatan" class="control-label">Nama Kegiatan</label>
+                <input asp-for="Namakegiatan" class="form-control" />
+                <span asp-validation-for="Namakegiatan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Masapelaksanaan" class="control-label">Masa Pelaksanaan</label>
+                <input asp-for="Masapelaksanaan" class="form-control" />
+                <span asp-validation-for="Masapelaksanaan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Idpenggunas" class="control-label">Pilih Pengguna</label>
+                <select asp-for="Idpenggunas" class="form-control" asp-items="@listPengguna" multiple></select>
+                <span asp-validation-for="Idpenggunas" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Buktipendukung" class="control-label">Bukti Pendukung</label>
+                <input asp-for="Buktipendukung" class="form-control" type="file" />
+                <span asp-validation-for="Buktipendukung" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary float-left">Create</button>
+                <a asp-action="Index" class="btn btn-secondary float-right">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.querySelector('form').addEventListener('submit', function (e) {
+        const buktiPendukungInput = document.querySelector('input[name="Buktipendukung"]');
+        if (buktiPendukungInput.files.length === 0) {
+            e.preventDefault(); // Mencegah pengiriman formulir jika tidak ada file yang diunggah.
+        }
+    });
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,109 @@
+﻿@model LP2M_Revisi.Models.Pengabdianmasyarakat
+
+@{
+    ViewData["Title"] = "Ubah Pengabdian Masyarakat";
+    ViewData["Routing"] = "Pengabdian Masyarakat";
+    ViewData["Routing2"] = "Ubah Pengabdian Masyarakat";
+}
+
+<h1>Ubah</h1>
+
+<h4>Pengabdianmasyarakat</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Namakegiatan" class="control-label">Nama Kegiatan</label>
+                <input asp-for="Namakegiatan" class="form-control" />
+                <span asp-validation-for="Namakegiatan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Waktupelaksanaan" class="control-label">Waktu Pelaksanaan</label>
+                <input asp-for="Waktupelaksanaan" class="form-control" type="date" value="@Model.Waktupelaksanaan" />
+                <span asp-validation-for="Waktupelaksanaan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Jumlahpenerima" class="control-label">Jumlah Penerima</label>
+                <input asp-for="Jumlahpenerima" class="form-control" />
+                <span asp-validation-for="Jumlahpenerima" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Surattugas" class="control-label">Surat Tugas</label>
+                <input asp-for="Surattugas" class="form-control" type="file"/>
+                <span asp-validation-for="Surattugas" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Laporan" class="control-label">Laporan</label>
+                <input asp-for="Laporan" class="form-control" type="file" />
+                <span asp-validation-for="Laporan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Buktipendukung" class="control-label">Bukti Pendukung</label>
+                <input asp-for="Buktipendukung" class="form-control" type="file" />
+                <span asp-validation-for="Buktipendukung" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="Mahasiswa" class="control-label">Mahasiswa</label>
+                <input id="Mahasiswa" name="Mahasiswa" class="form-control" value="@ViewBag.Mahasiswa"/>
+            </div>
+            <div class="form-group">
+                <label for="Nim" class="control-label">Nim</label>
+                <input id="Nim" name="Nim" class="form-control" value="@ViewBag.Nim" />
+            </div>
+            <div class="form-group">
+                <label for="Prodi" class="control-label">Prodi</label>
+                <select id="Prodi" name="Prodi" class="form-control" asp-items="ViewBag.Prodi"></select>
+            </div>
+            <div class="form-group">
+                <input asp-for="MahasiswaProdiNim" class="form-control" type="hidden"/>
+                <span asp-validation-for="MahasiswaProdiNim" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Status" class="form-control" type="hidden" />
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Inputby" class="form-control" type="hidden" />
+                <span asp-validation-for="Inputby" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Inputdate" class="form-control" type="hidden" />
+                <span asp-validation-for="Inputdate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<script>
+    // Handling form submission
+    document.querySelector('form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Get values from the form fields
+        var mahasiswaValue = document.getElementById('Mahasiswa').value;
+        var nimValue = document.getElementById('Nim').value;
+        var prodiValue = document.getElementById('Prodi').value;
+
+        // Concatenate the values
+        var mahasiswaProdiNimValue = mahasiswaValue + '|' + nimValue + '|' + prodiValue;
+
+        // Assign the concatenated value to the MahasiswaProdiNim field
+        document.getElementById('MahasiswaProdiNim').value = mahasiswaProdiNimValue;
+
+        // Submit the form
+        this.submit();
+    });
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

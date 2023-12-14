@@ -1,0 +1,252 @@
+﻿@using Newtonsoft.Json
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+
+    <title>@ViewData["Title"]</title>
+
+    <link rel="shortcut icon" href="~/assets/favicon.png">
+    <link href="~/assets/Plugins/bootstrap-4.0.0-alpha.6-dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/Plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/assets/Content/jquery.fancybox.css" rel="stylesheet" />
+    <link href="~/assets/Content/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/assets/Styles/Style.css" rel="stylesheet" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <script src="~/assets/Scripts/tether/tether.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <!-- jangan lupa menambahkan script js sweet alert di bawah ini  -->
+    <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.7/dist/sweetalert2.all.min.js"></script>
+    <script src="~/assets/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="~/assets/Plugins/bootstrap-4.0.0-alpha.6-dist/js/bootstrap.min.js"></script>
+    <script src="~/assets/Plugins/Highcharts-5.0.14/code/highcharts.js"></script>
+    <script src="~/assets/Plugins/Highcharts-5.0.14/code/highcharts-more.js"></script>
+    <script src="~/assets/Plugins/Highcharts-5.0.14/code/modules/solid-gauge.js"></script>
+    <script src="~/assets/Scripts/tinymce/tinymce.min.js"></script>
+    <script src="~/assets/Scripts/jquery.fancybox.pack.js"></script>
+    <script src="~/assets/Scripts/bootstrap-select.min.js"></script>
+    <script src="~/assets/Scripts/LetterAvatar.js"></script>
+    <script src="~/assets/Scripts/tableToExcel.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("[data-toggle=tooltip").tooltip();
+        })
+
+        $(function () {
+            $('[rel="tooltip"]').tooltip()
+        })
+
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
+
+        function redirectNotifikasi() {
+            // window.location.href = 'Page_Notifikasi.aspx';
+        }
+
+        function sentValidation(input) {
+            // $(input).addClass('disabled');
+            // $(input).text('Mohon tunggu..');
+        }
+
+        function pageLoad(sender, args) {
+            // $('.selectpicker').selectpicker();
+            // katweKibsAvatar.init({
+            //     dataChars: 2
+            // });
+        }
+
+        function refreshChart() {
+            // try { $('#container1').highcharts().setSize(undefined, undefined, false); } catch (err) { }
+            // try { $('#container2').highcharts().setSize(undefined, undefined, false); } catch (err) { }
+            // try { $('#container3').highcharts().setSize(undefined, undefined, false); } catch (err) { }
+        }
+    </script>
+
+    <script src="~/assets/Scripts/jquery.floatThead.js"></script>
+
+    <style>
+        .mce-branding-powered-by {
+            display: none;
+        }
+
+        table { cde
+            border-top: none;
+            border-bottom: none;
+            background-color: #FFF;
+            white-space: nowrap;
+        }
+
+        .table-striped tbody tr:nth-of-type(2n+1) {
+            background-color: #FFF;
+        }
+
+        .table-striped tbody tr:nth-of-type(2n), thead {
+            background-color: #ECECEC;
+        }
+
+        .table-striped tbody tr.pagination-ys {
+            background-color: #FFF;
+        }
+
+        .bottom-wrapper {
+            margin-top: 1em;
+        }
+
+        div.dataTables_filter > label > input {
+        }
+
+        .btn:hover {
+            cursor: pointer;
+        }
+        a.list-group-item:hover {
+            background-color: #007bff; /* Ganti dengan warna latar belakang yang Anda inginkan */
+        color: white; /* Ganti dengan warna teks yang Anda inginkan */
+    }
+    </style>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap4.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.3.4/css/buttons.dataTables.min.css">
+
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.4/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.4/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.4/js/buttons.print.min.js"></script>
+</head>
+<body>
+    <div class="polman-nav-static-top">
+        <div class="float-left">
+            <a href="#">
+                <img src="~/assets/Images/IMG_Logo.png" style="height: 50px;" />
+            </a>
+        </div>
+
+        <div class="polman-menu">
+            @if (Context.Session.GetString("Identity") != null)
+            {
+                var penggunaData = JsonConvert.DeserializeObject<Pengguna>(Context.Session.GetString("Identity"));
+                <div style="padding-top: 15px; margin-right: -30px;">
+                    Hai,&nbsp;<b>@penggunaData.Nama</b>
+                </div>
+            }
+        </div>
+
+        <div class="polman-menu-bar">
+            <div class="float-right">
+                <div class="fa fa-bars fa-2x" style="margin-top: 9px; cursor: pointer;" aria-hidden="true" data-toggle="collapse" data-target="#menu" aria-expanded="false" aria-controls="menu"></div>
+            </div>
+        </div>
+    </div>
+    <div class="polman-nav-static-right collapse scrollstyle" id="menu">
+        <div id="accordions" role="tablist" aria-multiselectable="true">
+            <div class="list-group">
+
+                <a asp-controller="Login" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 23px;">
+                    <i class="fa fa-sign-out fa-lg fa-pull-left"></i>Logout
+                </a>
+
+                <a asp-controller="Dashboard" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">
+                    <i class="fa fa-home fa-lg fa-pull-left"></i>Dashboard
+                </a>
+
+                <a asp-controller="Penggunas" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">
+                    <i class="fa fa-user-circle fa-lg fa-pull-left"></i>Pengguna
+                </a>
+
+                <a asp-controller="Prodis" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">
+                    <i class="fa fa-user fa-lg fa-pull-left"></i>Prodi
+                </a>
+
+                <a href="#" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;" id="suratMenu">
+                    <i class="fa fa-book fa-lg fa-pull-left"></i>Surat Tugas
+                </a>
+                <ul id="suratOptions" style="display: none;list-style-type: none;">
+                    <li><a asp-controller="Surattugas" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Tambah Surat Tugas</a></li>
+                    <li><a asp-controller="Surattugas" asp-action="Konfirmasi" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Konfirmasi Surat Tugas</a></li>
+                </ul>
+
+                <a asp-controller="Pengabdianmasyarakats" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">
+                    <i class="fa fa-users fa-lg fa-pull-left"></i>Pengabdian Masyarakat
+                </a>
+
+                <a href="#" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;" id="publikasiMenu">
+                    <i class="fa fa-chevron-right fa-lg fa-pull-left"></i> Publikasi
+                </a>
+                <ul id="publikasiOptions" style="display: none;list-style-type: none;">
+                    <li><a asp-controller="Bukus" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Buku</a></li>
+                    <li><a asp-controller="Jurnals" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Jurnal</a></li>
+                    <li><a asp-controller="Prosidings" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Prosiding</a></li>
+                    <li><a asp-controller="Seminars" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Seminar</a></li>
+                    <li><a asp-controller="Hakciptums" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Hak Cipta</a></li>
+                    <li><a asp-controller="Hakpatens" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Hak Paten</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="polman-adjust5">
+        <ol class="breadcrumb polman-breadcrumb">
+            <li class="breadcrumb-item"><a data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Menuju Hal @ViewData["Routing"]">@ViewData["Routing"]</a></li>
+            <li class="breadcrumb-item"><a data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Menuju Hal @ViewData["Routing2"]">@ViewData["Routing2"]</a></li>
+        </ol>
+        <hr />
+
+        <div class="mb-5">
+        </div>
+        <div>
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+
+        <div class="mt-5" style="background-color: white; width: 100%; position: fixed; bottom: 0; z-index: 3;">
+            @*<footer class="d-flex flex-wrap pt-3 pb-3 border-top">
+            Copyright &copy; <?php echo date('Y'); ?> - Gerlando MI'21 & Jilbran MI'22
+            </footer>*@
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#publikasiMenu").click(function () {
+                toggleSubMenu("#publikasiOptions");
+            });
+
+            $("#suratMenu").click(function () {
+                toggleSubMenu("#suratOptions");
+            });
+
+            function toggleSubMenu(menuSelector) {
+                // Menutup semua submenu kecuali yang sedang diklik
+                $("[id$='Options']").not(menuSelector).hide();
+
+                // Toggle submenu yang diklik
+                $(menuSelector).toggle();
+
+                // Menangani ikon panah
+                var icon = $(menuSelector.replace("Options", "Menu") + " i");
+                if ($(menuSelector).is(":visible")) {
+                    icon.removeClass("fa-chevron-right").addClass("fa-chevron-down");
+                } else {
+                    icon.removeClass("fa-chevron-down").addClass("fa-chevron-right");
+                }
+            }
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

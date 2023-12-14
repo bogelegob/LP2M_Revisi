@@ -1,0 +1,233 @@
+﻿@model IEnumerable<LP2M_Revisi.Models.Hakciptum>
+@{
+    ViewData["Title"] = "Master Hak Cipta";
+    ViewData["Routing"] = "Hak Cipta";
+    if (ViewBag.Pengguna == "Admin")
+    {
+        Layout = "_LayoutAdmin";
+    }
+    else
+    {
+        Layout = "_Layout";
+    }
+}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+<style>
+    .border-container {
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 10px;
+        display: inline-block;
+    }
+</style>
+<div class="row mb-5">
+    <div class="col-md-6 mt-2">
+        <div class="border-container">
+            <center>
+                <div class="fa fa-users fa-lg fa-pull-left">
+                    <span style="font-size: Larger; font-weight: bold;">Total Hak Cipta</span>
+                </div>
+            </center><br>
+            <center>
+                <div>
+                    <span id="totalData" style="font-weight: bold;text-align: center;font-size: 40px;"></span>
+                </div>
+            </center>
+        </div>
+    </div>
+</div>
+<br>
+<div class="row mb-3">
+    <div class="col-12 col-md-1">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fa fa-plus"></i>&nbsp;Tambah
+        </a>
+    </div>
+    <div class="col-12 col-md-8">
+        <div class="input-group">
+            <input id="cari" type="text" class="form-control" placeholder="Cari">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="button">
+                    <i class="fa fa-search"></i>&nbsp;Cari
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-3">
+        <div class="input-group">
+            <select class="form-control" id="filter">
+                <option value="all">Semua Kategori</option>
+                <option value="Tahun">Tahun</option>
+                <option value="Prodi">Prodi</option>
+                <option value="Judul">Judul</option>
+            </select>
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="button">
+                    <i class="fa fa-filter"></i>&nbsp;Filter
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="overflow-x: auto; width: 100%;">
+    <table id="myTable" class="table table-hover grid scrollstyle text-center" width="100%">
+        <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Judul)
+            </th>
+            <th>
+                No Aplikasi
+            </th>
+            <th>
+                No Sertifikat
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Keterangan)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                Tanggal Input
+            </th>
+            <th>
+                Tanggal Edit
+            </th>
+            <th>
+                Edit By
+            </th>
+            <th>
+                Input By
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Judul)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Noaplikasi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nosertifikat)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Keterangan)
+            </td>
+            <td>
+                @if (item.Status == 0)
+                {
+                    <span>Tidak Aktif</span>
+                }
+                else if (item.Status == 1)
+                {
+                    <span>Aktif</span>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Inputdate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Editdate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EditbyNavigation.Nama)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InputbyNavigation.Nama)
+            </td>
+            <td>
+                @*<button class="btn btn-sm btn-success kirim-button" data-id="@item.Id">
+                    <i class="fa fa-paper-plane"></i>
+                </button>*@
+                        @if (ViewBag.Pengguna == "Admin")
+                        {
+                            <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@item.Id" title="Edit">
+                                <i class="fa fa-pencil-square-o"></i>
+                            </a>
+                            <a class="btn btn-sm btn-info btn-info-modal" asp-action="Details" asp-route-id="@item.Id" title="Detail">
+                                <i class="fa fa-info-circle"></i>
+                            </a>
+                            <a class="btn btn-sm btn-danger delete-button" asp-action="Delete" asp-route-id="@item.Id" title="Hapus">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-sm btn-info btn-info-modal" asp-action="Details" asp-route-id="@item.Id" title="Detail">
+                                <i class="fa fa-info-circle"></i>
+                            </a>
+                        }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+</div>
+<script>
+    // Fungsi untuk menghitung total data dalam tabel
+    function updateTotalData() {
+        var totalDataElement = document.getElementById("totalData");
+        var table = document.getElementById("myTable"); // Ganti "myTable" dengan id tabel yang sesuai
+        var rowCount = table.rows.length - 1; // Mengurangi 1 untuk mengabaikan baris header
+
+        totalDataElement.textContent = rowCount;
+    }
+
+    function searchTable() {
+        var input, filter, table, tr, td, i, j, txtValue;
+        input = document.getElementById("cari");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+
+        for (i = 1; i < tr.length; i++) { // Mulai dari 1 untuk menghindari baris header
+            var display = false;
+            for (j = 0; j < tr[i].cells.length; j++) {
+                td = tr[i].cells[j];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        display = true;
+                        break;
+                    }
+                }
+            }
+            if (display) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+    $(document).ready(function () {
+        // Initialize DataTable
+        var table = $('#myTable').DataTable({
+            "pageLength": 10,
+            "lengthMenu": [10, 25, 50, 75, 100],
+            "searching": false,
+            "ordering": false,
+        });
+
+        // Call the updateTotalData function whenever the table is drawn
+        table.on('draw', function () {
+            updateTotalData();
+        });
+    });
+
+    // Panggil fungsi saat halaman dimuat
+    window.addEventListener('load', updateTotalData);
+
+    // Panggil fungsi pencarian saat input berubah
+    var searchInput = document.getElementById("cari");
+    searchInput.addEventListener("input", searchTable);
+
+</script>

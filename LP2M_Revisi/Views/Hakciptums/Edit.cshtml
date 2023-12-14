@@ -1,0 +1,74 @@
+﻿@model LP2M_Revisi.Models.Hakciptum
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Hakciptum</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Judul" class="control-label"></label>
+                <input asp-for="Judul" class="form-control" />
+                <span asp-validation-for="Judul" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Noaplikasi" class="control-label"></label>
+                <input asp-for="Noaplikasi" class="form-control" />
+                <span asp-validation-for="Noaplikasi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nosertifikat" class="control-label"></label>
+                <input asp-for="Nosertifikat" class="form-control" />
+                <span asp-validation-for="Nosertifikat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Keterangan" class="control-label"></label>
+                <input asp-for="Keterangan" class="form-control" />
+                <span asp-validation-for="Keterangan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <input asp-for="Status" class="form-control" />
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Inputby" class="control-label"></label>
+                <select asp-for="Inputby" class="form-control" asp-items="ViewBag.Inputby"></select>
+                <span asp-validation-for="Inputby" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Inputdate" class="control-label"></label>
+                <input asp-for="Inputdate" class="form-control" />
+                <span asp-validation-for="Inputdate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Editby" class="control-label"></label>
+                <select asp-for="Editby" class="form-control" asp-items="ViewBag.Editby"></select>
+                <span asp-validation-for="Editby" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Editdate" class="control-label"></label>
+                <input asp-for="Editdate" class="form-control" />
+                <span asp-validation-for="Editdate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

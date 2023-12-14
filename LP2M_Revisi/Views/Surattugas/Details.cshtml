@@ -1,0 +1,198 @@
+﻿@model LP2M_Revisi.Models.Surattuga
+
+@{
+    ViewData["Title"] = "Details";
+    ViewData["Routing"] = "Surat Tugas";
+    ViewData["Routing2"] = "Detail Surat Tugas";
+}
+<style>
+    /* Styling tambahan untuk timeline */
+    .timeline {
+        position: relative;
+        max-width: 800px;
+        margin: 50px auto;
+    }
+
+    .timeline-item {
+        border-left: 2px solid #3498db;
+        margin-bottom: 40px;
+        padding-left: 40px;
+        position: relative;
+        background-color: #fff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease-in-out;
+    }
+
+        .timeline-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+    .timeline-content {
+        padding: 20px;
+    }
+
+        .timeline-content h2 {
+            margin-top: 0;
+            color: #3498db;
+        }
+
+        .timeline-content p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+    .timeline-date {
+        display: block;
+        margin-top: 15px;
+        color: #888;
+    }
+
+    /* Garis dan panah untuk menunjukkan alur timeline */
+    .timeline::before {
+        content: '';
+        position: absolute;
+        width: 4px;
+        background-color: #ccc;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        margin-left: -2px;
+    }
+
+    .timeline-item::after {
+        content: '';
+        position: absolute;
+        border-style: solid;
+        border-width: 8px 8px 8px 0;
+        border-color: transparent #fff transparent transparent;
+        right: -10px;
+        top: 15px;
+    }
+
+    .timeline-item:nth-child(even)::after {
+        left: -10px;
+        right: auto;
+        border-width: 8px 0 8px 8px;
+        border-color: transparent transparent transparent #fff;
+    }
+
+</style>
+<h1>Details</h1>
+
+<div>
+    <h4>Surattuga</h4>
+    <hr />
+    <table class="table table-bordered">
+        <tr>
+            <th>Nama Kegiatan</th>
+            <td>@Html.DisplayFor(model => model.Namakegiatan)</td>
+        </tr>
+        <tr>
+            <th>Masa Pelaksanaan</th>
+            <td>@Html.DisplayFor(model => model.Masapelaksanaan)</td>
+        </tr>
+        <tr>
+            <th>Bukti Pendukung</th>
+            <td>
+                @*@if (Model.Buktipendukung != null)
+                {
+                var base64 = Convert.ToBase64String(Model.Buktipendukung);
+                var imgSrc = $"data:image/png;base64,{base64}";
+
+                // Displaying the image
+                <img src="@imgSrc" alt="Proof Document" class="img-fluid" />
+
+                // If the document is a PDF, you can use the following code instead of displaying the image
+                <-- <embed src="@imgSrc" type="application/pdf" width="100%" height="600px" /> -->
+                }*@
+                @Html.DisplayFor(model => model.Namafile)
+                @if (!string.IsNullOrEmpty(Model.Namafile))
+                {
+                    <a asp-action="Download" asp-route-fileName="@Model.Namafile">Download</a>
+                }
+            </td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td>@Html.DisplayFor(model => model.Status)</td>
+        </tr>
+        <tr>
+            <th>Keterangan</th>
+            <td>@Html.DisplayFor(model => model.Keterangan)</td>
+        </tr>
+        <tr>
+            <th>Tanggal Input</th>
+            <td>@Html.DisplayFor(model => model.Inputdate)</td>
+        </tr>
+        <tr>
+            <th>Tanggal Edit</th>
+            <td>@Html.DisplayFor(model => model.Editdate)</td>
+        </tr>
+        <tr>
+            <th>Surat Tugas</th>
+            <td>@Html.DisplayFor(model => model.Namafilesurat)</td>
+            @if (!string.IsNullOrEmpty(Model.Namafilesurat))
+            {
+                <a asp-action="Download" asp-route-fileName="@Model.Namafilesurat">Download</a>
+            }
+        </tr>
+        <tr>
+            <th>Edit By</th>
+            <td>@Html.DisplayFor(model => model.EditbyNavigation.Nama)</td>
+        </tr>
+        <tr>
+            <th>Input By</th>
+            <td>@Html.DisplayFor(model => model.InputbyNavigation.Nama)</td>
+        </tr>
+    </table>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<div class="timeline">
+    <div class="timeline-item">
+        <div class="timeline-content">
+            <h2>Titik 1</h2>
+            <p>Pengajuan Surat Tugas</p>
+            <span class="timeline-date">@Html.DisplayFor(model => model.Inputdate)</span>
+        </div>
+    </div>
+    <div class="timeline-item">
+        <div class="timeline-content">
+            <h2>Titik 2</h2>
+            @if (Model.Status == 2)
+            {
+                <p>Pengajuan Surat Tugas Diterima</p>
+                <span class="timeline-date">@Html.DisplayFor(model => model.Editdate)</span>
+            }
+            else if (Model.Status == 1)
+            {
+                <p>Belum Dikonfirmasi</p>
+            }
+            else
+            {
+                <p>Belum Diajukan</p>
+            }
+            
+            
+        </div>
+    </div>
+    @if (Model.Status == 2 && Model.tanggalselesai != null)
+    {
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <h2>Titik 3</h2>
+                <p>Surat Tugas Diupload</p>
+                <span class="timeline-date">@Html.DisplayFor(model => model.tanggalselesai)</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        
+    }
+</div>

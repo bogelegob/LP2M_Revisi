@@ -1,0 +1,89 @@
+﻿@model LP2M_Revisi.Models.Prosiding
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Prosiding</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Judulprogram" class="control-label"></label>
+                <input asp-for="Judulprogram" class="form-control" />
+                <span asp-validation-for="Judulprogram" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judulpaper" class="control-label"></label>
+                <input asp-for="Judulpaper" class="form-control" />
+                <span asp-validation-for="Judulpaper" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Kategori" class="control-label"></label>
+                <input asp-for="Kategori" class="form-control" />
+                <span asp-validation-for="Kategori" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Penyelenggara" class="control-label"></label>
+                <input asp-for="Penyelenggara" class="form-control" />
+                <span asp-validation-for="Penyelenggara" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Waktuterbit" class="control-label"></label>
+                <input asp-for="Waktuterbit" class="form-control" />
+                <span asp-validation-for="Waktuterbit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tempatpelaksanaan" class="control-label"></label>
+                <input asp-for="Tempatpelaksanaan" class="form-control" />
+                <span asp-validation-for="Tempatpelaksanaan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Keterangan" class="control-label"></label>
+                <input asp-for="Keterangan" class="form-control" />
+                <span asp-validation-for="Keterangan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <input asp-for="Status" class="form-control" />
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Inputby" class="control-label"></label>
+                <select asp-for="Inputby" class="form-control" asp-items="ViewBag.Inputby"></select>
+                <span asp-validation-for="Inputby" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Inputdate" class="control-label"></label>
+                <input asp-for="Inputdate" class="form-control" />
+                <span asp-validation-for="Inputdate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Editby" class="control-label"></label>
+                <select asp-for="Editby" class="form-control" asp-items="ViewBag.Editby"></select>
+                <span asp-validation-for="Editby" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Editdate" class="control-label"></label>
+                <input asp-for="Editdate" class="form-control" />
+                <span asp-validation-for="Editdate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

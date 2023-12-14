@@ -1,0 +1,87 @@
+﻿@model LP2M_Revisi.Models.Pengabdianmasyarakat
+
+@{
+    ViewData["Title"] = "Details";
+    ViewData["Routing"] = "Pengabdian Masyarakat";
+    ViewData["Routing2"] = "Details Pengabdian Masyarakat";
+    int no = 1;
+}
+
+<h1>Details</h1>
+
+<div class="table-responsive">
+    <table id="myTable" class="table table-hover grid scrollstyle text-center" width="100%">
+        <thead>
+            <tr>
+                <th>
+                    NO
+                </th>
+                <th>
+                    Nama Kegiatan
+                </th>
+                <th>
+                    Waktu Pelaksanaan
+                </th>
+                <th>
+                    Surat Tugas
+                </th>
+                <th>
+                    Laporan
+                </th>
+                <th>
+                    Bukti Pendukung
+                </th>
+                <th>
+                    Mahasiswa
+                </th>
+                <th>
+                    NIM
+                </th>
+                <th>
+                    Prodi
+                </th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.MahasiswaProdiNim.Split('|').Length-1; i += 3)
+            {
+                <tr>
+                    <td>@no</td>
+                    <td>@Html.DisplayFor(model => model.Namakegiatan)</td>
+                    <td>@Html.DisplayFor(model => model.Waktupelaksanaan)</td>
+                    <td>
+                        @if (Model.Surattugas == null)
+                        {
+                            <div>Belum ada surat Tugas</div>
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(model => model.Namafilesurat)
+                        }
+                    </td>
+                    <td>@Html.DisplayFor(model => model.Namafilelaporan)</td>
+                    <td>@Html.DisplayFor(model => model.Namafilebukti)</td>
+
+                    @for (int j = 0; j < 3; j++)
+                    {
+                        var dataIndex = i + j;
+                        if (dataIndex < Model.MahasiswaProdiNim.Split('|').Length)
+                        {
+
+                            <td><span>@Model.MahasiswaProdiNim.Split('|')[dataIndex]</span></td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                    }
+                    <td>
+                        <a asp-action="Index">Back to List</a>
+                    </td>
+                </tr>
+                no++;
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,489 @@
+﻿@model IEnumerable<LP2M_Revisi.Models.Surattuga>
+
+@{
+    ViewData["Title"] = "Master Surat Tugas";
+    ViewData["Routing"] = "Surat Tugas";
+    Layout = ViewBag.Layout;
+}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Referensi ke Bootstrap JS dan CSS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+<style>
+    .border-container {
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 10px;
+        display: inline-block;
+    }
+</style>
+<div class="card mb-2" style="max-width: 300px; border-radius: 10px;">
+    <div class="row no-gutters">
+        <div class="col-md-4 d-flex align-items-center justify-content-center">
+            <div class="fa fa-book" style="font-size: 60px;"></div>
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">Total Surat Tugas</h5>
+                <div style="text-align:center;">
+                    <span id="totalData" style="font-weight: bold;text-align: center;font-size: 40px;"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="row mb-3">
+    <div class="col-12 col-md-1">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fa fa-plus"></i>&nbsp;Tambah
+        </a>
+    </div>
+    <div class="col-12 col-md-8">
+        <div class="input-group">
+            <input id="cari" type="text" class="form-control" placeholder="Cari">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="button">
+                    <i class="fa fa-search"></i>&nbsp;Cari
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-3">
+        <div class="input-group">
+            <select class="form-control" id="filter">
+                <option value="all">Semua Kategori</option>
+                <option value="Tahun">Tahun</option>
+                <option value="Prodi">Prodi</option>
+                <option value="Judul">Judul</option>
+            </select>
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="button">
+                    <i class="fa fa-filter"></i>&nbsp;Filter
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        @TempData["SuccessMessage"]
+    </div>
+}
+else if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        @TempData["ErrorMessage"]
+    </div>
+}
+<div style="overflow-x: auto; width: 100%;">
+    <table id="myTable" class="table table-hover grid scrollstyle text-center" width="100%">
+        <thead>
+            <tr>
+                <th>
+                    Nama Kegiatan
+                </th>
+                <th>
+                    Masa Pelaksanaan
+                </th>
+                <th>
+                    Bukti Pendukung
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+                <th>
+                    Tanggal Input
+                </th>
+                <th>
+                    Tanggal Edit
+                </th>
+                <th>
+                    Surat Tugas
+                </th>
+                <th>
+                    Edit By
+                </th>
+                <th>
+                    Input By
+                </th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Namakegiatan)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Masapelaksanaan)
+                    </td>
+                    <td>
+                        @*@Html.DisplayFor(modelItem => item.Namafile)*@
+                        @if (!string.IsNullOrEmpty(item.Namafile))
+                        {
+                            <a asp-action="Download" asp-route-fileName="@item.Namafile" class="fa fa-download"></a>
+                        }
+                    </td>
+                    <td>
+                        @if (item.Status == 0)
+                        {
+                            <span>belum diajukan</span>
+                        }
+                        else if (item.Status == 1)
+                        {
+                            <span>Menunggu Konfirmasi</span>
+                        }
+                        else if (item.Status == 2)
+                        {
+                            <span>Konfirmasi Diterima</span>
+                        }
+                        else
+                        {
+                            <span>Sudah Konfirmasi</span>
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Inputdate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Editdate)
+                    </td>
+                    <td>
+                        @if (item.Surattugas == null)
+                        {
+                            <div>Belum ada surat Tugas</div>
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.Namafilesurat)
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EditbyNavigation.Nama)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.InputbyNavigation.Nama)
+                    </td>
+                    <td>
+                        @if (item.Status == 1)
+                        {
+                            <button class="btn btn-sm btn-success setuju-button" data-id="@item.Id">
+                                <i class="fa fa-check"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger tolak-button" data-id="@item.Id">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        }
+                        else if (item.Status == 2)
+                        {
+                            <button class="btn btn-sm btn-success terima-button" data-id="@item.Id">
+                                <i class="fa fa-user"></i>
+                            </button>
+                        }
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<!-- Add this modal structure at the end of your HTML -->
+<div class="modal fade" id="tolakModal" tabindex="-1" role="dialog" aria-labelledby="tolakModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tolakModalLabel">Tolak Surat - Masukkan Alasan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="alasan">Alasan Tolak:</label>
+                    <textarea class="form-control" id="alasan" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="tolakBatal">Batal</button>
+                <button type="button" class="btn btn-danger" id="tolakSubmit">Tolak</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="terimaModal" tabindex="-1" role="dialog" aria-labelledby="terimaModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="terimaModalLabel">Terima Surat - Pilih Surat Tugas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="alasanFile">Surat Tugas:</label>
+                    <input type="file" class="form-control-file" id="FileSurat">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="terimaBatal">Batal</button>
+                <button type="button" class="btn btn-danger" id="terimaSubmit">Terima</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="setujuModal" tabindex="-1" role="dialog" aria-labelledby="setujuModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="setujuModalLabel">Terima Konfirmasi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="setujuBatal">Batal</button>
+                <button type="button" class="btn btn-danger" id="setujuSubmit">Terima</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    // Fungsi untuk menghitung total data dalam tabel
+    function updateTotalData() {
+        var totalDataElement = document.getElementById("totalData");
+        var table = document.getElementById("myTable"); // Ganti "myTable" dengan id tabel yang sesuai
+        var rowCount = table.rows.length - 1; // Mengurangi 1 untuk mengabaikan baris header
+
+        totalDataElement.textContent = rowCount;
+    }
+
+    function searchTable() {
+        var input, filter, table, tr, td, i, j, txtValue;
+        input = document.getElementById("cari");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+
+        for (i = 1; i < tr.length; i++) { // Mulai dari 1 untuk menghindari baris header
+            var display = false;
+            for (j = 0; j < tr[i].cells.length; j++) {
+                td = tr[i].cells[j];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        display = true;
+                        break;
+                    }
+                }
+            }
+            if (display) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+    $(document).ready(function () {
+        // Initialize DataTable
+        var table = $('#myTable').DataTable({
+            "pageLength": 10,
+            "lengthMenu": [10, 25, 50, 75, 100],
+            "searching": true,
+            "ordering": true,
+        });
+
+        // Call the updateTotalData function whenever the table is drawn
+        table.on('draw', function () {
+            updateTotalData();
+        });
+    });
+
+    // Panggil fungsi saat halaman dimuat
+    window.addEventListener('load', updateTotalData);
+
+    // Panggil fungsi pencarian saat input berubah
+    var searchInput = document.getElementById("cari");
+    searchInput.addEventListener("input", searchTable);
+
+    $(document).ready(function () {
+        $(".alert").on("click", ".close", function (e) {
+            $(this).parent().hide();
+        });
+
+        $(".setuju-button").click(function () {
+            var anggotaId = $(this).data("id");
+            console.log(anggotaId);
+
+            // Tampilkan Modal Tolak
+            $("#setujuModal").modal("show");
+            $("#setujuBatal").click(function () {
+                $("#setujuModal").modal("hide");
+
+                
+            });
+
+            // Tangani Tombol Tolak di dalam Modal
+            $("#setujuSubmit").off("click").on("click", function () {
+                
+
+                var formData = new FormData();
+                formData.append("id", anggotaId);
+                ;
+                // Tutup modal
+                $("#setujuModal").modal("hide");
+
+                
+
+                // Lakukan aksi Tolak
+                $.ajax({
+                    url: "/Surattugas/terima/" + anggotaId,
+                    type: "POST",
+                    data: formData, // Kirim surat ke server
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data.success) {
+                            Swal.fire("Sukses!", data.message, "success");
+                            location.reload();
+                        } else {
+                            Swal.fire("Gagal!", data.message, "error");
+                        }
+                    },
+                    error: function () {
+                        Swal.fire("Error!", "Terjadi kesalahan saat menyetujui Surat.", "error");
+                    }
+                });
+            });
+        });
+
+        $(".terima-button").click(function () {
+            var anggotaId = $(this).data("id");
+            console.log(anggotaId);
+
+            // Tampilkan Modal Tolak
+            $("#terimaModal").modal("show");
+            $("#terimaBatal").click(function () {
+                $("#terimaModal").modal("hide");
+
+                // Reset nilai textarea
+                $("#FileSurat").val('');
+            });
+
+            // Tangani Tombol Tolak di dalam Modal
+            $("#terimaSubmit").off("click").on("click", function () {
+                var fileInput = $("#FileSurat")[0];
+                var file = fileInput.files[0];
+
+                if (!file) {
+                    Swal.fire("Peringatan!", "Masukkan surat tugas.", "warning");
+                    return;
+                }
+
+                var formData = new FormData();
+                formData.append("id", anggotaId);
+                formData.append("suratt", file);
+                // Tutup modal
+                $("#terimaModal").modal("hide");
+
+                // Reset nilai textarea
+                $("#FileSurat").val('');
+
+
+                // Lakukan aksi Tolak
+                $.ajax({
+                    url: "/Surattugas/Setuju/" + anggotaId,
+                    type: "POST",
+                    data: formData, // Kirim surat ke server
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data.success) {
+                            Swal.fire("Sukses!", data.message, "success");
+                            location.reload();
+                        } else {
+                            Swal.fire("Gagal!", data.message, "error");
+                        }
+                    },
+                    error: function () {
+                        Swal.fire("Error!", "Terjadi kesalahan saat menyetujui Surat.", "error");
+                    }
+                });
+            });
+        });
+
+        $(".tolak-button").click(function () {
+            var anggotaId = $(this).data("id");
+            console.log(anggotaId);
+
+            // Tampilkan Modal Tolak
+            $("#tolakModal").modal("show");
+            $("#tolakBatal").click(function () {
+                $("#tolakModal").modal("hide");
+
+                // Reset nilai textarea
+                $("#alasan").val('');
+            });
+
+            // Tangani Tombol Tolak di dalam Modal
+            $("#tolakSubmit").off("click").on("click", function () {
+                var alasan = $("#alasan").val();
+
+                if (!alasan) {
+                    Swal.fire("Peringatan!", "Masukkan alasan tolak surat.", "warning");
+                    return;
+                }
+
+                // Tutup modal
+                $("#tolakModal").modal("hide");
+
+                // Reset nilai textarea
+                $("#alasan").val('');
+
+
+                // Lakukan aksi Tolak
+                $.ajax({
+                    url: "/Surattugas/Tolak/" + anggotaId,
+                    type: "POST",
+                    data: { alasan: alasan }, // Kirim alasan ke server
+                    success: function (data) {
+                        if (data.success) {
+                            Swal.fire("Sukses!", data.message, "success");
+                            location.reload();
+                        } else {
+                            Swal.fire("Gagal!", data.message, "error");
+                        }
+                    },
+                    error: function () {
+                        Swal.fire("Error!", "Terjadi kesalahan saat menyetujui Surat.", "error");
+                    }
+                });
+            });
+        });
+
+    });
+    $(document).ready(function () {
+        $(".alert").on("click", ".close", function (e) {
+            $(this).parent().hide();
+        });
+    });
+
+</script>
