@@ -160,7 +160,7 @@ else if (TempData["ErrorMessage"] != null)
                 }
                 else
                 {
-                   @Html.DisplayFor(modelItem => item.Namafilesurat)
+                   <a asp-action="Download" asp-route-fileName="@item.Namafilesurat">@item.Namafilesurat</a>
                 }
             </td>
             <td>
