@@ -25,7 +25,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Waktupelaksanaan" class="control-label">Waktu Pelaksanaan</label>
-                <input asp-for="Waktupelaksanaan" class="form-control" />
+                <input asp-for="Waktupelaksanaan" class="form-control" type="date" />
                 <span asp-validation-for="Waktupelaksanaan" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -33,20 +33,18 @@
                 <input asp-for="Jumlahpenerima" class="form-control" />
                 <span asp-validation-for="Jumlahpenerima" class="text-danger"></span>
             </div>
+            <span id="fileValidationMessage" class="text-danger"></span>
             <div class="form-group">
                 <label asp-for="Surattugas" class="control-label">Surat Tugas</label>
                 <input asp-for="Surattugas" class="form-control" type="file"/>
-                <span asp-validation-for="Surattugas" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Laporan" class="control-label">Laporan</label>
                 <input asp-for="Laporan" class="form-control" type="file"/>
-                <span asp-validation-for="Laporan" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Buktipendukung" class="control-label">Bukti Pendukung</label>
                 <input asp-for="Buktipendukung" class="form-control" type="file"/>
-                <span asp-validation-for="Buktipendukung" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label for="Mahasiswa" class="control-label">Mahasiswa</label>
@@ -55,12 +53,14 @@
             </div>
             <div class="form-group">
                 <label for="Nim" class="control-label">Nim</label>
-                <input id="Nim" name="Nim" class="form-control" />
+                <input id="Nim" name="Nim" class="form-control" type="number" />
                 <button id="NM" name="NM">Kirim</button>
             </div>
             <div class="form-group">
                 <label for="Prodi" class="control-label">Prodi</label>
-                <select id="Prodi" name="Prodi" class="form-control" asp-items="ViewBag.Prodi"></select>
+                <select id="Prodi" name="Prodi" class="form-control" asp-items="ViewBag.Prodi">
+                    <option value="">-- Pilih Prodi --</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="Detail" class="control-label">Detail</label>
@@ -91,6 +91,17 @@
         var prodiValue = document.getElementById('Prodi').value;
         var detail = document.getElementById('Detail').value;
 
+        var suratTugasFile = document.getElementById('Surattugas').files[0];
+        var laporanFile = document.getElementById('Laporan').files[0];
+        var buktiPendukungFile = document.getElementById('Buktipendukung').files[0];
+
+        if (!suratTugasFile && !laporanFile && !buktiPendukungFile) {
+            document.getElementById('fileValidationMessage').innerText = 'Harap isi setidaknya satu file.';
+            return;
+        } else {
+            document.getElementById('fileValidationMessage').innerText = ''; // Reset the message if files are selected
+        }
+
         // Concatenate the values
         var mahasiswaProdiNimValue = detail;
 
@@ -111,19 +122,18 @@
         // Get current value of Detail textarea
         var currentDetailValue = document.getElementById('Detail').value;
         var currentValues = currentDetailValue.split('|');
-        if (!currentDetailValue){
-            var newDetailValue = mahasiswaValue +'|';
+        if (!currentDetailValue) {
+            var newDetailValue = mahasiswaValue + '|';
         }
-        else{
+        else {
             if (currentValues.length >= 3) {
                 var newDetailValue = (currentDetailValue ? currentDetailValue + '\n' : '') + mahasiswaValue + '|';
-            }else{
-                var newDetailValue = mahasiswaValue +(currentDetailValue ? '|' + currentDetailValue : '');
+            } else {
+                var newDetailValue = mahasiswaValue + (currentDetailValue ? '|' + currentDetailValue : '');
             }
-        
         }
         // Assign the concatenated value to the Detail textarea
-        document.getElementById('Detail').value = newDetailValue;   
+        document.getElementById('Detail').value = newDetailValue;
     });
 
     // Handling Nim button click
@@ -136,10 +146,10 @@
         // Get current value of Detail textarea
         var currentDetailValue = document.getElementById('Detail').value;
 
-        if (!currentDetailValue){
-        // Check if Mahasiswa data is already present
-        var separator = currentDetailValue.includes('|') ? '|' : '';
-        }else{
+        if (!currentDetailValue) {
+            // Check if Mahasiswa data is already present
+            var separator = currentDetailValue.includes('|') ? '|' : '';
+        } else {
             var separator = '';
         }
         // Concatenate the values with |
@@ -168,6 +178,7 @@
         document.getElementById('Detail').value = newDetailValue;
     });
 </script>
+
 
 
 

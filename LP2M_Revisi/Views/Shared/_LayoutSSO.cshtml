@@ -79,8 +79,8 @@
             display: none;
         }
 
-        table { cde
-            border-top: none;
+        table {
+            cde border-top: none;
             border-bottom: none;
             background-color: #FFF;
             white-space: nowrap;
@@ -108,10 +108,13 @@
         .btn:hover {
             cursor: pointer;
         }
-        a.list-group-item:hover {
-            background-color: #007bff; /* Ganti dengan warna latar belakang yang Anda inginkan */
-        color: white; /* Ganti dengan warna teks yang Anda inginkan */
-    }
+
+        a.list-group-item:hover,
+        .list-group-item-selected {
+            background-color: #007bff;
+            color: white;
+        }
+
     </style>
 
     <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
@@ -151,53 +154,21 @@
             </div>
         </div>
     </div>
+
     <div class="polman-nav-static-right collapse scrollstyle" id="menu">
         <div id="accordions" role="tablist" aria-multiselectable="true">
             <div class="list-group">
+                <a class="list-group-item list-group-item-action polman-username" style="border-radius: 0px; border: none; background-color: #EEE;">
+                    Hai,&nbsp;<b>Barok</b>
+                </a>
 
                 <a asp-controller="Login" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 23px;">
                     <i class="fa fa-sign-out fa-lg fa-pull-left"></i>Logout
                 </a>
 
-                <a asp-controller="Dashboard" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">
+                <a asp-controller="SSO" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">
                     <i class="fa fa-home fa-lg fa-pull-left"></i>Dashboard
                 </a>
-
-                <a asp-controller="Penggunas" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">
-                    <i class="fa fa-user-circle fa-lg fa-pull-left"></i>Pengguna
-                </a>
-
-                <a asp-controller="Prodis" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">
-                    <i class="fa fa-user fa-lg fa-pull-left"></i>Prodi
-                </a>
-
-                <a href="#" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;" id="suratMenu">
-                    <i class="fa fa-book fa-lg fa-pull-left"></i>Surat Tugas
-                </a>
-                <ul id="suratOptions" style="display: none;list-style-type: none;">
-                    <li><a asp-controller="Surattugas" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Tambah Surat Tugas</a></li>
-                    <li><a asp-controller="Surattugas" asp-action="Konfirmasi" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Konfirmasi Surat Tugas</a></li>
-                </ul>
-
-                <a asp-controller="Pengabdianmasyarakats" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">
-                    <i class="fa fa-users fa-lg fa-pull-left"></i>Pengabdian Masyarakat
-                </a>
-
-                <a asp-controller="Pengaduan" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">
-                    <i class="fa fa-users fa-lg fa-pull-left"></i>Pengaduan
-                </a>
-
-                <a href="#" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;" id="publikasiMenu">
-                    <i class="fa fa-chevron-right fa-lg fa-pull-left"></i> Publikasi
-                </a>
-                <ul id="publikasiOptions" style="display: none;list-style-type: none;">
-                    <li><a asp-controller="Bukus" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Buku</a></li>
-                    <li><a asp-controller="Jurnals" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Jurnal</a></li>
-                    <li><a asp-controller="Prosidings" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Prosiding</a></li>
-                    <li><a asp-controller="Seminars" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Seminar</a></li>
-                    <li><a asp-controller="Hakciptums" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Hak Cipta</a></li>
-                    <li><a asp-controller="Hakpatens" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Hak Paten</a></li>
-                </ul>
             </div>
         </div>
     </div>
@@ -224,33 +195,20 @@
         </div>
     </div>
     <script>
-        $(document).ready(function () {
-            $("#publikasiMenu").click(function () {
-                toggleSubMenu("#publikasiOptions");
+        document.addEventListener("DOMContentLoaded", function () {
+            var listItems = document.querySelectorAll('.list-group-item');
+
+            listItems.forEach(function (item) {
+                item.addEventListener('click', function () {
+                    listItems.forEach(function (otherItem) {
+                        otherItem.classList.remove('list-group-item-selected');
+                    });
+
+                    item.classList.add('list-group-item-selected');
+                });
             });
-
-            $("#suratMenu").click(function () {
-                toggleSubMenu("#suratOptions");
-            });
-
-            function toggleSubMenu(menuSelector) {
-                // Menutup semua submenu kecuali yang sedang diklik
-                $("[id$='Options']").not(menuSelector).hide();
-
-                // Toggle submenu yang diklik
-                $(menuSelector).toggle();
-
-                // Menangani ikon panah
-                var icon = $(menuSelector.replace("Options", "Menu") + " i");
-                if ($(menuSelector).is(":visible")) {
-                    icon.removeClass("fa-chevron-right").addClass("fa-chevron-down");
-                } else {
-                    icon.removeClass("fa-chevron-down").addClass("fa-chevron-right");
-                }
-            }
         });
     </script>
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

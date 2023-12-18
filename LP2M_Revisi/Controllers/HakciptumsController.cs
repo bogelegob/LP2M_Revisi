@@ -24,7 +24,7 @@ namespace LP2M_Revisi.Controllers
         {
             Pengguna penggunaModel;
             string serializedModel = HttpContext.Session.GetString("Identity");
-            Console.WriteLine(serializedModel);
+            string Role = HttpContext.Session.GetString("selectedRole");
             if (serializedModel == null)
             {
                 return RedirectToAction("Index", "Login");
@@ -37,7 +37,7 @@ namespace LP2M_Revisi.Controllers
             {
                 return RedirectToAction("Index", "Login");
             }
-            if (penggunaModel.Role == "Admin")
+            if (Role == "Admin")
             {
                 ViewBag.Layout = "_LayoutAdmin";
             }

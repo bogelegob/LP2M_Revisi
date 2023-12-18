@@ -7,11 +7,13 @@ namespace LP2M_Revisi.Models;
 public partial class Pengabdianmasyarakat
 {
     public string Id { get; set; } = null!;
-
+    [MaxLength(200)]
+    [Required(ErrorMessage = "Nama Kegiatan harus diisi.")]
     public string? Namakegiatan { get; set; }
     [DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy}", ApplyFormatInEditMode = true)]
+    [Required(ErrorMessage = "Waktu Pelaksanaan harus diisi.")]
     public DateTime? Waktupelaksanaan { get; set; }
-
+    [Required(ErrorMessage = "Jumlah penerima harus diisi.")]
     public int? Jumlahpenerima { get; set; }
 
     public byte[]? Surattugas { get; set; }

@@ -5,25 +5,26 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using LP2M_Revisi.Models;
+using Newtonsoft.Json;
 
 namespace LP2M_Revisi.Controllers
 {
-    public class DashboardController : Controller
+    public class PengaduanController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public DashboardController(ApplicationDbContext context)
+        public PengaduanController(ApplicationDbContext context)
         {
             _context = context;
         }
-        public IActionResult Index()
+
+        // GET: Bukus
+        public async Task<IActionResult> Index()
         {
             Pengguna penggunaModel;
             string serializedModel = HttpContext.Session.GetString("Identity");
-            var Role = HttpContext.Session.GetString("selectedRole");
-            Console.WriteLine(serializedModel);
+            string Role = HttpContext.Session.GetString("selectedRole");
             if (serializedModel == null)
             {
                 return RedirectToAction("Index", "Login");
@@ -32,25 +33,21 @@ namespace LP2M_Revisi.Controllers
             {
                 penggunaModel = JsonConvert.DeserializeObject<Pengguna>(serializedModel);
             }
-            int totalSuratTugas = _context.Surattugas.Count();
-            ViewData["TotalSuratTugas"] = totalSuratTugas;
-            return View();
-        }
-        public IActionResult DKaryawan()
-        {
-            Pengguna penggunaModel;
-            string serializedModel = HttpContext.Session.GetString("Identity");
-            var Role = HttpContext.Session.GetString("selectedRole");
-            Console.WriteLine(serializedModel);
-            if (serializedModel == null)
+            if (penggunaModel.Role != "Admin" && penggunaModel.Role != "Karyawan")
             {
                 return RedirectToAction("Index", "Login");
             }
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
             else
             {
-                penggunaModel = JsonConvert.DeserializeObject<Pengguna>(serializedModel);
+                ViewBag.Layout = "_Layout";
             }
-            return View();
+            ViewBag.Pengguna = penggunaModel.Role;
+            var applicationDbContext = _context.Bukus.Include(b => b.EditbyNavigation).Include(b => b.InputbyNavigation);
+            return View(await applicationDbContext.ToListAsync());
         }
     }
 }

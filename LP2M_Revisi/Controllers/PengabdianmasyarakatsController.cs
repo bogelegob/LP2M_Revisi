@@ -24,7 +24,7 @@ namespace LP2M_Revisi.Controllers
         {
             Pengguna penggunaModel;
             string serializedModel = HttpContext.Session.GetString("Identity");
-            Console.WriteLine(serializedModel);
+            string Role = HttpContext.Session.GetString("selectedRole");
             if (serializedModel == null)
             {
                 return RedirectToAction("Index", "Login");
@@ -37,7 +37,7 @@ namespace LP2M_Revisi.Controllers
             {
                 return RedirectToAction("Index", "Login");
             }
-            if (penggunaModel.Role == "Admin")
+            if (Role == "Admin")
             {
                 ViewBag.Layout = "_LayoutAdmin";
             }
@@ -75,6 +75,15 @@ namespace LP2M_Revisi.Controllers
         // GET: Pengabdianmasyarakats/Details/5
         public async Task<IActionResult> Details(string id)
         {
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             if (id == null || _context.Pengabdianmasyarakats == null)
             {
                 return NotFound();
@@ -95,6 +104,15 @@ namespace LP2M_Revisi.Controllers
         // GET: Pengabdianmasyarakats/Create
         public IActionResult Create()
         {
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             Pengabdianmasyarakat pengabdi = new Pengabdianmasyarakat();
             pengabdi.Id = GenerateNextId();
             ViewData["Prodi"] = new SelectList(_context.Prodis, "Id", "Nama");
@@ -161,6 +179,15 @@ namespace LP2M_Revisi.Controllers
         // GET: Pengabdianmasyarakats/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             if (id == null || _context.Pengabdianmasyarakats == null)
             {
                 return NotFound();

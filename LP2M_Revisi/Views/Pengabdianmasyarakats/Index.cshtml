@@ -16,6 +16,21 @@
         padding: 10px;
         display: inline-block;
     }
+
+    .table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table td.long-text {
+        white-space: normal;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    #myTable th {
+        text-align: center;
+    }
 </style>
 <div class="card mb-2" style="max-width: 300px; border-radius: 10px;">
     <div class="row no-gutters">
@@ -112,7 +127,7 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
+            <td class="@(item.Namakegiatan.Length > 25 ? "long-text" : "")">
                 @Html.DisplayFor(modelItem => item.Namakegiatan)
             </td>
             <td>
@@ -121,7 +136,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Jumlahpenerima)
             </td>
-            <td>
+            <td class="@(item.Namakegiatan.Length > 25 ? "long-text" : "")">
                 @if (item.Surattugas == null)
                 {
                     <div>Belum ada surat Tugas</div>
@@ -134,7 +149,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Namafilelaporan)
             </td>
-            <td>
+            <td class="@(item.Namakegiatan.Length > 25 ? "long-text" : "")">
                 @Html.DisplayFor(modelItem => item.Namafilebukti)
             </td>
             @*<td>
