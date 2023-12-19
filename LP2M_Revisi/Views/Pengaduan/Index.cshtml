@@ -1,8 +1,8 @@
-﻿@model IEnumerable<LP2M_Revisi.Models.Surattuga>
+﻿@model IEnumerable<LP2M_Revisi.Models.Pengaduan>
 
 @{
-    ViewData["Title"] = "Master Surat Tugas";
-    ViewData["Routing"] = "Surat Tugas";
+    ViewData["Title"] = "Pengaduan";
+    ViewData["Routing"] = "Pengaduan";
     Layout = ViewBag.Layout;
 }
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -17,7 +17,7 @@
         display: inline-block;
     }
 </style>
-<div class="card mb-2" style="max-width: 300px; border-radius: 10px;">
+@*<div class="card mb-2" style="max-width: 300px; border-radius: 10px;">
     <div class="row no-gutters">
         <div class="col-md-4 d-flex align-items-center justify-content-center">
             <div class="fa fa-book" style="font-size: 60px;"></div>
@@ -32,12 +32,15 @@
         </div>
     </div>
 </div>
-<br>
+<br>*@
 <div class="row mb-3">
     <div class="col-12 col-md-1">
-        <a asp-action="Create" class="btn btn-primary">
-            <i class="fa fa-plus"></i>&nbsp;Tambah
-        </a>
+        @if (ViewBag.Layout == "_Layout")
+        {
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="fa fa-plus"></i>&nbsp;Tambah
+            </a>
+        }
     </div>
     <div class="col-12 col-md-8">
         <div class="input-group">
@@ -91,28 +94,16 @@ else if (TempData["ErrorMessage"] != null)
                 Nama Kegiatan
             </th>
             <th>
-                Masa Pelaksanaan
+                Status
             </th>
             <th>
-                Bukti Pendukung
+                Tanggal Dibuat
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Status)
+                Tanggal Dikonfirmasi
             </th>
             <th>
-                Tanggal Input
-            </th>
-            <th>
-                Tanggal Edit
-            </th>
-            <th>
-                Surat Tugas
-            </th>
-            <th>
-                Edit By
-            </th>
-            <th>
-                Input By
+                Dibuat Oleh
             </th>
             <th>Aksi</th>
         </tr>
@@ -121,13 +112,34 @@ else if (TempData["ErrorMessage"] != null)
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Namakegiatan)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Masapelaksanaan)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Namafile)
+                @if(item.buku != null)
+                {
+                    <span>Buku</span>
+                }
+                else if(item.prosiding != null)
+                {
+                    <span>Prosiding</span>
+                }
+                else if(item.jurnal != null)
+                {
+                    <span>Jurnal</span>
+                }
+                else if(item.seminar != null)
+                {
+                    <span>Seminar</span>
+                }
+                else if(item.hakcipta != null)
+                {
+                    <span>Hak Cipta</span>
+                }
+                else if(item.hakpaten != null)
+                {
+                    <span>Hak Paten</span>
+                }
+                else if(item.pengabdian != null)
+                {
+                    <span>Pengabdian</span>
+                }
             </td>
             <td>
                 @if(item.Status == 0)
@@ -148,26 +160,13 @@ else if (TempData["ErrorMessage"] != null)
                 }
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Inputdate)
+                @Html.DisplayFor(modelItem => item.createdate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Editdate)
+                @Html.DisplayFor(modelItem => item.updatedate)
             </td>
             <td>
-                @if(item.Surattugas == null)
-                {
-                   <div>Belum ada surat Tugas</div>
-                }
-                else
-                {
-                   <a asp-action="Download" asp-route-fileName="@item.Namafilesurat">@item.Namafilesurat</a>
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EditbyNavigation.Nama)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.InputbyNavigation.Nama)
+                @Html.DisplayFor(modelItem => item.PenggunaNavigation.Nama)
             </td>
             <td>
                 @if (item.Status == 0)
@@ -184,6 +183,9 @@ else if (TempData["ErrorMessage"] != null)
                             <a class="btn btn-sm btn-danger delete-button" asp-action="Delete" asp-route-id="@item.Id" title="Hapus">
                                 <i class="fa fa-trash-o"></i>
                             </a>
+                            <button class="btn btn-sm btn-danger tolak-button" data-id="@item.pengguna">
+                                <i class="fa fa-times"></i>
+                            </button>
                 }
                 else
                 {
@@ -196,6 +198,56 @@ else if (TempData["ErrorMessage"] != null)
 }
     </tbody>
 </table>
+</div>
+<!-- Add this modal structure at the end of your HTML -->
+<div class="modal fade" id="tolakModal" tabindex="-1" role="dialog" aria-labelledby="tolakModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tolakModalLabel">Tambah Pengaduan - Masukkan Pengaduan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="alasan">Jenis Pengaduan:</label>
+                    <select class="form-control" id="jenispengaduan">
+                        <option value="">Pilih Jenis</option>
+                        <option value="edit">Edit</option>
+                        <option value="hapus">Hapus</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="alasan">Pengaduan Data:</label>
+                    <select class="form-control" id="datapengaduan">
+                        <option value="">Pilih Pengaduan</option>
+                        <option value="pengabdian">Pengabdian</option>
+                        <option value="prosiding">Prosiding</option>
+                        <option value="buku">Buku</option>
+                        <option value="jurnal">Jurnal</option>
+                        <option value="seminar">Seminar</option>
+                        <option value="hakcipta">Hak Cipta</option>
+                        <option value="hakpaten">Hak Paten</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="alasan">Data Mana :</label>
+                    <select class="form-control" id="databro">
+                        <option value="">Pilih Data</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="alasan">Alasan Pengaduan:</label>
+                    <textarea class="form-control" id="alasan" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="tolakBatal">Batal</button>
+                <button type="button" class="btn btn-danger" id="tolakSubmit">Buat</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -234,6 +286,7 @@ else if (TempData["ErrorMessage"] != null)
             }
         }
     }
+
     $(document).ready(function () {
         // Initialize DataTable
         var table = $('#myTable').DataTable({
@@ -277,7 +330,7 @@ else if (TempData["ErrorMessage"] != null)
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "/Surattugas/KirimConfirm/" + anggotaId,
+                        url: "/Pengaduan/KirimConfirm/" + anggotaId,
                         type: "POST",
                         success: function (data) {
                             if (data.success) {
@@ -295,11 +348,96 @@ else if (TempData["ErrorMessage"] != null)
             });
         });
 
+
+        $(".tolak-button").click(function () {
+            var anggotaId = $(this).data("id");
+            console.log(anggotaId);
+
+            // Tampilkan Modal Tolak
+            $("#tolakModal").modal("show");
+            $("#tolakBatal").click(function () {
+                $("#tolakModal").modal("hide");
+
+                // Reset nilai textarea
+                $("#alasan").val('');
+            });
+
+            // Tangani Tombol Tolak di dalam Modal
+            $("#tolakSubmit").off("click").on("click", function () {
+                var jenis = $("#jenispengaduan").val();
+                var tipe = $("#datapengaduan").val();
+                var alasan = $("#alasan").val();
+
+
+                if (!alasan) {
+                    Swal.fire("Peringatan!", "Masukkan alasan Pengaduan.", "warning");
+                    return;
+                }
+
+                // Tutup modal
+                $("#tolakModal").modal("hide");
+
+                // Reset nilai textarea
+                $("#alasan").val('');
+
+
+                // Lakukan aksi Tolak
+                $.ajax({
+                    url: "/Pengaduan/Create/" + anggotaId,
+                    type: "POST",
+                    data: { alasan: alasan }, // Kirim alasan ke server
+                    success: function (data) {
+                        if (data.success) {
+                            Swal.fire("Sukses!", data.message, "success");
+                            location.reload();
+                        } else {
+                            Swal.fire("Gagal!", data.message, "error");
+                        }
+                    },
+                    error: function () {
+                        Swal.fire("Error!", "Terjadi kesalahan saat menyetujui Surat.", "error");
+                    }
+                });
+            });
+
+            // Tangani perubahan pada select "jenispengaduan"
+            $("#datapengaduan").change(function () {
+                var selectedPengaduan = $(this).val();
+                var selectedId = "USR001";// Ambil nilai ID yang sesuai dari suatu tempat (misalnya, dari elemen tertentu)
+                console.log(selectedPengaduan);
+                console.log(selectedId);
+                    // Lakukan AJAX untuk mengambil data berdasarkan jenis pengaduan
+                    $.ajax({
+                        url: "/Pengaduan/GetData?id=" + selectedId + "&pengaduan=" + selectedPengaduan,
+                        type: "GET",
+                        success: function (data) {
+                        console.log(data);
+                            // Kosongkan select "datapengaduan" sebelum mengisinya kembali
+                        $("#databro").empty();
+
+                            // Isi kembali select "datapengaduan" dengan data yang diperoleh dari controller
+                            
+
+                            if (data && data.length > 0) {
+                                $.each(data, function (index, item) {
+                                $("#databro").append('<option value="' + item.Id + '">' + item.Id + '</option>');
+                                });
+                            } else {
+                            $("#databro").append('<option value="">Tidak ada data</option>');
+                            }
+                        },
+                        error: function () {
+                            Swal.fire("Error!", "Terjadi kesalahan saat mengambil data.", "error");
+                        }
+                    });
+            });
+        });
     });
     $(document).ready(function () {
         $(".alert").on("click", ".close", function (e) {
             $(this).parent().hide();
         });
     });
-
 </script>
+
+

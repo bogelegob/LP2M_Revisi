@@ -36,6 +36,8 @@ public partial class ApplicationDbContext : DbContext
     public virtual DbSet<Seminar> Seminars { get; set; }
 
     public virtual DbSet<Surattuga> Surattugas { get; set; }
+    public virtual DbSet<Pengaduan> Pengaduan { get; set; }
+    public virtual DbSet<DataModel> Data { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DefaultConnection");
@@ -731,6 +733,87 @@ public partial class ApplicationDbContext : DbContext
                             .IsUnicode(false)
                             .HasColumnName("idpengguna");
                     });
+        });
+
+        modelBuilder.Entity<Pengaduan>(entity =>
+        {
+            entity.ToTable("pengaduan");
+
+            entity.Property(e => e.Id).HasColumnName("idpengaduan");
+            entity.Property(e => e.pengguna)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idpengguna");
+            entity.Property(e => e.buku)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idbuku");
+            entity.Property(e => e.prosiding)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idprosiding");
+            entity.Property(e => e.seminar)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idseminar");
+            entity.Property(e => e.jurnal)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idjurnal");
+            entity.Property(e => e.hakcipta)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idhakcipta");
+            entity.Property(e => e.hakpaten)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idhakpaten");
+            entity.Property(e => e.pengabdian )
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idpengabdian");
+            entity.Property(e => e.Keterangan)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("keterangan");
+            entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.createdate)
+                .HasColumnType("datetime")
+                .HasColumnName("createdate");
+            entity.Property(e => e.updatedate)
+                .HasColumnType("datetime")
+                .HasColumnName("updatedate");
+            entity.HasOne(d => d.BukuNavigation).WithMany(p => p.BukuPengaduanNavigations)
+                .HasForeignKey(d => d.buku)
+                .HasConstraintName("FK_pengaduan_buku");
+
+            entity.HasOne(d => d.HakciptaNavigation).WithMany(p => p.HakCiptaPengaduanNavigations)
+                .HasForeignKey(d => d.hakcipta)
+                .HasConstraintName("FK_pengaduan_hakcipta");
+            
+            entity.HasOne(d => d.HakpatenNavigation).WithMany(p => p.HakPatenPengaduanNavigations)
+                .HasForeignKey(d => d.hakpaten)
+                .HasConstraintName("FK_pengaduan_hakpaten");
+
+            entity.HasOne(d => d.ProsidingNavigation).WithMany(p => p.ProsidingPengaduanNavigations)
+                .HasForeignKey(d => d.prosiding)
+                .HasConstraintName("FK_pengaduan_prosiding"); 
+            
+            entity.HasOne(d => d.PengabdianmasyarakatNavigation).WithMany(p => p.PengabdianPengaduanNavigations)
+                .HasForeignKey(d => d.pengabdian)
+                .HasConstraintName("FK_pengaduan_pengabdian");
+
+            entity.HasOne(d => d.SeminarNavigation).WithMany(p => p.SeminarPengaduanNavigations)
+                .HasForeignKey(d => d.seminar)
+                .HasConstraintName("FK_pengaduan_seminar");
+            
+            entity.HasOne(d => d.JurnalNavigation).WithMany(p => p.JurnalPengaduanNavigations)
+                .HasForeignKey(d => d.jurnal)
+                .HasConstraintName("FK_pengaduan_jurnal");
+
+            entity.HasOne(d => d.PenggunaNavigation).WithMany(p => p.PenggunaPengaduanNavigations)
+                .HasForeignKey(d => d.pengguna)
+                .HasConstraintName("FK_pengaduan_pengguna");
         });
 
         OnModelCreatingPartial(modelBuilder);

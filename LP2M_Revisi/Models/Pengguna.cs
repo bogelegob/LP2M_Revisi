@@ -70,4 +70,5 @@ public partial class Pengguna
     public virtual ICollection<Seminar> Idseminars { get; set; } = new List<Seminar>();
 
     public virtual ICollection<Surattuga> Idsurattugas { get; set; } = new List<Surattuga>();
+    public virtual ICollection<Pengaduan> PenggunaPengaduanNavigations { get; set; } = new List<Pengaduan>();
 }

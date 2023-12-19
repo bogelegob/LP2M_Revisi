@@ -40,4 +40,5 @@ public partial class Pengabdianmasyarakat
     public virtual Pengguna? InputbyNavigation { get; set; }
 
     public virtual ICollection<Pengguna> Idpenggunas { get; set; } = new List<Pengguna>();
+    public virtual ICollection<Pengaduan> PengabdianPengaduanNavigations { get; set; } = new List<Pengaduan>();
 }

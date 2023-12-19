@@ -1,0 +1,46 @@
+﻿@model LP2M_Revisi.Models.Surattuga
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Surattuga</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Namakegiatan" class="control-label">Nama Kegiatan</label>
+                <input asp-for="Namakegiatan" class="form-control" />
+                <span asp-validation-for="Namakegiatan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Masapelaksanaan" class="control-label">Masa Pelaksanaan</label>
+                <input asp-for="Masapelaksanaan" class="form-control" />
+                <span asp-validation-for="Masapelaksanaan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Buktipendukung" class="control-label">Bukti Pendukung</label>
+                <input asp-for="Buktipendukung" class="form-control" type="file" />
+                <span asp-validation-for="Buktipendukung" class="text-danger"></span>
+            </div>
+                <input asp-for="Inputby" type="hidden" class="form-control" />
+                <input asp-for="Inputdate" type="hidden" class="form-control" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
