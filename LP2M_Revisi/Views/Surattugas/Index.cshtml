@@ -43,28 +43,29 @@
             <i class="fa fa-plus"></i>&nbsp;Tambah
         </a>
     </div>
-    <div class="col-12 col-md-8">
+    <br />
+    <div class="col-lg-12">
         <div class="input-group">
-            <input id="cari" type="text" class="form-control" placeholder="Cari">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="button">
-                    <i class="fa fa-search"></i>&nbsp;Cari
-                </button>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-md-3">
-        <div class="input-group">
-            <select class="form-control" id="filter">
-                <option value="all">Semua Kategori</option>
-                <option value="Tahun">Tahun</option>
-                <option value="Prodi">Prodi</option>
-                <option value="Judul">Judul</option>
-            </select>
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="button">
+            <input type="text" class="form-control" id="cari" name="cari" placeholder="Pencarian" clientidmode="static">
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-secondary">Cari</button>
+            </span>
+            <div class="input-group-btn">
+                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" fdprocessedid="63p3so">
                     <i class="fa fa-filter"></i>&nbsp;Filter
                 </button>
+                <div class="dropdown-menu dropdown-menu-right" style="padding: 20px; min-width: 300px !important;">
+                    <div class="form-group">
+                        <label style="font-weight: bold;" for="ddSemester">Status</label>
+                        <select name="ddSemester" id="ddSemester" class="form-control dropdown" style="min-width: 260px !important;">
+                            <option value="">-- Semua --</option>
+                            <option value="Diterima">Diterima</option>
+                            <option value="Ditolak">Ditolak</option>
+                            <option value="Belum">Belum Diajukan</option>
+                            <option value="Konfirmasi">Menunggu Konfirmasi</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

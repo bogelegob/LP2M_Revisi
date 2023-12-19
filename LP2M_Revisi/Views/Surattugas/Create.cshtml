@@ -6,6 +6,7 @@
     ViewData["Routing2"] = "Tambah Surat Tugas";
     // Konversi ViewData["ListPengguna"] menjadi IEnumerable<SelectListItem>
     var listPengguna = ViewData["ListPengguna"] as IEnumerable<SelectListItem>;
+    Layout = ViewBag.Layout;
 }
 
 <form asp-action="Create" enctype="multipart/form-data">
@@ -16,8 +17,8 @@
         <div class="card-body">
             <div class="container-fluid">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-row">
-                    <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label asp-for="Namakegiatan" class="control-label">Nama Kegiatan</label>
                             <input asp-for="Namakegiatan" class="form-control" required />
@@ -34,7 +35,7 @@
                     </div>
                 </div>
                 
-                <div class="form-row">
+                <div class="row">
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label asp-for="Idpenggunas" class="control-label">Pilih Pengguna</label>

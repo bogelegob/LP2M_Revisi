@@ -2,7 +2,11 @@
     ViewData["Title"] = "Halaman SSO";
     ViewData["Routing"] = "Halaman SSO";
 }
-
+<style>
+    .list-group-item:hover {
+        cursor: pointer;
+    }
+</style>
 <div class="card">
     <div class="card-header" role="tab" id="heading0">
         <h5 class="mb-0">
@@ -12,11 +16,11 @@
     <div id="app0" class="collapse" role="tabpanel" aria-labelledby="heading0" aria-expanded="false" style="">
         <div class="card-block">
             <div class="list-group">
-                <a href="" class="list-group-item list-group-item-action" data-role="Admin">Login sebagai ADMIN</a>
+                <a class="list-group-item list-group-item-action" data-role="Admin">Login sebagai ADMIN</a>
             </div>
             <br />
             <div class="list-group">
-                <a href="" class="list-group-item list-group-item-action" data-role="Karyawan">Login sebagai KARYAWAN</a>
+                <a class="list-group-item list-group-item-action" data-role="Karyawan">Login sebagai KARYAWAN</a>
             </div>
         </div>
     </div>
@@ -30,8 +34,6 @@
             // Ambil elemen dengan id yang sesuai dengan data-target
             var targetId = $(this).data('target');
             var targetElement = $('#' + targetId);
-
-            // Ambil role dari data-role attribute dan simpan di session storage
 
             // Toggle (menyembunyikan/menampilkan) elemen
             targetElement.collapse('toggle');
