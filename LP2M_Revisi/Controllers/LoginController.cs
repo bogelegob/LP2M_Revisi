@@ -26,14 +26,7 @@ namespace LP2M_Revisi.Controllers
                 // Pengguna ditemukan, simpan data pengguna dalam sesi
                 string serializedModel = JsonConvert.SerializeObject(pengguna);
                 HttpContext.Session.SetString("Identity", serializedModel);
-                if(pengguna.Role == "Admin")
-                {
-                    return RedirectToAction("Index", "Dashboard");
-                }
-                else
-                {
-                    return RedirectToAction("DKaryawan", "Dashboard");
-                }
+                return RedirectToAction("Index", "SSO");
             }
             else
             {
@@ -41,5 +34,14 @@ namespace LP2M_Revisi.Controllers
                 return RedirectToAction("Index");
             }
         }
+        [HttpPost]
+        public IActionResult SetRole(string role)
+        {
+            // Simpan role dalam sesi dengan kunci "selectedRole"
+            HttpContext.Session.SetString("selectedRole", role);
+
+            return Json(new { success = true });
+        }
+
     }
 }

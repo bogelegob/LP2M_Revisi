@@ -22,6 +22,7 @@ namespace LP2M_Revisi.Controllers
         {
             Pengguna penggunaModel;
             string serializedModel = HttpContext.Session.GetString("Identity");
+            var Role = HttpContext.Session.GetString("selectedRole");
             Console.WriteLine(serializedModel);
             if (serializedModel == null)
             {
@@ -30,10 +31,6 @@ namespace LP2M_Revisi.Controllers
             else
             {
                 penggunaModel = JsonConvert.DeserializeObject<Pengguna>(serializedModel);
-            }
-            if(penggunaModel.Role != "Admin")
-            {
-                return RedirectToAction("Index", "Login");
             }
             int totalSuratTugas = _context.Surattugas.Count();
             ViewData["TotalSuratTugas"] = totalSuratTugas;
@@ -43,6 +40,7 @@ namespace LP2M_Revisi.Controllers
         {
             Pengguna penggunaModel;
             string serializedModel = HttpContext.Session.GetString("Identity");
+            var Role = HttpContext.Session.GetString("selectedRole");
             Console.WriteLine(serializedModel);
             if (serializedModel == null)
             {
@@ -51,10 +49,6 @@ namespace LP2M_Revisi.Controllers
             else
             {
                 penggunaModel = JsonConvert.DeserializeObject<Pengguna>(serializedModel);
-            }
-            if (penggunaModel.Role != "Karyawan")
-            {
-                return RedirectToAction("Index", "Login");
             }
             return View();
         }

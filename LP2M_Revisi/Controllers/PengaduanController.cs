@@ -1,7 +1,11 @@
-﻿using LP2M_Revisi.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using LP2M_Revisi.Models;
 using Newtonsoft.Json;
 using System.Drawing;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -16,11 +20,13 @@ namespace LP2M_Revisi.Controllers
         {
             _context = context;
         }
+
+        // GET: Bukus
         public async Task<IActionResult> Index()
         {
             Pengguna penggunaModel;
             string serializedModel = HttpContext.Session.GetString("Identity");
-            Console.WriteLine(serializedModel);
+            string Role = HttpContext.Session.GetString("selectedRole");
             if (serializedModel == null)
             {
                 return RedirectToAction("Index", "Login");
@@ -33,7 +39,7 @@ namespace LP2M_Revisi.Controllers
             {
                 return RedirectToAction("Index", "Login");
             }
-            if (penggunaModel.Role == "Admin")
+            if (Role == "Admin")
             {
                 ViewBag.Layout = "_LayoutAdmin";
                 var pengaduan = await _context.Pengaduan.Where(b => b.pengguna == penggunaModel.Id).Include(b => b.PenggunaNavigation).ToListAsync();

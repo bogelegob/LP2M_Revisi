@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LP2M_Revisi.Models;
 using Newtonsoft.Json;
+using System.Data;
 
 namespace LP2M_Revisi.Controllers
 {
@@ -24,7 +25,7 @@ namespace LP2M_Revisi.Controllers
         {
             Pengguna penggunaModel;
             string serializedModel = HttpContext.Session.GetString("Identity");
-            Console.WriteLine(serializedModel);
+            string Role = HttpContext.Session.GetString("selectedRole");
             if (serializedModel == null)
             {
                 return RedirectToAction("Index", "Login");
@@ -37,7 +38,8 @@ namespace LP2M_Revisi.Controllers
             {
                 return RedirectToAction("Index", "Login");
             }
-            if (penggunaModel.Role == "Admin")
+            
+            if (Role == "Admin")
             {
                 ViewBag.Layout = "_LayoutAdmin";
                 var surattugas = await _context.Surattugas.Where(b => b.Inputby == penggunaModel.Id).Include(b => b.EditbyNavigation).Include(b => b.InputbyNavigation).ToListAsync();
@@ -56,7 +58,7 @@ namespace LP2M_Revisi.Controllers
         {
             Pengguna penggunaModel;
             string serializedModel = HttpContext.Session.GetString("Identity");
-            Console.WriteLine(serializedModel);
+            string Role = HttpContext.Session.GetString("selectedRole");
             if (serializedModel == null)
             {
                 return RedirectToAction("Index", "Login");
@@ -69,7 +71,7 @@ namespace LP2M_Revisi.Controllers
             {
                 return RedirectToAction("Index", "Login");
             }
-            if (penggunaModel.Role == "Admin")
+            if (Role == "Admin")
             {
                 ViewBag.Layout = "_LayoutAdmin";
             }
@@ -107,6 +109,15 @@ namespace LP2M_Revisi.Controllers
         // GET: Surattugas/Details/5
         public async Task<IActionResult> Details(string id)
         {
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             if (id == null || _context.Surattugas == null)
             {
                 return NotFound();
@@ -129,7 +140,7 @@ namespace LP2M_Revisi.Controllers
         {
             Pengguna penggunaModel;
             string serializedModel = HttpContext.Session.GetString("Identity");
-            Console.WriteLine(serializedModel);
+            string Role = HttpContext.Session.GetString("selectedRole");
             if (serializedModel == null)
             {
                 return RedirectToAction("Index", "Login");
@@ -141,6 +152,14 @@ namespace LP2M_Revisi.Controllers
             if (penggunaModel.Role != "Admin" && penggunaModel.Role != "Karyawan")
             {
                 return RedirectToAction("Index", "Login");
+            }
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
             }
             Surattuga suratTugas = new Surattuga();
             suratTugas.Id = GenerateNextId();
@@ -212,6 +231,7 @@ namespace LP2M_Revisi.Controllers
         {
             Pengguna penggunaModel;
             string serializedModel = HttpContext.Session.GetString("Identity");
+            string Role = HttpContext.Session.GetString("selectedRole");
             Console.WriteLine(serializedModel);
             if (serializedModel == null)
             {
@@ -224,6 +244,14 @@ namespace LP2M_Revisi.Controllers
             if (penggunaModel.Role != "Admin" && penggunaModel.Role != "Karyawan")
             {
                 return RedirectToAction("Index", "Login");
+            }
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
             }
             if (id == null || _context.Surattugas == null)
             {

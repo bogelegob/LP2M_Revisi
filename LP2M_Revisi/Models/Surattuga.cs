@@ -12,11 +12,14 @@ public partial class Surattuga
     public string? Namafilesurat { get; set; }
     [DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
     public DateTime? tanggalselesai { get; set; }
+    [MaxLength(200)]
+    [Required(ErrorMessage = "Nama Kegiatan harus diisi.")]
     public string? Namakegiatan { get; set; }
     public string? Keterangan { get; set; }
-
+    [Required(ErrorMessage = "Masa pelaksanaan harus diisi.")]
     public string? Masapelaksanaan { get; set; }
     /*[MaxLength()]*/
+    [Required(ErrorMessage = "Bukti Pendukung harus diisi.")]
     public byte[]? Buktipendukung { get; set; }
 
     public int? Status { get; set; }
