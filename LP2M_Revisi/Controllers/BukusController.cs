@@ -132,9 +132,8 @@ namespace LP2M_Revisi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int sa)
+        public async Task<IActionResult> Create([Bind("Id,Judulbuku,Isbn,Penerbit,Tahun,Status,Inputby,Inputdate,Editby,Editdate")] Buku buku)
         {
-            Buku buku = new Buku();
             if (ModelState.IsValid)
             {
                 var serializedModel = HttpContext.Session.GetString("Identity");
