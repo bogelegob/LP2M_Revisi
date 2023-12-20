@@ -132,42 +132,42 @@ namespace LP2M_Revisi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Judulbuku,Isbn,Penerbit,Tahun,Status,Inputby,Inputdate,Editby,Editdate")] Buku buku)
+        public async Task<IActionResult> Create([Bind("Id,Judulbuku,Isbn,Penerbit,Tahun,Status,Inputby,Inputdate,Editby,Editdate")] Buku buku, string SelectedUserIds)
         {
             if (ModelState.IsValid)
             {
                 var serializedModel = HttpContext.Session.GetString("Identity");
                 var pengguna = JsonConvert.DeserializeObject<Pengguna>(serializedModel);
-                buku.Id = GenerateNextId();
                 buku.Inputby = pengguna.Id;
                 buku.Editby = pengguna.Id;
                 DateTime tgl = DateTime.Now;
                 buku.Inputdate = tgl;
                 buku.Editdate = tgl;
                 buku.Status = 0;
-                buku.Id = GenerateNextId();
                 _context.Add(buku);
+                string[] selectedIdsArray = SelectedUserIds.Split(',');
 
-                // Buat entitas Detailbuku untuk setiap pengguna yang dipilih
-                /*if (selectedUserIds != null)
+                foreach (var userId in selectedIdsArray)
                 {
-                    foreach (var userId in selectedUserIds)
+                    if (!string.IsNullOrEmpty(userId))
                     {
+                        // Buat objek Detailbuku dan set nilainya
                         var detailBuku = new Detailbuku
                         {
-                            Idbuku = buku.Id,
-                            Idpengguna = userId.Id,
-                            Status = "Aktif" // Atur status atau properti lain jika diperlukan
+                            Idbuku = buku.Id, // Sesuaikan dengan properti yang sesuai
+                            Idpengguna = userId,
+                            Status = "Aktif" 
                         };
 
-                        _context.Add(detailBuku);
+                        // Tambahkan objek Detailbuku ke konteks
+                        _context.Detailbukus.Add(detailBuku);
                     }
-                }*/
-
+                }
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", buku.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", buku.Inputby);
             return View(buku);

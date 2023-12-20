@@ -54,6 +54,9 @@
                 <textarea id="selectedUsers" class="form-control" rows="4" readonly></textarea>
             </div>
             <div class="form-group">
+                <input type="hidden" id="selectedUserIds" name="SelectedUserIds" />
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -67,60 +70,16 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
-
-        // Simpan data pengguna yang dipilih dalam array JavaScript
-        var selectedUsersArray = [];
-
-        // Logika JavaScript untuk menambahkan pengguna ke textarea
         document.getElementById('btnTambahPengguna').addEventListener('click', function () {
-            // Dapatkan nilai pengguna yang dipilih dari select
-            var selectedUser = document.getElementById('listPengguna').value;
+            var selectedOption = document.getElementById('listPengguna').options[document.getElementById('listPengguna').selectedIndex];
+            var currentText = document.getElementById('selectedUsers');
+            var currentId = document.getElementById('selectedUserIds');
 
-            // Dapatkan teks dan nilai dari opsi select yang dipilih
-            var selectedUserName = document.getElementById('listPengguna').options[document.getElementById('listPengguna').selectedIndex].text;
+            // Update the textarea with the selected user's data
+            currentText.value += selectedOption.text + '\n';
 
-            // Cek apakah pengguna sudah ada dalam daftar yang dipilih sebelumnya
-            var isAlreadySelected = selectedUsersArray.some(function (user) {
-                return user.id === selectedUser;
-            });
-
-            if (!isAlreadySelected) {
-                selectedUsersArray.push({ id: selectedUser, name: selectedUserName });
-
-                var textarea = document.getElementById('selectedUsers');
-                textarea.value += selectedUserName + ' (ID: ' + selectedUser + ')\n';
-
-                // Nonaktifkan opsi yang sudah dipilih
-                document.getElementById('listPengguna').querySelector('option[value="' + selectedUser + '"]').disabled = true;
-            } else {
-                alert('Pengguna sudah dipilih sebelumnya.');
-            }
-        });
-
-        // Handle submission form
-        // Fungsi untuk mengirim data pengguna ke controller
-        document.querySelector('form').addEventListener('submit', function (event) {
-            // Prevent default form submission
-            event.preventDefault();
-
-            // Kirim array data pengguna ke controller saat form disubmit
-            fetch('/Bukus/Create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(selectedUsersArray) // Kirim array data pengguna
-            })
-                .then(response => {
-                    // Handle response dari server (jika diperlukan)
-                    // Misalnya, redirect ke halaman lain setelah berhasil disubmit
-                    //window.location.href = '/Bukus/Index'; // Ganti dengan URL tujuan
-                    alert("Bisa masuk ini");
-                })
-                .catch(error => {
-                    // Handle kesalahan (jika diperlukan)
-                    console.error('Error:', error);
-                });
+            // Update the selectedIdUsers input with the selected user's id
+            currentId.value += selectedOption.value + ',';
         });
     </script>
 }
