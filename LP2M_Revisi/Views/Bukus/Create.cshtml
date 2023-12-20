@@ -39,6 +39,20 @@
                 <input asp-for="Tahun" class="form-control" />
                 <span asp-validation-for="Tahun" class="text-danger"></span>
             </div>
+            <!-- Tambahkan select option dan tombol "Tambah Pengguna" -->
+            <div class="form-group">
+                <label for="listPengguna" class="control-label">Pilih Pengguna</label>
+                <!-- Gunakan data pengguna yang dikirim dari controller untuk membuat dropdown -->
+                <select id="listPengguna" asp-items="@ViewBag.ListPengguna" class="form-control">
+                </select>
+                <a id="btnTambahPengguna" class="btn btn-secondary">Tambah Pengguna</a>
+            </div>
+
+            <!-- Tambahkan textarea untuk menampilkan data pengguna yang dipilih -->
+            <div class="form-group">
+                <label for="selectedUsers" class="control-label">Data Pengguna yang Dipilih</label>
+                <textarea id="selectedUsers" class="form-control" rows="4" readonly></textarea>
+            </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -52,4 +66,61 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+
+        // Simpan data pengguna yang dipilih dalam array JavaScript
+        var selectedUsersArray = [];
+
+        // Logika JavaScript untuk menambahkan pengguna ke textarea
+        document.getElementById('btnTambahPengguna').addEventListener('click', function () {
+            // Dapatkan nilai pengguna yang dipilih dari select
+            var selectedUser = document.getElementById('listPengguna').value;
+
+            // Dapatkan teks dan nilai dari opsi select yang dipilih
+            var selectedUserName = document.getElementById('listPengguna').options[document.getElementById('listPengguna').selectedIndex].text;
+
+            // Cek apakah pengguna sudah ada dalam daftar yang dipilih sebelumnya
+            var isAlreadySelected = selectedUsersArray.some(function (user) {
+                return user.id === selectedUser;
+            });
+
+            if (!isAlreadySelected) {
+                selectedUsersArray.push({ id: selectedUser, name: selectedUserName });
+
+                var textarea = document.getElementById('selectedUsers');
+                textarea.value += selectedUserName + ' (ID: ' + selectedUser + ')\n';
+
+                // Nonaktifkan opsi yang sudah dipilih
+                document.getElementById('listPengguna').querySelector('option[value="' + selectedUser + '"]').disabled = true;
+            } else {
+                alert('Pengguna sudah dipilih sebelumnya.');
+            }
+        });
+
+        // Handle submission form
+        // Fungsi untuk mengirim data pengguna ke controller
+        document.querySelector('form').addEventListener('submit', function (event) {
+            // Prevent default form submission
+            event.preventDefault();
+
+            // Kirim array data pengguna ke controller saat form disubmit
+            fetch('/Bukus/Create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(selectedUsersArray) // Kirim array data pengguna
+            })
+                .then(response => {
+                    // Handle response dari server (jika diperlukan)
+                    // Misalnya, redirect ke halaman lain setelah berhasil disubmit
+                    //window.location.href = '/Bukus/Index'; // Ganti dengan URL tujuan
+                    alert("Bisa masuk ini");
+                })
+                .catch(error => {
+                    // Handle kesalahan (jika diperlukan)
+                    console.error('Error:', error);
+                });
+        });
+    </script>
 }

@@ -116,6 +116,11 @@ namespace LP2M_Revisi.Controllers
             }
             Buku buku = new Buku();
             buku.Id = GenerateNextId();
+            // Ambil data pengguna dari database menggunakan Entity Framework atau metode lainnya
+            /*var listPengguna = _context.Penggunas.Select(p => new { Id = p.Id, Nama = p.Nama }).ToList();
+
+            // Kirim data pengguna ke tampilan
+            ViewData["ListPengguna"] = new SelectList(listPengguna, "Id", "Nama");*/
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama");
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama");
             ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
@@ -127,12 +132,14 @@ namespace LP2M_Revisi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Judulbuku,Isbn,Penerbit,Tahun,Status,Inputby,Inputdate,Editby,Editdate")] Buku buku, List<string> selectedUserIds)
+        public async Task<IActionResult> Create(int sa)
         {
+            Buku buku = new Buku();
             if (ModelState.IsValid)
             {
                 var serializedModel = HttpContext.Session.GetString("Identity");
                 var pengguna = JsonConvert.DeserializeObject<Pengguna>(serializedModel);
+                buku.Id = GenerateNextId();
                 buku.Inputby = pengguna.Id;
                 buku.Editby = pengguna.Id;
                 DateTime tgl = DateTime.Now;
@@ -143,20 +150,20 @@ namespace LP2M_Revisi.Controllers
                 _context.Add(buku);
 
                 // Buat entitas Detailbuku untuk setiap pengguna yang dipilih
-                if (selectedUserIds != null)
+                /*if (selectedUserIds != null)
                 {
                     foreach (var userId in selectedUserIds)
                     {
                         var detailBuku = new Detailbuku
                         {
                             Idbuku = buku.Id,
-                            Idpengguna = userId,
+                            Idpengguna = userId.Id,
                             Status = "Aktif" // Atur status atau properti lain jika diperlukan
                         };
 
                         _context.Add(detailBuku);
                     }
-                }
+                }*/
 
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
