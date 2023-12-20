@@ -132,39 +132,47 @@ namespace LP2M_Revisi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Judulbuku,Isbn,Penerbit,Tahun,Status,Inputby,Inputdate,Editby,Editdate")] Buku buku)
+        public async Task<IActionResult> Create([Bind("Id,Judulbuku,Isbn,Penerbit,Tahun,Status,Inputby,Inputdate,Editby,Editdate")] Buku buku, string[] selectedPenggunas)
         {
             if (ModelState.IsValid)
             {
                 var serializedModel = HttpContext.Session.GetString("Identity");
                 var pengguna = JsonConvert.DeserializeObject<Pengguna>(serializedModel);
-                buku.Id = GenerateNextId();
                 buku.Inputby = pengguna.Id;
                 buku.Editby = pengguna.Id;
                 DateTime tgl = DateTime.Now;
                 buku.Inputdate = tgl;
                 buku.Editdate = tgl;
                 buku.Status = 0;
-                buku.Id = GenerateNextId();
                 _context.Add(buku);
 
-                // Buat entitas Detailbuku untuk setiap pengguna yang dipilih
-                /*if (selectedUserIds != null)
-                {
-                    foreach (var userId in selectedUserIds)
-                    {
-                        var detailBuku = new Detailbuku
-                        {
-                            Idbuku = buku.Id,
-                            Idpengguna = userId.Id,
-                            Status = "Aktif" // Atur status atau properti lain jika diperlukan
-                        };
-
-                        _context.Add(detailBuku);
-                    }
-                }*/
-
                 await _context.SaveChangesAsync();
+                Console.WriteLine(selectedPenggunas);
+                // Tambahkan pengguna terkait dengan buku
+                if (selectedPenggunas != null)
+                {
+                    foreach (var penggunaId in selectedPenggunas)
+                    {
+                        var penggunaTerpilih = await _context.Penggunas.FindAsync(penggunaId);
+                        if (penggunaTerpilih != null)
+                        {
+                            
+
+                            // Buat entitas DetailBuku
+                            var detailBuku = new Detailbuku
+                            {
+                                Idbuku = buku.Id,
+                                Idpengguna = penggunaTerpilih.Id,
+                                Status = "1", // Atur tanggal sesuai kebutuhan
+                                                              // Tambahkan atribut lain jika diperlukan
+                            };
+
+                            _context.Detailbukus.Add(detailBuku);
+                        }
+                    }
+                    await _context.SaveChangesAsync();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
 
