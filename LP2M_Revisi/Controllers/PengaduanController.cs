@@ -9,6 +9,7 @@ using LP2M_Revisi.Models;
 using Newtonsoft.Json;
 using System.Drawing;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Azure;
 
 namespace LP2M_Revisi.Controllers
 {
@@ -155,9 +156,10 @@ namespace LP2M_Revisi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Namakegiatan,Masapelaksanaan,Status,Inputby,Inputdate,Editby,Editdate,Surattugas")] Pengaduan pengaduan)
+        public async Task<IActionResult> Create(string jenis ,string hakpaten, string hakcipta, string jurnal,string buku, string prosiding, string pengabdian, string seminar, string alasan)
         {
+            Console.WriteLine("dafffwrfvesrgghdhrn" + jenis);
+            Pengaduan pengaduan = new Pengaduan();
             if (ModelState.IsValid)
             {
                 var serializedModel = HttpContext.Session.GetString("Identity");
@@ -166,9 +168,37 @@ namespace LP2M_Revisi.Controllers
 
                 DateTime tgl = DateTime.Now;
                 pengaduan.createdate = tgl;
-
                 pengaduan.Status = 0;
-                
+                pengaduan.Keterangan = alasan;
+
+                if (jenis == "hakpaten")
+                {
+                    pengaduan.hakpaten = hakpaten;
+                }
+                if (jenis == "hakcipta")
+                {
+                    pengaduan.hakcipta = hakcipta;
+                }
+                if (jenis == "jurnal")
+                {
+                    pengaduan.jurnal = jurnal;
+                }
+                if (jenis == "buku")
+                {
+                    pengaduan.buku = buku;
+                }
+                if (jenis == "prosiding")
+                {
+                    pengaduan.prosiding = prosiding;
+                }
+                if (jenis == "pengabdian")
+                {
+                    pengaduan.pengabdian = pengabdian;
+                }
+                if (jenis == "seminar")
+                {
+                    pengaduan.seminar = seminar;
+                }
 
                 _context.Add(pengaduan);
                 await _context.SaveChangesAsync();
@@ -178,7 +208,8 @@ namespace LP2M_Revisi.Controllers
 
             // Pilihan pengguna untuk dropdown
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", pengaduan.pengguna);
-            return View(pengaduan);
+            var response = new { success = true, message = "Surat Tugas berhasil dikirim." };
+            return Json(response);
         }
 
         // GET: Surattugas/Delete/5
@@ -393,13 +424,46 @@ namespace LP2M_Revisi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetData(string id, string pengaduan)
         {
-            // Di sini Anda dapat menulis logika untuk mengambil data dari database
-            // Misalnya, menggunakan Entity Framework Core untuk mengakses database
+            List<DataModel> data = new List<DataModel>();
 
-            // Contoh sederhana: menggantikan dengan logika sesuai dengan kebutuhan Anda
-            var siapa = await _context.Surattugas.Where(b => b.Inputby == id).Include(b => b.EditbyNavigation).Include(b => b.InputbyNavigation).ToListAsync();
+            if (pengaduan == "buku")
+            {
+                var bukuData = await _context.Bukus
+                    .Where(b => b.Inputby == id)
+                    .ToListAsync();
 
-            return Ok(siapa);
+                foreach (var buku in bukuData)
+                {
+                    var pengaduanEntry = new DataModel
+                    {
+                        Id = buku.Id,
+                        Nama = buku.Judulbuku
+                    };
+
+                    data.Add(pengaduanEntry);
+                }
+            }
+            else if (pengaduan == "jurnal")
+            {
+                var jurnalData = await _context.Jurnals
+                    .Where(j => j.Inputby == id)
+                    .ToListAsync();
+
+                foreach (var buku in jurnalData)
+                {
+                    var pengaduanEntry = new DataModel
+                    {
+                        Id = buku.Id,
+                        Nama = buku.Namajurnal
+                    };
+
+                    data.Add(pengaduanEntry);
+                }
+            }
+
+            return Ok(data);
         }
+
+
     }
 }

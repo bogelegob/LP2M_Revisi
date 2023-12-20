@@ -2,7 +2,7 @@
 {
     public class DataModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Nama { get; set; }
     }
 }
