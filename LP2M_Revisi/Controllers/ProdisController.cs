@@ -21,7 +21,16 @@ namespace LP2M_Revisi.Controllers
         // GET: Prodis
         public async Task<IActionResult> Index()
         {
-              return _context.Prodis != null ? 
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
+            return _context.Prodis != null ? 
                           View(await _context.Prodis.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.Prodis'  is null.");
         }
@@ -30,6 +39,15 @@ namespace LP2M_Revisi.Controllers
         // GET: Prodis/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             if (id == null || _context.Prodis == null)
             {
                 return NotFound();
@@ -48,6 +66,15 @@ namespace LP2M_Revisi.Controllers
         // GET: Prodis/Create
         public IActionResult Create()
         {
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             return View();
         }
 
@@ -70,6 +97,15 @@ namespace LP2M_Revisi.Controllers
         // GET: Prodis/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             if (id == null || _context.Prodis == null)
             {
                 return NotFound();
@@ -121,6 +157,15 @@ namespace LP2M_Revisi.Controllers
         // GET: Prodis/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             if (id == null || _context.Prodis == null)
             {
                 return NotFound();

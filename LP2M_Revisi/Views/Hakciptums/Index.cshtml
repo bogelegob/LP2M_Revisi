@@ -2,14 +2,7 @@
 @{
     ViewData["Title"] = "Master Hak Cipta";
     ViewData["Routing"] = "Hak Cipta";
-    if (ViewBag.Pengguna == "Admin")
-    {
-        Layout = "_LayoutAdmin";
-    }
-    else
-    {
-        Layout = "_Layout";
-    }
+    Layout = ViewBag.Layout;
 }
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">

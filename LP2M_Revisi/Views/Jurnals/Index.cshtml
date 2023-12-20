@@ -4,14 +4,7 @@
 @{
     ViewData["Title"] = "Master Jurnal";
     ViewData["Routing"] = "Jurnal";
-    if (ViewBag.Pengguna == "Admin")
-    {
-        Layout = "_LayoutAdmin";
-    }
-    else
-    {
-        Layout = "_Layout";
-    }
+    Layout = ViewBag.Layout;
 }
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">

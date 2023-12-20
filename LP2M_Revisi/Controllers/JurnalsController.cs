@@ -95,6 +95,15 @@ namespace LP2M_Revisi.Controllers
         // GET: Jurnals/Create
         public IActionResult Create()
         {
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             Jurnal jurnal = new Jurnal();
             jurnal.Id = GenerateNextId();
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama");
@@ -136,7 +145,15 @@ namespace LP2M_Revisi.Controllers
             {
                 return NotFound();
             }
-
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             var jurnal = await _context.Jurnals.FindAsync(id);
             if (jurnal == null)
             {
@@ -187,6 +204,15 @@ namespace LP2M_Revisi.Controllers
         // GET: Jurnals/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             if (id == null || _context.Jurnals == null)
             {
                 return NotFound();

@@ -21,6 +21,15 @@ namespace LP2M_Revisi.Controllers
         // GET: Penggunas
         public async Task<IActionResult> Index()
         {
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             var applicationDbContext = _context.Penggunas.Include(p => p.ProdiNavigation);
             return View(await applicationDbContext.ToListAsync());
         }
@@ -51,6 +60,15 @@ namespace LP2M_Revisi.Controllers
         // GET: Penggunas/Details/5
         public async Task<IActionResult> Details(string id)
         {
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             if (id == null || _context.Penggunas == null)
             {
                 return NotFound();
@@ -70,6 +88,15 @@ namespace LP2M_Revisi.Controllers
         // GET: Penggunas/Create
         public IActionResult Create()
         {
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             ViewData["Prodi"] = new SelectList(_context.Prodis, "Id", "Nama");
             return View();
         }
@@ -94,6 +121,15 @@ namespace LP2M_Revisi.Controllers
         // GET: Penggunas/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             if (id == null || _context.Penggunas == null)
             {
                 return NotFound();
@@ -147,6 +183,15 @@ namespace LP2M_Revisi.Controllers
         // GET: Penggunas/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             if (id == null || _context.Penggunas == null)
             {
                 return NotFound();

@@ -22,8 +22,6 @@ namespace LP2M_Revisi.Controllers
         {
             Pengguna penggunaModel;
             string serializedModel = HttpContext.Session.GetString("Identity");
-            var Role = HttpContext.Session.GetString("selectedRole");
-            Console.WriteLine(serializedModel);
             if (serializedModel == null)
             {
                 return RedirectToAction("Index", "Login");
@@ -31,6 +29,15 @@ namespace LP2M_Revisi.Controllers
             else
             {
                 penggunaModel = JsonConvert.DeserializeObject<Pengguna>(serializedModel);
+            }
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
             }
             int totalSuratTugas = _context.Surattugas.Count();
             ViewData["TotalSuratTugas"] = totalSuratTugas;
@@ -40,8 +47,15 @@ namespace LP2M_Revisi.Controllers
         {
             Pengguna penggunaModel;
             string serializedModel = HttpContext.Session.GetString("Identity");
-            var Role = HttpContext.Session.GetString("selectedRole");
-            Console.WriteLine(serializedModel);
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             if (serializedModel == null)
             {
                 return RedirectToAction("Index", "Login");

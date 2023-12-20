@@ -25,7 +25,7 @@ namespace LP2M_Revisi.Controllers
         {
             Pengguna penggunaModel;
             string serializedModel = HttpContext.Session.GetString("Identity");
-            string Role = HttpContext.Session.GetString("selectedRole");
+            
             if (serializedModel == null)
             {
                 return RedirectToAction("Index", "Login");
@@ -38,7 +38,7 @@ namespace LP2M_Revisi.Controllers
             {
                 return RedirectToAction("Index", "Login");
             }
-            
+            string Role = HttpContext.Session.GetString("selectedRole");
             if (Role == "Admin")
             {
                 ViewBag.Layout = "_LayoutAdmin";
@@ -175,7 +175,7 @@ namespace LP2M_Revisi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Namakegiatan,Masapelaksanaan,Status,Inputby,Inputdate,Editby,Editdate,Surattugas")] Surattuga surattuga, IFormFile Buktipendukung, List<string> selectedUserIds)
+        public async Task<IActionResult> Create([Bind("Id,Namakegiatan,Masapelaksanaan,Status,Inputby,Inputdate,Editby,Editdate,Surattugas")] Surattuga surattuga, IFormFile Buktipendukung, string SelectedUserIds)
         {
             if (ModelState.IsValid)
             {
@@ -191,14 +191,23 @@ namespace LP2M_Revisi.Controllers
                 surattuga.Id = GenerateNextId();
 
                 // Menangani pengguna yang dipilih
-                if (selectedUserIds != null && selectedUserIds.Any())
-                {
-                    foreach (var userId in selectedUserIds)
-                    {
-                        surattuga.Idpenggunas.Add(new Pengguna { Id = userId });
-                    }
-                }
+                string[] selectedIdsArray = SelectedUserIds.Split(',');
 
+                /*foreach (var userId in selectedIdsArray)
+                {
+                    if (!string.IsNullOrEmpty(userId))
+                    {
+                        // Buat objek Detailbuku dan set nilainya
+                        var detailBuku = new Detailsurattugas
+                        {
+                            Idsurattugas = surattuga.Id, // Sesuaikan dengan properti yang sesuai
+                            Idpengguna = userId
+                        };
+
+                        // Tambahkan objek Detailbuku ke konteks
+                        _context.Detailsurattugas.Add(detailBuku);
+                    }
+                }*/
                 if (Buktipendukung != null && Buktipendukung.Length > 0)
                 {
                     surattuga.Namafile = Buktipendukung.FileName;
@@ -222,7 +231,7 @@ namespace LP2M_Revisi.Controllers
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", surattuga.Inputby);
 
             // Semua pengguna untuk pilihan many-to-many
-            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama", selectedUserIds);
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
             return View(surattuga);
         }
 
@@ -328,7 +337,15 @@ namespace LP2M_Revisi.Controllers
             {
                 return NotFound();
             }
-
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             var surattuga = await _context.Surattugas
                 .Include(s => s.EditbyNavigation)
                 .Include(s => s.InputbyNavigation)
