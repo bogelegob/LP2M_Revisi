@@ -215,6 +215,15 @@ namespace LP2M_Revisi.Controllers
         // GET: Seminars/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             if (id == null || _context.Seminars == null)
             {
                 return NotFound();

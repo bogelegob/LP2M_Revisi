@@ -59,7 +59,6 @@ namespace LP2M_Revisi.Controllers
         {
             Pengguna penggunaModel;
             string serializedModel = HttpContext.Session.GetString("Identity");
-            Console.WriteLine(serializedModel);
             if (serializedModel == null)
             {
                 return RedirectToAction("Index", "Login");
@@ -72,7 +71,8 @@ namespace LP2M_Revisi.Controllers
             {
                 return RedirectToAction("Index", "Login");
             }
-            if (penggunaModel.Role == "Admin")
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
             {
                 ViewBag.Layout = "_LayoutAdmin";
             }
@@ -145,6 +145,15 @@ namespace LP2M_Revisi.Controllers
             {
                 return RedirectToAction("Index", "Login");
             }
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             Pengaduan pengaduan = new Pengaduan();
             
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama");
@@ -187,6 +196,15 @@ namespace LP2M_Revisi.Controllers
             if (id == null || _context.Pengaduan == null)
             {
                 return NotFound();
+            }
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
             }
 
             var pengaduan = await _context.Pengaduan

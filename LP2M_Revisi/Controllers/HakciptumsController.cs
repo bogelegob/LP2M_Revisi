@@ -80,7 +80,15 @@ namespace LP2M_Revisi.Controllers
             {
                 return NotFound();
             }
-
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             var hakciptum = await _context.Hakcipta
                 .Include(h => h.EditbyNavigation)
                 .Include(h => h.InputbyNavigation)
@@ -96,6 +104,15 @@ namespace LP2M_Revisi.Controllers
         // GET: Hakciptums/Create
         public IActionResult Create()
         {
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             Hakciptum hakciptum = new Hakciptum();
             hakciptum.Id = GenerateNextId();
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama");
@@ -137,7 +154,15 @@ namespace LP2M_Revisi.Controllers
             {
                 return NotFound();
             }
-
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             var hakciptum = await _context.Hakcipta.FindAsync(id);
             if (hakciptum == null)
             {
@@ -192,7 +217,15 @@ namespace LP2M_Revisi.Controllers
             {
                 return NotFound();
             }
-
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             var hakciptum = await _context.Hakcipta
                 .Include(h => h.EditbyNavigation)
                 .Include(h => h.InputbyNavigation)

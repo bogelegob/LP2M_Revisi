@@ -291,7 +291,15 @@ namespace LP2M_Revisi.Controllers
             {
                 return NotFound();
             }
-
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             var pengabdianmasyarakat = await _context.Pengabdianmasyarakats
                 .Include(p => p.EditbyNavigation)
                 .Include(p => p.InputbyNavigation)

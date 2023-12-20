@@ -10,47 +10,49 @@
 }
 
 <form asp-action="Create" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="card">
         <div class="card-header">
             <label><b>Tambah Surat Tugas</b></label>
         </div>
-        <div class="card-body">
-            <div class="container-fluid">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label asp-for="Namakegiatan" class="control-label">Nama Kegiatan</label>
-                            <input asp-for="Namakegiatan" class="form-control" required />
-                            <span asp-validation-for="Namakegiatan" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label asp-for="Masapelaksanaan" class="control-label">Masa Pelaksanaan</label>
-                            <input asp-for="Masapelaksanaan" class="form-control" required />
-                            <span asp-validation-for="Masapelaksanaan" class="text-danger"></span>
-                        </div>
+        <div class="card-block">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Namakegiatan" class="control-label">Nama Kegiatan</label>
+                        <input asp-for="Namakegiatan" class="form-control" required />
+                        <span asp-validation-for="Namakegiatan" class="text-danger"></span>
                     </div>
                 </div>
-                
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label asp-for="Idpenggunas" class="control-label">Pilih Pengguna</label>
-                            <select asp-for="Idpenggunas" class="form-control" asp-items="@listPengguna" multiple id="selectedUsers"></select>
-                            <span asp-validation-for="Idpenggunas" class="text-danger"></span>
-                        </div>
-                    </div>
+            
 
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label for="selectedUsersTextarea">Selected Users</label>
-                            <textarea id="selectedUsersTextarea" class="form-control" readonly></textarea>
-                        </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Masapelaksanaan" class="control-label">Masa Pelaksanaan</label>
+                        <input asp-for="Masapelaksanaan" class="form-control" required />
+                        <span asp-validation-for="Masapelaksanaan" class="text-danger"></span>
                     </div>
                 </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="listPengguna" class="control-label">Pilih Pengguna</label>
+                            <!-- Gunakan data pengguna yang dikirim dari controller untuk membuat dropdown -->
+                        <select id="listPengguna" asp-items="@ViewBag.ListPengguna" class="form-control"></select>
+                        <a id="btnTambahPengguna" class="btn btn-secondary">Tambah Pengguna</a>
+                    </div>
+                </div>
+
+                    <!-- Tambahkan textarea untuk menampilkan data pengguna yang dipilih -->
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="selectedUsers" class="control-label">Data Pengguna yang Dipilih</label>
+                        <textarea id="selectedUsers" class="form-control" rows="4" readonly></textarea>
+                    </div>
+                </div>
+                    <div class="form-group">
+                        <input type="hidden" id="selectedUserIds" name="SelectedUserIds" />
+                    </div>
+            </div>
                     <div class="form-group">
                         <input type="button" id="hapus" value="Hapus" class="btn btn-danger" />
                     </div>
@@ -65,7 +67,6 @@
                     <button type="submit" class="btn btn-primary float-left">Create</button>
                     <a asp-action="Index" class="btn btn-secondary float-right">Back to List</a>
                 </div>
-            </div>
         </div>
     </div>
 </form>
@@ -74,52 +75,30 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         // Mendapatkan elemen-elemen HTML yang diperlukan
-        const selectPengguna = document.getElementById('selectedUsers');
-        const textareaSelectedUsers = document.getElementById('selectedUsersTextarea');
-        const buttonHapus = document.getElementById('hapus');
+        document.getElementById('btnTambahPengguna').addEventListener('click', function () {
+            var selectedOption = document.getElementById('listPengguna').options[document.getElementById('listPengguna').selectedIndex];
+            var currentText = document.getElementById('selectedUsers');
+            var currentId = document.getElementById('selectedUserIds');
 
-        // Inisialisasi array untuk menyimpan pengguna yang dipilih
-        let selectedUsers = [];
+            // Update the textarea with the selected user's data
+            currentText.value += selectedOption.text + '\n';
 
-        // Menangani perubahan pada elemen select
-        selectPengguna.addEventListener('change', function () {
-            // Mendapatkan opsi yang dipilih
-            const newlySelectedUsers = Array.from(selectPengguna.selectedOptions).map(option => option.text);
-            // Mengupdate nilai textarea dengan semua pengguna yang dipilih
-            textareaSelectedUsers.value = selectedUsers.join(', ');
+            // Update the selectedIdUsers input with the selected user's id
+            currentId.value += selectedOption.value + ',';
         });
+        document.getElementById('hapus').addEventListener('click', function () {
+            var currentText = document.getElementById('selectedUsers');
+            var currentId = document.getElementById('selectedUserIds');
 
-        // Menangani klik pada opsi (pengguna)
-        selectPengguna.addEventListener('click', function (event) {
-            if (event.target.tagName === 'OPTION') {
-                const clickedUser = event.target.text;
+            // Hapus baris terakhir dari textarea
+            var lines = currentText.value.split('\n');
+            lines.pop();
+            currentText.value = lines.join('\n');
 
-                // Menambahkan pengguna yang diklik ke dalam array
-                selectedUsers.push(clickedUser);
-
-                // Mengupdate nilai textarea dengan semua pengguna yang dipilih
-                textareaSelectedUsers.value = selectedUsers.join(', ');
-            }
-        });
-
-        // Menangani klik pada tombol Hapus Nama Terakhir
-        buttonHapus.addEventListener('click', function () {
-            // Menghapus nama terakhir dari array
-            selectedUsers.pop();
-
-            // Mengupdate nilai textarea dengan semua pengguna yang dipilih
-            textareaSelectedUsers.value = selectedUsers.join(', ');
-        });
-
-        // Menangani submit formulir
-        document.querySelector('form').addEventListener('submit', function (e) {
-            const buktiPendukungInput = document.querySelector('input[name="Buktipendukung"]');
-            if (buktiPendukungInput.files.length === 0) {
-                e.preventDefault(); // Mencegah pengiriman formulir jika tidak ada file yang diunggah.
-            }
-
-            // Menambahkan nilai yang dipilih ke dalam textarea sebelum mengirim formulir
-            document.getElementById('Idpenggunas').value = selectedUsers.join(',');
+            // Hapus id terakhir dari selectedUserIds
+            var ids = currentId.value.split(',');
+            ids.pop();
+            currentId.value = ids.join(',');
         });
     });
 </script>
