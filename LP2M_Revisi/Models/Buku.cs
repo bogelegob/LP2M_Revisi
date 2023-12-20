@@ -35,6 +35,7 @@ public partial class Buku
     public virtual ICollection<Detailbuku> Detailbukus { get; set; } = new List<Detailbuku>();
     public virtual ICollection<Pengaduan> BukuPengaduanNavigations { get; set; } = new List<Pengaduan>();
     
+
     public virtual Pengguna? EditbyNavigation { get; set; }
 
     public virtual Pengguna? InputbyNavigation { get; set; }

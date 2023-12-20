@@ -132,7 +132,7 @@ namespace LP2M_Revisi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Judulbuku,Isbn,Penerbit,Tahun,Status,Inputby,Inputdate,Editby,Editdate")] Buku buku, string[] selectedPenggunas)
+        public async Task<IActionResult> Create([Bind("Id,Judulbuku,Isbn,Penerbit,Tahun,Status,Inputby,Inputdate,Editby,Editdate")] Buku buku, string SelectedUserIds)
         {
             if (ModelState.IsValid)
             {
@@ -145,37 +145,29 @@ namespace LP2M_Revisi.Controllers
                 buku.Editdate = tgl;
                 buku.Status = 0;
                 _context.Add(buku);
+                string[] selectedIdsArray = SelectedUserIds.Split(',');
 
-                await _context.SaveChangesAsync();
-                Console.WriteLine(selectedPenggunas);
-                // Tambahkan pengguna terkait dengan buku
-                if (selectedPenggunas != null)
+                foreach (var userId in selectedIdsArray)
                 {
-                    foreach (var penggunaId in selectedPenggunas)
+                    if (!string.IsNullOrEmpty(userId))
                     {
-                        var penggunaTerpilih = await _context.Penggunas.FindAsync(penggunaId);
-                        if (penggunaTerpilih != null)
+                        // Buat objek Detailbuku dan set nilainya
+                        var detailBuku = new Detailbuku
                         {
-                            
+                            Idbuku = buku.Id, // Sesuaikan dengan properti yang sesuai
+                            Idpengguna = userId,
+                            Status = "Aktif" 
+                        };
 
-                            // Buat entitas DetailBuku
-                            var detailBuku = new Detailbuku
-                            {
-                                Idbuku = buku.Id,
-                                Idpengguna = penggunaTerpilih.Id,
-                                Status = "1", // Atur tanggal sesuai kebutuhan
-                                                              // Tambahkan atribut lain jika diperlukan
-                            };
-
-                            _context.Detailbukus.Add(detailBuku);
-                        }
+                        // Tambahkan objek Detailbuku ke konteks
+                        _context.Detailbukus.Add(detailBuku);
                     }
-                    await _context.SaveChangesAsync();
                 }
+                await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
-
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", buku.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", buku.Inputby);
             return View(buku);

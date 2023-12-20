@@ -19,7 +19,7 @@ namespace LP2M_Revisi.Controllers
         public IActionResult Index(string username,string password)
         {
             var pengguna = _context.Penggunas
-         .FirstOrDefault(p => p.Username == username && p.Password == password);
+            .FirstOrDefault(p => p.Username == username && p.Password == password);
 
             if (pengguna != null)
             {

@@ -56,6 +56,9 @@
             <!-- Tambahkan input tersembunyi untuk menyimpan pengguna yang dipilih -->
             <input type="hidden" id="selectedPenggunas" name="selectedPenggunas" />
             <div class="form-group">
+                <input type="hidden" id="selectedUserIds" name="SelectedUserIds" />
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -75,35 +78,17 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
-        var selectedPenggunas = []; // Array untuk menyimpan pengguna yang dipilih
-
-        // Logika JavaScript untuk menambahkan pengguna ke array selectedPenggunas
         document.getElementById('btnTambahPengguna').addEventListener('click', function () {
-            var selectedUser = document.getElementById('listPengguna').value;
-            var selectedUserName = document.getElementById('listPengguna').options[document.getElementById('listPengguna').selectedIndex].text;
+            var selectedOption = document.getElementById('listPengguna').options[document.getElementById('listPengguna').selectedIndex];
+            var currentText = document.getElementById('selectedUsers');
+            var currentId = document.getElementById('selectedUserIds');
 
-            var isAlreadySelected = selectedPenggunas.some(function (user) {
-                return user.id === selectedUser;
-            });
+            // Update the textarea with the selected user's data
+            currentText.value += selectedOption.text + '\n';
 
-            if (!isAlreadySelected) {
-                selectedPenggunas.push({ id: selectedUser, name: selectedUserName });
-
-                var textarea = document.getElementById('selectedUsers');
-                textarea.value += selectedUserName + ' (ID: ' + selectedUser + ')\n';
-
-                document.getElementById('listPengguna').querySelector('option[value="' + selectedUser + '"]').disabled = true;
-            } else {
-                alert('Pengguna sudah dipilih sebelumnya.');
-            }
-
-            // Update nilai input tersembunyi sebelum form disubmit
-            document.getElementById('selectedPenggunas').value = JSON.stringify(selectedPenggunas.map(user => user.id));
-            console.log(document.getElementById('selectedPenggunas').value);
+            // Update the selectedIdUsers input with the selected user's id
+            currentId.value += selectedOption.value + ',';
         });
-
-        // Handle submission form
-        
     </script>
 }
 
