@@ -37,18 +37,17 @@
     </div>
 </div>
 <br>
-<div class="row mb-3">
-    <div class="col-12 col-md-1">
-        <a asp-action="Create" class="btn btn-primary">
-            <i class="fa fa-plus"></i>&nbsp;Tambah
-        </a>
-    </div>
-    <br />
+<div class="row">
     <div class="col-lg-12">
         <div class="input-group">
-            <input type="text" class="form-control" id="cari" name="cari" placeholder="Pencarian" clientidmode="static">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="fa fa-plus"></i>&nbsp;Tambah
+            </a>
+            <input name="cari" type="text" id="cari" class="form-control" placeholder="Pencarian" />
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-secondary">Cari</button>
+                <a id="MainContent_linkCari" class="btn btn-secondary" href="#">
+                    <i class="fa fa-search"></i>&nbsp;Cari
+                </a>
             </span>
             <div class="input-group-btn">
                 <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" fdprocessedid="63p3so">
@@ -67,8 +66,13 @@
                     </div>
                 </div>
             </div>
+            <span>
+                <a asp-action="ExportToExcel" class="btn btn-success">
+                    <i class="fa fa-file-excel"></i>&nbsp;Export
+                </a>
+            </span>
         </div>
-    </div>
+    </div>
 </div>
 @if (TempData["SuccessMessage"] != null)
 {
@@ -108,13 +112,7 @@ else if (TempData["ErrorMessage"] != null)
                 Tanggal Input
             </th>
             <th>
-                Tanggal Edit
-            </th>
-            <th>
                 Surat Tugas
-            </th>
-            <th>
-                Edit By
             </th>
             <th>
                 Input By
@@ -156,9 +154,6 @@ else if (TempData["ErrorMessage"] != null)
                 @Html.DisplayFor(modelItem => item.Inputdate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Editdate)
-            </td>
-            <td>
                 @if(item.Surattugas == null)
                 {
                    <div>Belum ada surat Tugas</div>
@@ -167,9 +162,6 @@ else if (TempData["ErrorMessage"] != null)
                 {
                    <a asp-action="Download" asp-route-fileName="@item.Namafilesurat">@item.Namafilesurat</a>
                 }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EditbyNavigation.Nama)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.InputbyNavigation.Nama)

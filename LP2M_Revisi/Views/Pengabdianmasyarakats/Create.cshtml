@@ -7,80 +7,97 @@
     Layout = ViewBag.Layout;
 }
 
-<h1>Tambah</h1>
-
-<h4>Pengabdian Masyarakat</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+<form asp-action="Create" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="card">
+        <div class="card-header">
+            <label><b>Tambah Surat Tugas</b></label>
+        </div>
+        <div class="card-block">
+             <div class="row">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input asp-for="Id" class="form-control" type="hidden" value="@Model.Id"/>
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Namakegiatan" class="control-label">Nama Kegiatan</label>
-                <input asp-for="Namakegiatan" class="form-control" />
-                <span asp-validation-for="Namakegiatan" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Waktupelaksanaan" class="control-label">Waktu Pelaksanaan</label>
-                <input asp-for="Waktupelaksanaan" class="form-control" type="date" />
-                <span asp-validation-for="Waktupelaksanaan" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Jumlahpenerima" class="control-label">Jumlah Penerima</label>
-                <input asp-for="Jumlahpenerima" class="form-control" />
-                <span asp-validation-for="Jumlahpenerima" class="text-danger"></span>
-            </div>
-            <span id="fileValidationMessage" class="text-danger"></span>
-            <div class="form-group">
-                <label asp-for="Surattugas" class="control-label">Surat Tugas</label>
-                <input asp-for="Surattugas" class="form-control" type="file"/>
-            </div>
-            <div class="form-group">
-                <label asp-for="Laporan" class="control-label">Laporan</label>
-                <input asp-for="Laporan" class="form-control" type="file"/>
-            </div>
-            <div class="form-group">
-                <label asp-for="Buktipendukung" class="control-label">Bukti Pendukung</label>
-                <input asp-for="Buktipendukung" class="form-control" type="file"/>
-            </div>
-            <div class="form-group">
-                <label for="Mahasiswa" class="control-label">Mahasiswa</label>
-                <input id="Mahasiswa" name="Mahasiswa" class="form-control" required />
-                <button id="Mhs" name="Mhs">Kirim</button>
-            </div>
-            <div class="form-group">
-                <label for="Nim" class="control-label">Nim</label>
-                <input id="Nim" name="Nim" class="form-control" type="number" />
-                <button id="NM" name="NM">Kirim</button>
-            </div>
-            <div class="form-group">
-                <label for="Prodi" class="control-label">Prodi</label>
-                <select id="Prodi" name="Prodi" class="form-control" asp-items="ViewBag.Prodi">
-                    <option value="">-- Pilih Prodi --</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="Detail" class="control-label">Detail</label>
-                <textarea id="Detail" name="Detail" class="form-control"></textarea>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="Namakegiatan" class="control-label">Nama Kegiatan</label>
+                        <input asp-for="Namakegiatan" class="form-control" />
+                        <span asp-validation-for="Namakegiatan" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="Waktupelaksanaan" class="control-label">Waktu Pelaksanaan</label>
+                        <input asp-for="Waktupelaksanaan" class="form-control" type="date" />
+                        <span asp-validation-for="Waktupelaksanaan" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="Jumlahpenerima" class="control-label">Jumlah Penerima</label>
+                        <input asp-for="Jumlahpenerima" class="form-control" />
+                        <span asp-validation-for="Jumlahpenerima" class="text-danger"></span>
+                    </div>
+                </div>
+                <span id="fileValidationMessage" class="text-danger"></span>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="Surattugas" class="control-label">Surat Tugas</label>
+                        <input asp-for="Surattugas" class="form-control" type="file"/>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="Laporan" class="control-label">Laporan</label>
+                        <input asp-for="Laporan" class="form-control" type="file"/>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="Buktipendukung" class="control-label">Bukti Pendukung</label>
+                        <input asp-for="Buktipendukung" class="form-control" type="file"/>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="Mahasiswa" class="control-label">Mahasiswa</label>
+                        <input id="Mahasiswa" name="Mahasiswa" class="form-control" required />
+                        <button id="Mhs" name="Mhs">Kirim</button>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="Nim" class="control-label">Nim</label>
+                        <input id="Nim" name="Nim" class="form-control" type="number" />
+                        <button id="NM" name="NM">Kirim</button>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="Prodi" class="control-label">Prodi</label>
+                        <select id="Prodi" name="Prodi" class="form-control" asp-items="ViewBag.Prodi">
+                            <option value="">-- Pilih Prodi --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label for="Detail" class="control-label">Detail</label>
+                        <textarea id="Detail" name="Detail" class="form-control" readonly></textarea>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <input asp-for="MahasiswaProdiNim" class="form-control" type="hidden"/>
                 <span asp-validation-for="MahasiswaProdiNim" id="MahasiswaProdiNim" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <button type="submit" class="btn btn-primary float-left">Create</button>
+                <a asp-action="Index" class="btn btn-secondary float-right">Back to List</a>
             </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 <script>
     // Handling form submission
     document.querySelector('form').addEventListener('submit', function (e) {
@@ -122,19 +139,20 @@
 
         // Get current value of Detail textarea
         var currentDetailValue = document.getElementById('Detail').value;
-        var currentValues = currentDetailValue.split('|');
+        var currentValues = currentDetailValue.split(',');
         if (!currentDetailValue) {
-            var newDetailValue = mahasiswaValue + '|';
+            var newDetailValue = mahasiswaValue + ',';
         }
         else {
             if (currentValues.length >= 3) {
-                var newDetailValue = (currentDetailValue ? currentDetailValue + '\n' : '') + mahasiswaValue + '|';
+                var newDetailValue = (currentDetailValue ? currentDetailValue + '\n' : '') + mahasiswaValue + ',';
             } else {
-                var newDetailValue = mahasiswaValue + (currentDetailValue ? '|' + currentDetailValue : '');
+                var newDetailValue = mahasiswaValue + (currentDetailValue ? ',' + currentDetailValue : '');
             }
         }
         // Assign the concatenated value to the Detail textarea
         document.getElementById('Detail').value = newDetailValue;
+        document.getElementById('Mahasiswa').value = '';
     });
 
     // Handling Nim button click
@@ -149,7 +167,7 @@
 
         if (!currentDetailValue) {
             // Check if Mahasiswa data is already present
-            var separator = currentDetailValue.includes('|') ? '|' : '';
+            var separator = currentDetailValue.includes(',') ? ',' : '';
         } else {
             var separator = '';
         }
@@ -158,6 +176,7 @@
 
         // Assign the concatenated value to the Detail textarea
         document.getElementById('Detail').value = newDetailValue;
+        document.getElementById('Nim').value = '';
     });
 
     // Handling Prodi dropdown change
@@ -170,10 +189,10 @@
         var currentDetailValue = document.getElementById('Detail').value;
 
         // Check if Nim data is already present
-        var separator = currentDetailValue.includes('|') ? '|' : '';
+        var separator = currentDetailValue.includes(',') ? ',' : '';
 
         // Concatenate the values with |
-        var newDetailValue = currentDetailValue + (currentDetailValue ? separator + prodiValue + '|' : prodiValue + '|');
+        var newDetailValue = currentDetailValue + (currentDetailValue ? separator + prodiValue + ',' : prodiValue + '|');
 
         // Assign the concatenated value to the Detail textarea
         document.getElementById('Detail').value = newDetailValue;

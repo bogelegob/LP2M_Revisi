@@ -18,6 +18,7 @@
         <div class="card-block">
             <div class="row">
                 <div class="col-lg-6">
+                    <input asp-for="Id" class="form-control" type="hidden" value="@Model.Id"/>
                     <div class="form-group">
                         <label asp-for="Namakegiatan" class="control-label">Nama Kegiatan</label>
                         <input asp-for="Namakegiatan" class="form-control" required />
@@ -38,6 +39,7 @@
                         <label for="listPengguna" class="control-label">Pilih Pengguna</label>
                             <!-- Gunakan data pengguna yang dikirim dari controller untuk membuat dropdown -->
                         <select id="listPengguna" asp-items="@ViewBag.ListPengguna" class="form-control"></select>
+                        <br>
                         <a id="btnTambahPengguna" class="btn btn-secondary">Tambah Pengguna</a>
                     </div>
                 </div>
@@ -59,7 +61,7 @@
                 
                     <div class="form-group">
                         <label asp-for="Buktipendukung" class="control-label">Bukti Pendukung</label>
-                        <input asp-for="Buktipendukung" class="form-control" type="file" required />
+                        <input asp-for="Buktipendukung" class="form-control" type="file" name="Buktipendukung" />
                         <span asp-validation-for="Buktipendukung" class="text-danger"></span>
                     </div>
             
@@ -86,7 +88,10 @@
             // Update the selectedIdUsers input with the selected user's id
             currentId.value += selectedOption.value + ',';
         });
-        document.getElementById('hapus').addEventListener('click', function () {
+        document.getElementById('hapus').addEventListener('click', function (event) {
+            // Prevent the default behavior of the button
+            event.preventDefault();
+
             var currentText = document.getElementById('selectedUsers');
             var currentId = document.getElementById('selectedUserIds');
 

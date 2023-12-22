@@ -18,8 +18,6 @@ public partial class Surattuga
     public string? Keterangan { get; set; }
     [Required(ErrorMessage = "Masa pelaksanaan harus diisi.")]
     public string? Masapelaksanaan { get; set; }
-    /*[MaxLength()]*/
-    [Required(ErrorMessage = "Bukti Pendukung harus diisi.")]
     public byte[]? Buktipendukung { get; set; }
 
     public int? Status { get; set; }
