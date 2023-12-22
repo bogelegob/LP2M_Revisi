@@ -35,12 +35,11 @@
 <br>*@
 <div class="row mb-3">
     <div class="col-12 col-md-1">
-        @if (ViewBag.Layout == "_Layout")
-        {
-            <a asp-action="Create" class="btn btn-primary">
-                <i class="fa fa-plus"></i>&nbsp;Tambah
-            </a>
-        }
+   
+            <button class="btn btn-sm btn-danger tolak-button" data-id="@ViewBag.pengguna">
+                <i class="fa fa-times"></i>
+            </button>
+        
     </div>
     <div class="col-12 col-md-8">
         <div class="input-group">
@@ -417,14 +416,13 @@ else if (TempData["ErrorMessage"] != null)
             $("#datapengaduan").change(function () {
                 var selectedPengaduan = $(this).val();
                 var selectedId = anggotaId;// Ambil nilai ID yang sesuai dari suatu tempat (misalnya, dari elemen tertentu)
-                console.log(selectedPengaduan);
-                console.log(selectedId);
+                
                     // Lakukan AJAX untuk mengambil data berdasarkan jenis pengaduan
                     $.ajax({
                         url: "/Pengaduan/GetData?id=" + selectedId + "&pengaduan=" + selectedPengaduan,
                         type: "GET",
                         success: function (data) {
-                        console.log(data);
+                        
                             // Kosongkan select "datapengaduan" sebelum mengisinya kembali
                         $("#databro").empty();
 

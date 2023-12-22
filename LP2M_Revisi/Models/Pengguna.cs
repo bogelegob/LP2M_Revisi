@@ -26,6 +26,13 @@ public partial class Pengguna
     public virtual ICollection<Buku> BukuInputbyNavigations { get; set; } = new List<Buku>();
 
     public virtual ICollection<Detailbuku> Detailbukus { get; set; } = new List<Detailbuku>();
+    public virtual ICollection<Detailhakcipta> Detailhakciptas { get; set; } = new List<Detailhakcipta>();
+    public virtual ICollection<Detailhakpaten> Detailhakpatens { get; set; } = new List<Detailhakpaten>();
+    public virtual ICollection<Detailjurnal> Detailjurnals { get; set; } = new List<Detailjurnal>();
+    public virtual ICollection<Detailpengabdian> Detailpengabdians { get; set; } = new List<Detailpengabdian>();
+    public virtual ICollection<Detailprosiding> Detailprosidings { get; set; } = new List<Detailprosiding>();
+    public virtual ICollection<Detailseminar> Detailseminars { get; set; } = new List<Detailseminar>();
+    public virtual ICollection<Detailsurat> Detailsurats { get; set; } = new List<Detailsurat>();
 
     public virtual ICollection<Hakciptum> HakciptumEditbyNavigations { get; set; } = new List<Hakciptum>();
 
@@ -57,7 +64,7 @@ public partial class Pengguna
 
     public virtual ICollection<Surattuga> SurattugaInputbyNavigations { get; set; } = new List<Surattuga>();
 
-    public virtual ICollection<Prosiding> IdProsidings { get; set; } = new List<Prosiding>();
+   /* public virtual ICollection<Prosiding> IdProsidings { get; set; } = new List<Prosiding>();
 
     public virtual ICollection<Hakciptum> Idhakcipta { get; set; } = new List<Hakciptum>();
 
@@ -69,6 +76,6 @@ public partial class Pengguna
 
     public virtual ICollection<Seminar> Idseminars { get; set; } = new List<Seminar>();
 
-    public virtual ICollection<Surattuga> Idsurattugas { get; set; } = new List<Surattuga>();
+    public virtual ICollection<Surattuga> Idsurattugas { get; set; } = new List<Surattuga>();*/
     public virtual ICollection<Pengaduan> PenggunaPengaduanNavigations { get; set; } = new List<Pengaduan>();
 }

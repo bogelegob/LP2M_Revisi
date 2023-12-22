@@ -29,11 +29,7 @@
                 <input asp-for="Masapelaksanaan" class="form-control" />
                 <span asp-validation-for="Masapelaksanaan" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Idpenggunas" class="control-label">Pilih Pengguna</label>
-                <select asp-for="Idpenggunas" class="form-control" asp-items="@listPengguna" multiple id="selectedUsers"></select>
-                <span asp-validation-for="Idpenggunas" class="text-danger"></span>
-            </div>
+            
             <div class="form-group">
                 <input type="text" id="Idpenggunas" name="Idpenggunas" />
             </div>

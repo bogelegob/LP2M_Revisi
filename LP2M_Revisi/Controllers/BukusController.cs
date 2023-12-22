@@ -116,11 +116,7 @@ namespace LP2M_Revisi.Controllers
             }
             Buku buku = new Buku();
             buku.Id = GenerateNextId();
-            // Ambil data pengguna dari database menggunakan Entity Framework atau metode lainnya
-            /*var listPengguna = _context.Penggunas.Select(p => new { Id = p.Id, Nama = p.Nama }).ToList();
 
-            // Kirim data pengguna ke tampilan
-            ViewData["ListPengguna"] = new SelectList(listPengguna, "Id", "Nama");*/
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama");
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama");
             ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");

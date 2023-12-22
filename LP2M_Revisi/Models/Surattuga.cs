@@ -36,6 +36,5 @@ public partial class Surattuga
     public virtual Pengguna? EditbyNavigation { get; set; }
 
     public virtual Pengguna? InputbyNavigation { get; set; }
-
-    public virtual ICollection<Pengguna> Idpenggunas { get; set; } = new List<Pengguna>();
+    public virtual ICollection<Detailsurat> Detailsurats { get; set; } = new List<Detailsurat>();
 }

@@ -26,7 +26,6 @@ public partial class Hakpaten
     public virtual Pengguna? EditbyNavigation { get; set; }
 
     public virtual Pengguna? InputbyNavigation { get; set; }
-
-    public virtual ICollection<Pengguna> Idpenggunas { get; set; } = new List<Pengguna>();
     public virtual ICollection<Pengaduan> HakPatenPengaduanNavigations { get; set; } = new List<Pengaduan>();
+    public virtual ICollection<Detailhakpaten> Detailhakpatens { get; set; } = new List<Detailhakpaten>();
 }

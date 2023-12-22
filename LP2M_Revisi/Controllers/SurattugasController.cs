@@ -191,21 +191,23 @@ namespace LP2M_Revisi.Controllers
                 surattuga.Id = GenerateNextId();
 
                 // Menangani pengguna yang dipilih
-                string[] selectedIdsArray = SelectedUserIds.Split(',');
 
-                /*foreach (var userId in selectedIdsArray)
+                /*string[] selectedIdsArray = SelectedUserIds.Split(',');
+
+                foreach (var userId in selectedIdsArray)
                 {
                     if (!string.IsNullOrEmpty(userId))
                     {
                         // Buat objek Detailbuku dan set nilainya
-                        var detailBuku = new Detailsurattugas
+                        var detailBuku = new Detailbuku
                         {
-                            Idsurattugas = surattuga.Id, // Sesuaikan dengan properti yang sesuai
-                            Idpengguna = userId
+                            Idbuku = buku.Id, // Sesuaikan dengan properti yang sesuai
+                            Idpengguna = userId,
+                            Status = "Aktif"
                         };
 
                         // Tambahkan objek Detailbuku ke konteks
-                        _context.Detailsurattugas.Add(detailBuku);
+                        _context.Detailbukus.Add(detailBuku);
                     }
                 }*/
                 if (Buktipendukung != null && Buktipendukung.Length > 0)

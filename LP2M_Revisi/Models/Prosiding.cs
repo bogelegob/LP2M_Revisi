@@ -34,7 +34,6 @@ public partial class Prosiding
     public virtual Pengguna? EditbyNavigation { get; set; }
 
     public virtual Pengguna? InputbyNavigation { get; set; }
-
-    public virtual ICollection<Pengguna> IdPenggunas { get; set; } = new List<Pengguna>();
     public virtual ICollection<Pengaduan> ProsidingPengaduanNavigations { get; set; } = new List<Pengaduan>();
+    public virtual ICollection<Detailprosiding> Detailprosidings { get; set; } = new List<Detailprosiding>();
 }

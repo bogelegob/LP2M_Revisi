@@ -45,13 +45,14 @@ namespace LP2M_Revisi.Controllers
                 ViewBag.Layout = "_LayoutAdmin";
                 var pengaduan = await _context.Pengaduan.Where(b => b.pengguna == penggunaModel.Id).Include(b => b.PenggunaNavigation).ToListAsync();
                 Console.WriteLine(penggunaModel.Id);
+                ViewBag.Pengguna = penggunaModel.Id;
                 return View(pengaduan);
             }
             else
             {
                 ViewBag.Layout = "_Layout";
                 var pengaduan = await _context.Pengaduan.Where(b => b.pengguna == penggunaModel.Id).Include(b => b.PenggunaNavigation).ToListAsync();
-
+                ViewBag.Pengguna = penggunaModel.Id;
                 return View(pengaduan);
             }
         }
@@ -81,7 +82,7 @@ namespace LP2M_Revisi.Controllers
             {
                 ViewBag.Layout = "_Layout";
             }
-            ViewBag.Pengguna = penggunaModel.Role;
+            ViewBag.Pengguna = penggunaModel.Id;
             var applicationDbContext = _context.Pengaduan.Include(s => s.PenggunaNavigation).Where(s => s.Status == 1 || s.Status == 2);
             return View(await applicationDbContext.ToListAsync());
         }
@@ -473,6 +474,91 @@ namespace LP2M_Revisi.Controllers
                     {
                         Id = buku.Id,
                         Nama = buku.Namajurnal
+                    };
+
+                    data.Add(pengaduanEntry);
+                }
+            }
+            else if (pengaduan == "seminar")
+            {
+                var jurnalData = await _context.Seminars
+                    .Where(j => j.Inputby == id)
+                    .ToListAsync();
+
+                foreach (var buku in jurnalData)
+                {
+                    var pengaduanEntry = new DataModel
+                    {
+                        Id = buku.Id,
+                        Nama = buku.Judulprogram
+                    };
+
+                    data.Add(pengaduanEntry);
+                }
+            }
+            else if (pengaduan == "pengabdian")
+            {
+                var jurnalData = await _context.Pengabdianmasyarakats
+                    .Where(j => j.Inputby == id)
+                    .ToListAsync();
+
+                foreach (var buku in jurnalData)
+                {
+                    var pengaduanEntry = new DataModel
+                    {
+                        Id = buku.Id,
+                        Nama = buku.Namakegiatan
+                    };
+
+                    data.Add(pengaduanEntry);
+                }
+            }
+            else if (pengaduan == "hakcipta")
+            {
+                var jurnalData = await _context.Hakcipta
+                    .Where(j => j.Inputby == id)
+                    .ToListAsync();
+
+                foreach (var buku in jurnalData)
+                {
+                    var pengaduanEntry = new DataModel
+                    {
+                        Id = buku.Id,
+                        Nama = buku.Judul
+                    };
+
+                    data.Add(pengaduanEntry);
+                }
+            }
+            else if (pengaduan == "hakpaten")
+            {
+                var jurnalData = await _context.Hakpatens
+                    .Where(j => j.Inputby == id)
+                    .ToListAsync();
+
+                foreach (var buku in jurnalData)
+                {
+                    var pengaduanEntry = new DataModel
+                    {
+                        Id = buku.Id,
+                        Nama = buku.Judul
+                    };
+
+                    data.Add(pengaduanEntry);
+                }
+            }
+            else if (pengaduan == "prosiding")
+            {
+                var jurnalData = await _context.Prosidings
+                    .Where(j => j.Inputby == id)
+                    .ToListAsync();
+
+                foreach (var buku in jurnalData)
+                {
+                    var pengaduanEntry = new DataModel
+                    {
+                        Id = buku.Id,
+                        Nama = buku.Judulprogram
                     };
 
                     data.Add(pengaduanEntry);

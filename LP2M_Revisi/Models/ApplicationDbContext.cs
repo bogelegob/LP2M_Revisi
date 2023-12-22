@@ -16,9 +16,14 @@ public partial class ApplicationDbContext : DbContext
     }
 
     public virtual DbSet<Buku> Bukus { get; set; }
-
     public virtual DbSet<Detailbuku> Detailbukus { get; set; }
-
+    public virtual DbSet<Detailhakcipta> Detailhakciptas { get; set; }
+    public virtual DbSet<Detailhakpaten> Detailhakpatens { get; set; }
+    public virtual DbSet<Detailjurnal> Detailjurnals { get; set; }
+    public virtual DbSet<Detailpengabdian> Detailpengabdians { get; set; }
+    public virtual DbSet<Detailprosiding> Detailprosidings { get; set; }
+    public virtual DbSet<Detailseminar> Detailseminars { get; set; }
+    public virtual DbSet<Detailsurat> Detailsurats { get; set; }
     public virtual DbSet<Hakciptum> Hakcipta { get; set; }
 
     public virtual DbSet<Hakpaten> Hakpatens { get; set; }
@@ -169,31 +174,32 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.InputbyNavigation).WithMany(p => p.HakciptumInputbyNavigations)
                 .HasForeignKey(d => d.Inputby)
                 .HasConstraintName("FK_hakciptas_s");
+        });
 
-            entity.HasMany(d => d.Idpenggunas).WithMany(p => p.Idhakcipta)
-                .UsingEntity<Dictionary<string, object>>(
-                    "Detailhakciptum",
-                    r => r.HasOne<Pengguna>().WithMany()
-                        .HasForeignKey("Idpengguna")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_detailhakcipta_pengguna"),
-                    l => l.HasOne<Hakciptum>().WithMany()
-                        .HasForeignKey("Idhakcipta")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_detailhakcipta_hakcipta"),
-                    j =>
-                    {
-                        j.HasKey("Idhakcipta", "Idpengguna");
-                        j.ToTable("detailhakcipta");
-                        j.IndexerProperty<string>("Idhakcipta")
-                            .HasMaxLength(6)
-                            .IsUnicode(false)
-                            .HasColumnName("idhakcipta");
-                        j.IndexerProperty<string>("Idpengguna")
-                            .HasMaxLength(6)
-                            .IsUnicode(false)
-                            .HasColumnName("idpengguna");
-                    });
+        modelBuilder.Entity<Detailhakcipta>(entity =>
+        {
+            entity.HasKey(e => new { e.Idhakcipta, e.Idpengguna });
+
+            entity.ToTable("detailhakcipta");
+
+            entity.Property(e => e.Idhakcipta)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idhakcipta");
+            entity.Property(e => e.Idpengguna)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idpengguna");
+
+            entity.HasOne(d => d.IdbukuNavigation).WithMany(p => p.Detailhakciptas)
+                .HasForeignKey(d => d.Idhakcipta)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_detailhakcipta_hakcipta");
+
+            entity.HasOne(d => d.IdpenggunaNavigation).WithMany(p => p.Detailhakciptas)
+                .HasForeignKey(d => d.Idpengguna)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_detailhakcipta_pengguna");
         });
 
         modelBuilder.Entity<Hakpaten>(entity =>
@@ -239,7 +245,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.Inputby)
                 .HasConstraintName("FK_hakpatens_s");
 
-            entity.HasMany(d => d.Idpenggunas).WithMany(p => p.Idhakpatens)
+            /*entity.HasMany(d => d.Idpenggunas).WithMany(p => p.Idhakpatens)
                 .UsingEntity<Dictionary<string, object>>(
                     "Detailhakpaten",
                     r => r.HasOne<Pengguna>().WithMany()
@@ -262,7 +268,33 @@ public partial class ApplicationDbContext : DbContext
                             .HasMaxLength(6)
                             .IsUnicode(false)
                             .HasColumnName("idpengguna");
-                    });
+                    });*/
+        });
+
+        modelBuilder.Entity<Detailhakpaten>(entity =>
+        {
+            entity.HasKey(e => new { e.Idhakpaten, e.Idpengguna });
+
+            entity.ToTable("detailhakpaten");
+
+            entity.Property(e => e.Idhakpaten)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idhakpaten");
+            entity.Property(e => e.Idpengguna)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idpengguna");
+
+            entity.HasOne(d => d.IdbukuNavigation).WithMany(p => p.Detailhakpatens)
+                .HasForeignKey(d => d.Idhakpaten)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_detailhakpaten_hakpaten");
+
+            entity.HasOne(d => d.IdpenggunaNavigation).WithMany(p => p.Detailhakpatens)
+                .HasForeignKey(d => d.Idpengguna)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_detailhakpaten_pengguna");
         });
 
         modelBuilder.Entity<Jurnal>(entity =>
@@ -321,7 +353,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.Inputby)
                 .HasConstraintName("FK_jurnals_s");
 
-            entity.HasMany(d => d.Idpenggunas).WithMany(p => p.Idjurnals)
+            /*entity.HasMany(d => d.Idpenggunas).WithMany(p => p.Idjurnals)
                 .UsingEntity<Dictionary<string, object>>(
                     "Detailjurnal",
                     r => r.HasOne<Pengguna>().WithMany()
@@ -344,7 +376,33 @@ public partial class ApplicationDbContext : DbContext
                             .HasMaxLength(6)
                             .IsUnicode(false)
                             .HasColumnName("idpengguna");
-                    });
+                    });*/
+        });
+
+        modelBuilder.Entity<Detailjurnal>(entity =>
+        {
+            entity.HasKey(e => new { e.Idjurnal, e.Idpengguna });
+
+            entity.ToTable("detailjurnal");
+
+            entity.Property(e => e.Idjurnal)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idjurnal");
+            entity.Property(e => e.Idpengguna)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idpengguna");
+
+            entity.HasOne(d => d.IdbukuNavigation).WithMany(p => p.Detailjurnals)
+                .HasForeignKey(d => d.Idjurnal)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_detailjurnal_jurnal");
+
+            entity.HasOne(d => d.IdpenggunaNavigation).WithMany(p => p.Detailjurnals)
+                .HasForeignKey(d => d.Idpengguna)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_detailjurnal_pengguna");
         });
 
         modelBuilder.Entity<Pengabdianmasyarakat>(entity =>
@@ -406,7 +464,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.Inputby)
                 .HasConstraintName("FK_pengabdianmasyarakats_s");
 
-            entity.HasMany(d => d.Idpenggunas).WithMany(p => p.Idpengabdians)
+            /*entity.HasMany(d => d.Idpenggunas).WithMany(p => p.Idpengabdians)
                 .UsingEntity<Dictionary<string, object>>(
                     "Detailpengabdian",
                     r => r.HasOne<Pengguna>().WithMany()
@@ -429,7 +487,33 @@ public partial class ApplicationDbContext : DbContext
                             .HasMaxLength(6)
                             .IsUnicode(false)
                             .HasColumnName("idpengguna");
-                    });
+                    });*/
+        });
+
+        modelBuilder.Entity<Detailpengabdian>(entity =>
+        {
+            entity.HasKey(e => new { e.Idpengabdian, e.Idpengguna });
+
+            entity.ToTable("detailpengabdian");
+
+            entity.Property(e => e.Idpengabdian)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idpengabdian");
+            entity.Property(e => e.Idpengguna)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idpengguna");
+
+            entity.HasOne(d => d.IdbukuNavigation).WithMany(p => p.Detailpengabdians)
+                .HasForeignKey(d => d.Idpengabdian)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_detailpengabdian_pengabdianmasyarakat");
+
+            entity.HasOne(d => d.IdpenggunaNavigation).WithMany(p => p.Detailpengabdians)
+                .HasForeignKey(d => d.Idpengguna)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_detailpengabdian_pengguna");
         });
 
         modelBuilder.Entity<Pengguna>(entity =>
@@ -470,7 +554,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.Prodi)
                 .HasConstraintName("FK_pengguna_prodi");
 
-            entity.HasMany(d => d.IdProsidings).WithMany(p => p.IdPenggunas)
+            /*entity.HasMany(d => d.IdProsidings).WithMany(p => p.IdPenggunas)
                 .UsingEntity<Dictionary<string, object>>(
                     "Detailprosiding",
                     r => r.HasOne<Prosiding>().WithMany()
@@ -493,7 +577,7 @@ public partial class ApplicationDbContext : DbContext
                             .HasMaxLength(6)
                             .IsUnicode(false)
                             .HasColumnName("id_prosiding");
-                    });
+                    });*/
         });
 
         modelBuilder.Entity<Prodi>(entity =>
@@ -567,6 +651,32 @@ public partial class ApplicationDbContext : DbContext
                 .HasConstraintName("FK_prosidings_s");
         });
 
+        modelBuilder.Entity<Detailprosiding>(entity =>
+        {
+            entity.HasKey(e => new { e.Idprosiding, e.Idpengguna });
+
+            entity.ToTable("detailprosiding");
+
+            entity.Property(e => e.Idprosiding)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("id_prosiding");
+            entity.Property(e => e.Idpengguna)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("id_pengguna");
+
+            entity.HasOne(d => d.IdbukuNavigation).WithMany(p => p.Detailprosidings)
+                .HasForeignKey(d => d.Idprosiding)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_detailprosiding_prosiding");
+
+            entity.HasOne(d => d.IdpenggunaNavigation).WithMany(p => p.Detailprosidings)
+                .HasForeignKey(d => d.Idpengguna)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_detailprosiding_pengguna");
+        });
+
         modelBuilder.Entity<Seminar>(entity =>
         {
             entity.ToTable("seminar");
@@ -626,7 +736,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.Inputby)
                 .HasConstraintName("FK_seminars_s");
 
-            entity.HasMany(d => d.Idpenggunas).WithMany(p => p.Idseminars)
+            /*entity.HasMany(d => d.Idpenggunas).WithMany(p => p.Idseminars)
                 .UsingEntity<Dictionary<string, object>>(
                     "Detailseminar",
                     r => r.HasOne<Pengguna>().WithMany()
@@ -649,7 +759,33 @@ public partial class ApplicationDbContext : DbContext
                             .HasMaxLength(6)
                             .IsUnicode(false)
                             .HasColumnName("idpengguna");
-                    });
+                    });*/
+        });
+
+        modelBuilder.Entity<Detailseminar>(entity =>
+        {
+            entity.HasKey(e => new { e.Idseminar, e.Idpengguna });
+
+            entity.ToTable("detailseminar");
+
+            entity.Property(e => e.Idseminar)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idseminar");
+            entity.Property(e => e.Idpengguna)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idpengguna");
+
+            entity.HasOne(d => d.IdbukuNavigation).WithMany(p => p.Detailseminars)
+                .HasForeignKey(d => d.Idseminar)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_detailseminar_seminar");
+
+            entity.HasOne(d => d.IdpenggunaNavigation).WithMany(p => p.Detailseminars)
+                .HasForeignKey(d => d.Idpengguna)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_detailseminar_pengguna");
         });
 
         modelBuilder.Entity<Surattuga>(entity =>
@@ -709,7 +845,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.Inputby)
                 .HasConstraintName("FK_surattugas_s");
 
-            entity.HasMany(d => d.Idpenggunas).WithMany(p => p.Idsurattugas)
+            /*entity.HasMany(d => d.Idpenggunas).WithMany(p => p.Idsurattugas)
                 .UsingEntity<Dictionary<string, object>>(
                     "Detailsurattuga",
                     r => r.HasOne<Pengguna>().WithMany()
@@ -732,7 +868,33 @@ public partial class ApplicationDbContext : DbContext
                             .HasMaxLength(6)
                             .IsUnicode(false)
                             .HasColumnName("idpengguna");
-                    });
+                    });*/
+        });
+
+        modelBuilder.Entity<Detailsurat>(entity =>
+        {
+            entity.HasKey(e => new { e.Idsurat, e.Idpengguna });
+
+            entity.ToTable("detailsurattugas");
+
+            entity.Property(e => e.Idsurat)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idsurattugas");
+            entity.Property(e => e.Idpengguna)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasColumnName("idpengguna");
+
+            entity.HasOne(d => d.IdbukuNavigation).WithMany(p => p.Detailsurats)
+                .HasForeignKey(d => d.Idsurat)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_detailsurattugas_surattugas");
+
+            entity.HasOne(d => d.IdpenggunaNavigation).WithMany(p => p.Detailsurats)
+                .HasForeignKey(d => d.Idpengguna)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_detailsurattugas_pengguna");
         });
 
         modelBuilder.Entity<Pengaduan>(entity =>

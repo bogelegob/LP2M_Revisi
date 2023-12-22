@@ -184,9 +184,13 @@
                     <i class="fa fa-users fa-lg fa-pull-left"></i>Pengabdian Masyarakat
                 </a>
 
-                <a asp-controller="Pengaduan" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">
-                    <i class="fa fa-users fa-lg fa-pull-left"></i>Pengaduan
+                <a href="#" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;" id="pengaduanMenu">
+                    <i class="fa fa-book fa-lg fa-pull-left"></i>Pengaduan
                 </a>
+                <ul id="pengaduanOptions" style="display: none;list-style-type: none;">
+                    <li><a asp-controller="Pengaduan" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Pengaduan</a></li>
+                    <li><a asp-controller="Pengaduan" asp-action="Konfirmasi" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Konfirmasi Pengaduan</a></li>
+                </ul>
 
                 <a href="#" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;" id="publikasiMenu">
                     <i class="fa fa-chevron-right fa-lg fa-pull-left"></i> Publikasi
@@ -198,14 +202,6 @@
                     <li><a asp-controller="Seminars" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Seminar</a></li>
                     <li><a asp-controller="Hakciptums" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Hak Cipta</a></li>
                     <li><a asp-controller="Hakpatens" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Hak Paten</a></li>
-                </ul>
-
-                <a href="#" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;" id="pengaduanMenu">
-                    <i class="fa fa-book fa-lg fa-pull-left"></i>Pengaduan
-                </a>
-                <ul id="pengaduanOptions" style="display: none;list-style-type: none;">
-                    <li><a asp-controller="Pengaduan" asp-action="Index" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Pengaduan</a></li>
-                    <li><a asp-controller="Pengaduan" asp-action="Konfirmasi" class="list-group-item list-group-item-action" style="border-radius: 0px; border: none; padding-left: 22px; display: inherit;">Konfirmasi Pengaduan</a></li>
                 </ul>
             </div>
         </div>

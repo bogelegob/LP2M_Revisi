@@ -45,7 +45,6 @@ public partial class Jurnal
     public virtual Pengguna? EditbyNavigation { get; set; }
 
     public virtual Pengguna? InputbyNavigation { get; set; }
-
-    public virtual ICollection<Pengguna> Idpenggunas { get; set; } = new List<Pengguna>();
     public virtual ICollection<Pengaduan> JurnalPengaduanNavigations { get; set; } = new List<Pengaduan>();
+    public virtual ICollection<Detailjurnal> Detailjurnals { get; set; } = new List<Detailjurnal>();
 }

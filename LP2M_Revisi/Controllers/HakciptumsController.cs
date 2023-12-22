@@ -46,7 +46,7 @@ namespace LP2M_Revisi.Controllers
                 ViewBag.Layout = "_Layout";
             }
             ViewBag.Pengguna = penggunaModel.Role;
-            var applicationDbContext = _context.Hakcipta.Include(h => h.EditbyNavigation).Include(h => h.InputbyNavigation).Where(h => h.Status == 1);
+            var applicationDbContext = _context.Hakcipta.Include(h => h.EditbyNavigation).Include(h => h.InputbyNavigation);
             return View(await applicationDbContext.ToListAsync());
         }
         public string GenerateNextId()
@@ -117,6 +117,7 @@ namespace LP2M_Revisi.Controllers
             hakciptum.Id = GenerateNextId();
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama");
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama");
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
             return View(hakciptum);
         }
 
@@ -125,8 +126,17 @@ namespace LP2M_Revisi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Judul,Noaplikasi,Nosertifikat,Keterangan,Status,Inputby,Inputdate,Editby,Editdate")] Hakciptum hakciptum)
+        public async Task<IActionResult> Create([Bind("Id,Judul,Noaplikasi,Nosertifikat,Keterangan,Status,Inputby,Inputdate,Editby,Editdate")] Hakciptum hakciptum, string SelectedUserIds)
         {
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             if (ModelState.IsValid)
             {
                 var serializedModel = HttpContext.Session.GetString("Identity");
@@ -139,9 +149,27 @@ namespace LP2M_Revisi.Controllers
                 hakciptum.Status = 1;
                 hakciptum.Id = GenerateNextId();
                 _context.Add(hakciptum);
+                string[] selectedIdsArray = SelectedUserIds.Split(',');
+
+                foreach (var userId in selectedIdsArray)
+                {
+                    if (!string.IsNullOrEmpty(userId))
+                    {
+                        // Buat objek Detailbuku dan set nilainya
+                        var detailhakcipta = new Detailhakcipta
+                        {
+                            Idhakcipta = hakciptum.Id, // Sesuaikan dengan properti yang sesuai
+                            Idpengguna = userId
+                        };
+
+                        // Tambahkan objek Detailbuku ke konteks
+                        _context.Detailhakciptas.Add(detailhakcipta);
+                    }
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", hakciptum.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", hakciptum.Inputby);
             return View(hakciptum);
