@@ -132,7 +132,7 @@ namespace LP2M_Revisi.Controllers
             {
                 return NotFound();
             }
-
+            Console.WriteLine(surattuga.Editby);
             return View(surattuga);
         }
 
