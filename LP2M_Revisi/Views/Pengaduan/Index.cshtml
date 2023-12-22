@@ -351,7 +351,6 @@ else if (TempData["ErrorMessage"] != null)
 
         $(".tolak-button").click(function () {
             var anggotaId = $(this).data("id");
-            console.log(anggotaId);
 
             // Tampilkan Modal Tolak
             $("#tolakModal").modal("show");
@@ -366,8 +365,12 @@ else if (TempData["ErrorMessage"] != null)
             $("#tolakSubmit").off("click").on("click", function () {
                 var jenis = $("#jenispengaduan").val();
                 var tipe = $("#datapengaduan").val();
+                var databro = $("#databro").val();
                 var alasan = $("#alasan").val();
-
+                console.log(jenis);
+                console.log(tipe);
+                console.log(databro);
+                console.log(alasan);
 
                 if (!alasan) {
                     Swal.fire("Peringatan!", "Masukkan alasan Pengaduan.", "warning");
@@ -383,9 +386,19 @@ else if (TempData["ErrorMessage"] != null)
 
                 // Lakukan aksi Tolak
                 $.ajax({
-                    url: "/Pengaduan/Create/" + anggotaId,
+                    url: "/Pengaduan/Create/",
                     type: "POST",
-                    data: { alasan: alasan }, // Kirim alasan ke server
+                    data: {
+                        jenis: tipe,
+                        hakpaten: databro,
+                        hakcipta: databro,
+                        jurnal: databro,
+                        buku: databro,
+                        prosiding: databro,
+                        pengabdian: databro,
+                        seminar: databro,
+                        alasan: alasan
+                    },
                     success: function (data) {
                         if (data.success) {
                             Swal.fire("Sukses!", data.message, "success");
@@ -403,7 +416,7 @@ else if (TempData["ErrorMessage"] != null)
             // Tangani perubahan pada select "jenispengaduan"
             $("#datapengaduan").change(function () {
                 var selectedPengaduan = $(this).val();
-                var selectedId = "USR001";// Ambil nilai ID yang sesuai dari suatu tempat (misalnya, dari elemen tertentu)
+                var selectedId = anggotaId;// Ambil nilai ID yang sesuai dari suatu tempat (misalnya, dari elemen tertentu)
                 console.log(selectedPengaduan);
                 console.log(selectedId);
                     // Lakukan AJAX untuk mengambil data berdasarkan jenis pengaduan
@@ -420,7 +433,7 @@ else if (TempData["ErrorMessage"] != null)
 
                             if (data && data.length > 0) {
                                 $.each(data, function (index, item) {
-                                $("#databro").append('<option value="' + item.Id + '">' + item.Id + '</option>');
+                                $("#databro").append('<option value="' + item.id + '">' + item.nama + '</option>');
                                 });
                             } else {
                             $("#databro").append('<option value="">Tidak ada data</option>');

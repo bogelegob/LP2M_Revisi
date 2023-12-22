@@ -17,6 +17,8 @@ namespace LP2M_Revisi.Models
         public DateTime? createdate { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
         public DateTime? updatedate { get; set; }
+        public int? Status { get; set; }
+        public string? Keterangan { get; set; }
         public virtual Pengguna? PenggunaNavigation { get; set; }
         public virtual Prosiding? ProsidingNavigation { get; set; }
         public virtual Seminar? SeminarNavigation { get; set; }
@@ -25,7 +27,6 @@ namespace LP2M_Revisi.Models
         public virtual Hakpaten? HakpatenNavigation { get; set; }
         public virtual Pengabdianmasyarakat? PengabdianmasyarakatNavigation { get; set; }
         public virtual Buku? BukuNavigation { get; set; }
-        public int? Status { get; set; }
-        public string? Keterangan { get; set; }
+        
     }
 }

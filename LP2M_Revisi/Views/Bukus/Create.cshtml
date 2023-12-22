@@ -54,6 +54,8 @@
                 <label for="selectedUsers" class="control-label">Data Pengguna yang Dipilih</label>
                 <textarea id="selectedUsers" class="form-control" rows="4" readonly></textarea>
             </div>
+            <!-- Tambahkan input tersembunyi untuk menyimpan pengguna yang dipilih -->
+            <input type="hidden" id="selectedPenggunas" name="selectedPenggunas" />
             <div class="form-group">
                 <input type="hidden" id="selectedUserIds" name="SelectedUserIds" />
             </div>
@@ -68,8 +70,14 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<!-- Tambahkan input tersembunyi untuk menyimpan pengguna yang dipilih -->
+<input type="hidden" id="selectedPenggunas" name="selectedPenggunas" />
+
+<!-- Sisipkan kode JavaScript yang diperbarui -->
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     <script>
         document.getElementById('btnTambahPengguna').addEventListener('click', function () {
             var selectedOption = document.getElementById('listPengguna').options[document.getElementById('listPengguna').selectedIndex];
@@ -84,3 +92,5 @@
         });
     </script>
 }
+
+
