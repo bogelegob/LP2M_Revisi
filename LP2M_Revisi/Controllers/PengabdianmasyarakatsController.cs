@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LP2M_Revisi.Models;
 using Newtonsoft.Json;
+using OfficeOpenXml;
 
 namespace LP2M_Revisi.Controllers
 {
@@ -378,6 +379,103 @@ namespace LP2M_Revisi.Controllers
         private bool PengabdianmasyarakatExists(string id)
         {
           return (_context.Pengabdianmasyarakats?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        public async Task<IActionResult> ExportToExcel(string searchString, string statusFilter)
+        {
+            IQueryable<Pengabdianmasyarakat> pengabdianquery = _context.Pengabdianmasyarakats.Include(b => b.EditbyNavigation).Include(b => b.InputbyNavigation);
+            Pengguna penggunaModel;
+            string serializedModel = HttpContext.Session.GetString("Identity");
+            penggunaModel = JsonConvert.DeserializeObject<Pengguna>(serializedModel);
+
+            // Filter data sesuai pencarian
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                //suratTugasQuery = suratTugasQuery.Where();
+            }
+
+            // Filter data sesuai status
+            if (!string.IsNullOrEmpty(statusFilter))
+            {
+                pengabdianquery = pengabdianquery.Where(b => b.Status == Convert.ToInt32(statusFilter));
+            }
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Karyawan")
+            {
+                pengabdianquery = pengabdianquery.Where(b => b.Inputby == penggunaModel.Id);
+            }
+
+            var suratTugasList = await pengabdianquery.ToListAsync();
+
+            // Create Excel package
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Pengabdian Masyarakat");
+
+                // Header
+                var headerRange = worksheet.Cells["A1:P1"];
+                headerRange.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+                worksheet.Cells["A1"].Value = "No";
+                worksheet.Cells["B1"].Value = "Kegiatan";
+                worksheet.Cells["C1"].Value = "Waktu Pelaksanaan";
+                worksheet.Cells["D1"].Value = "Personil";
+                worksheet.Cells["E1"].Value = "TPM";
+                worksheet.Cells["F1"].Value = "MI";
+                worksheet.Cells["G1"].Value = "MK";
+                worksheet.Cells["H1"].Value = "MO/TAB";
+                worksheet.Cells["I1"].Value = "P4";
+                worksheet.Cells["J1"].Value = "TRL";
+                worksheet.Cells["K1"].Value = "TKBG";
+                worksheet.Cells["L1"].Value = "Jumlah Penerima Manfaat";
+                worksheet.Cells["M1"].Value = "Asal Penerima";
+                worksheet.Cells["N1"].Value = "Nama Mahasiswa";
+                worksheet.Cells["O1"].Value = "Prodi";
+                worksheet.Cells["P1"].Value = "NIM";
+
+
+                string status;
+                int no = 1;
+                // Data
+                for (int i = 0; i < suratTugasList.Count; i++)
+                {
+
+                    if (suratTugasList[i].Namafilesurat == null)
+                    {
+                        status = "Belum ada surat tugas";
+                    }
+
+                    /*worksheet.Cells[i + 2, 1].Value = no;
+                    worksheet.Cells[i + 2, 2].Value = suratTugasList[i].Namakegiatan;
+                    worksheet.Cells[i + 2, 3].Value = suratTugasList[i].Waktupelaksanaan;
+                    worksheet.Cells[i + 2, 4].Value = suratTugasList[i].Prsonil;
+                    worksheet.Cells[i + 2, 5].Value = suratTugasList[i].TPM;
+                    worksheet.Cells[i + 2, 6].Value = suratTugasList[i].MI;
+                    worksheet.Cells[i + 2, 7].Value = suratTugasList[i].MK;
+                    worksheet.Cells[i + 2, 8].Value = suratTugasList[i].MO;
+                    worksheet.Cells[i + 2, 9].Value = suratTugasList[i].P4;
+                    worksheet.Cells[i + 2, 10].Value = suratTugasList[i].TRL;
+                    worksheet.Cells[i + 2, 11].Value = suratTugasList[i].TKBG;
+                    worksheet.Cells[i + 2, 12].Value = suratTugasList[i].Jumlahpenerima;
+                    worksheet.Cells[i + 2, 13].Value = suratTugasList[i].AsalPenerima;
+                    worksheet.Cells[i + 2, 14].Value = suratTugasList[i].Mahasiswa;
+                    worksheet.Cells[i + 2, 15].Value = suratTugasList[i].Prodi;
+                    worksheet.Cells[i + 2, 16].Value = suratTugasList[i].Nim;*/
+
+                    worksheet.Cells[i + 2, 1, i + 2, 16].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    no++;
+                }
+
+                // Auto fit columns
+                worksheet.Cells.AutoFitColumns();
+
+                // Convert to byte array
+                var excelBytes = package.GetAsByteArray();
+
+                // Set content type and file name
+                Response.Headers.Add("Content-Disposition", "attachment; filename=SuratTugas.xlsx");
+                return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            }
         }
     }
 }

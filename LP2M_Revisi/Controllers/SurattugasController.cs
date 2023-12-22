@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using LP2M_Revisi.Models;
 using Newtonsoft.Json;
 using System.Data;
+using OfficeOpenXml;
 
 namespace LP2M_Revisi.Controllers
 {
@@ -227,13 +228,23 @@ namespace LP2M_Revisi.Controllers
                 Console.WriteLine(TempData["SuccessMessage"]);
                 return RedirectToAction("Index");
             }
-
+            string Role = HttpContext.Session.GetString("selectedRole");
+            
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
+            Console.WriteLine("Ini mahhhhhhhhhhhhhhhhhhh");
             // Pilihan pengguna untuk dropdown
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", surattuga.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", surattuga.Inputby);
 
             // Semua pengguna untuk pilihan many-to-many
-            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama", SelectedUserIds);
             return View(surattuga);
         }
 
@@ -242,7 +253,7 @@ namespace LP2M_Revisi.Controllers
         {
             Pengguna penggunaModel;
             string serializedModel = HttpContext.Session.GetString("Identity");
-            string Role = HttpContext.Session.GetString("selectedRole");
+            
             Console.WriteLine(serializedModel);
             if (serializedModel == null)
             {
@@ -256,6 +267,7 @@ namespace LP2M_Revisi.Controllers
             {
                 return RedirectToAction("Index", "Login");
             }
+            string Role = HttpContext.Session.GetString("selectedRole");
             if (Role == "Admin")
             {
                 ViewBag.Layout = "_LayoutAdmin";
@@ -282,6 +294,7 @@ namespace LP2M_Revisi.Controllers
             }
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", surattuga.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", surattuga.Inputby);
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
             return View(surattuga);
         }
 
@@ -327,8 +340,18 @@ namespace LP2M_Revisi.Controllers
                 TempData["SuccessMessage"] = "Data berhasil diedit!";
                 return RedirectToAction(nameof(Index));
             }
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Admin")
+            {
+                ViewBag.Layout = "_LayoutAdmin";
+            }
+            else
+            {
+                ViewBag.Layout = "_Layout";
+            }
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", surattuga.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", surattuga.Inputby);
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
             return View(surattuga);
         }
 
@@ -534,7 +557,7 @@ namespace LP2M_Revisi.Controllers
             }
 
             // Cari data Surattuga dari database berdasarkan nama file atau parameter yang sesuai.
-            var surattuga = _context.Surattugas.FirstOrDefault(s => s.Namafile == fileName);
+            var surattuga = _context.Surattugas.FirstOrDefault(s => s.Namafile == fileName || s.Namafilesurat == fileName);
 
             if (surattuga != null && surattuga.Buktipendukung != null)
             {
@@ -551,6 +574,109 @@ namespace LP2M_Revisi.Controllers
                 return RedirectToAction("Index");
             }
         }
+
+        public async Task<IActionResult> ExportToExcel(string searchString, string statusFilter)
+        {
+            IQueryable<Surattuga> suratTugasQuery = _context.Surattugas.Include(b => b.EditbyNavigation).Include(b => b.InputbyNavigation);
+            Pengguna penggunaModel;
+            string serializedModel = HttpContext.Session.GetString("Identity");
+            penggunaModel = JsonConvert.DeserializeObject<Pengguna>(serializedModel);
+
+            // Filter data sesuai pencarian
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                suratTugasQuery = suratTugasQuery.Where(b => b.Namakegiatan.Contains(searchString)
+                                                         || b.Masapelaksanaan.Contains(searchString)
+                                                         );
+            }
+
+            // Filter data sesuai status
+            if (!string.IsNullOrEmpty(statusFilter))
+            {
+                suratTugasQuery = suratTugasQuery.Where(b => b.Status == Convert.ToInt32(statusFilter));
+            }
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Karyawan")
+            {
+                suratTugasQuery = suratTugasQuery.Where(b => b.Inputby == penggunaModel.Id);
+            }
+
+            var suratTugasList = await suratTugasQuery.ToListAsync();
+
+            // Create Excel package
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("SuratTugas");
+
+                // Header
+                var headerRange = worksheet.Cells["A1:J1"];
+                headerRange.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+                worksheet.Cells["A1"].Value = "NO";
+                worksheet.Cells["B1"].Value = "Nama Kegiatan";
+                worksheet.Cells["C1"].Value = "Masa Pelaksanaan";
+                worksheet.Cells["D1"].Value = "Bukti Pendukung";
+                worksheet.Cells["E1"].Value = "Status";
+                worksheet.Cells["F1"].Value = "Tanggal Input";
+                worksheet.Cells["G1"].Value = "Surat Tugas";
+                worksheet.Cells["H1"].Value = "Input By";
+
+
+                string status;
+                int no = 1;
+                // Data
+                for (int i = 0; i < suratTugasList.Count; i++)
+                {
+                    
+                    if (suratTugasList[i].Status == 0)
+                    {
+                        status = "Belum diajukan";
+                    }
+                    else if (suratTugasList[i].Status == 1)
+                    {
+                        status = "Menunggu Konfirmasi";
+                    }
+                    else if (suratTugasList[i].Status == 2)
+                    {
+                        status = "Diterima";
+                    }
+                    else if (suratTugasList[i].Status == 3)
+                    {
+                        status = "Ditolak";
+                    }
+
+                    if (suratTugasList[i].Namafilesurat == null)
+                    {
+                        status = "Belum ada surat tugas";
+                    }
+
+                    worksheet.Cells[i + 2, 1].Value = no;
+                    worksheet.Cells[i + 2, 2].Value = suratTugasList[i].Namakegiatan;
+                    worksheet.Cells[i + 2, 3].Value = suratTugasList[i].Masapelaksanaan;
+                    worksheet.Cells[i + 2, 4].Value = suratTugasList[i].Namafile;
+                    worksheet.Cells[i + 2, 5].Value = suratTugasList[i].Status;
+                    worksheet.Cells[i + 2, 6].Value = suratTugasList[i].Inputdate;
+                    worksheet.Cells[i + 2, 7].Value = suratTugasList[i].Namafilesurat;
+                    worksheet.Cells[i + 2, 8].Value = suratTugasList[i].InputbyNavigation.Nama;
+
+                    worksheet.Cells[i + 2, 1, i + 2, 8].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+                    worksheet.Cells[i + 2, 6].Style.Numberformat.Format = "dd-MMM-yyyy HH:mm:ss";
+                    no++;
+                }
+
+                // Auto fit columns
+                worksheet.Cells.AutoFitColumns();
+
+                // Convert to byte array
+                var excelBytes = package.GetAsByteArray();
+
+                // Set content type and file name
+                Response.Headers.Add("Content-Disposition", "attachment; filename=SuratTugas.xlsx");
+                return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            }
+        }
+
 
 
 
