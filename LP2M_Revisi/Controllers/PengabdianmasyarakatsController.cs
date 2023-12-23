@@ -119,6 +119,7 @@ namespace LP2M_Revisi.Controllers
             ViewData["Prodi"] = new SelectList(_context.Prodis, "Id", "Nama");
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama");
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama");
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
             return View(pengabdi);
         }
 
@@ -127,7 +128,7 @@ namespace LP2M_Revisi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Namakegiatan,Waktupelaksanaan,Jumlahpenerima,Surattugas,Laporan,Buktipendukung,MahasiswaProdiNim,Status,Inputby,Inputdate,Editby,Editdate")] Pengabdianmasyarakat pengabdianmasyarakat, IFormFile Surattugas, IFormFile Laporan, IFormFile Buktipendukung)
+        public async Task<IActionResult> Create([Bind("Id,Namakegiatan,Waktupelaksanaan,Jumlahpenerima,Surattugas,Laporan,Buktipendukung,MahasiswaProdiNim,Status,Inputby,Inputdate,Editby,Editdate")] Pengabdianmasyarakat pengabdianmasyarakat, IFormFile Surattugas, IFormFile Laporan, IFormFile Buktipendukung, string SelectedUserIds)
         {
             Console.WriteLine(pengabdianmasyarakat.MahasiswaProdiNim);
             if (ModelState.IsValid)
@@ -167,6 +168,23 @@ namespace LP2M_Revisi.Controllers
                         pengabdianmasyarakat.Buktipendukung = memoryStream.ToArray();
                     }
                 }
+                string[] selectedIdsArray = SelectedUserIds.Split(',');
+
+                foreach (var userId in selectedIdsArray)
+                {
+                    if (!string.IsNullOrEmpty(userId))
+                    {
+                        // Buat objek Detailbuku dan set nilainya
+                        var detailpengabdian = new Detailpengabdian
+                        {
+                            Idpengabdian = pengabdianmasyarakat.Id, // Sesuaikan dengan properti yang sesuai
+                            Idpengguna = userId,
+                        };
+
+                        // Tambahkan objek Detailbuku ke konteks
+                        _context.Detailpengabdians.Add(detailpengabdian);
+                    }
+                }
                 _context.Add(pengabdianmasyarakat);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -174,6 +192,7 @@ namespace LP2M_Revisi.Controllers
             ViewData["Prodi"] = new SelectList(_context.Prodis, "Id", "Nama");
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", pengabdianmasyarakat.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", pengabdianmasyarakat.Inputby);
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
             return View(pengabdianmasyarakat);
         }
 
@@ -208,6 +227,7 @@ namespace LP2M_Revisi.Controllers
             ViewData["Prodi"] = new SelectList(_context.Prodis, "Id", "Nama", splittedData[2]);
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", pengabdianmasyarakat.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", pengabdianmasyarakat.Inputby);
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
             return View(pengabdianmasyarakat);
         }
 
@@ -282,6 +302,7 @@ namespace LP2M_Revisi.Controllers
             ViewData["Prodi"] = new SelectList(_context.Prodis, "Id", "Nama", splittedData[2]);
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", pengabdianmasyarakat.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", pengabdianmasyarakat.Inputby);
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
             return View(pengabdianmasyarakat);
         }
 

@@ -185,7 +185,6 @@ namespace LP2M_Revisi.Controllers
                 surattuga.Inputby = pengguna.Id;
 
                 DateTime tgl = DateTime.Now;
-                Console.WriteLine("Tanggallllllll : " + tgl);
                 surattuga.Inputdate = tgl;
 
                 surattuga.Status = 0;
@@ -193,24 +192,23 @@ namespace LP2M_Revisi.Controllers
 
                 // Menangani pengguna yang dipilih
 
-                /*string[] selectedIdsArray = SelectedUserIds.Split(',');
+                string[] selectedIdsArray = SelectedUserIds.Split(',');
 
                 foreach (var userId in selectedIdsArray)
                 {
                     if (!string.IsNullOrEmpty(userId))
                     {
                         // Buat objek Detailbuku dan set nilainya
-                        var detailBuku = new Detailbuku
+                        var detailsurat = new Detailsurat
                         {
-                            Idbuku = buku.Id, // Sesuaikan dengan properti yang sesuai
+                            Idsurat = surattuga.Id, // Sesuaikan dengan properti yang sesuai
                             Idpengguna = userId,
-                            Status = "Aktif"
                         };
 
                         // Tambahkan objek Detailbuku ke konteks
-                        _context.Detailbukus.Add(detailBuku);
+                        _context.Detailsurats.Add(detailsurat);
                     }
-                }*/
+                }
                 if (Buktipendukung != null && Buktipendukung.Length > 0)
                 {
                     surattuga.Namafile = Buktipendukung.FileName;
@@ -282,6 +280,10 @@ namespace LP2M_Revisi.Controllers
             }
 
             var surattuga = await _context.Surattugas.FindAsync(id);
+            var detailsurats = await _context.Detailsurats
+            .Where(d => d.Idsurat == id)
+            .Select(d => d.Idpengguna)
+            .ToListAsync();
             if (surattuga == null)
             {
                 return NotFound();
@@ -295,6 +297,7 @@ namespace LP2M_Revisi.Controllers
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", surattuga.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", surattuga.Inputby);
             ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
+            ViewData["Detail"] = new SelectList(_context.Detailsurats, "Idpengguna", "Idpengguna");
             return View(surattuga);
         }
 

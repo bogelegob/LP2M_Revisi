@@ -108,6 +108,7 @@ namespace LP2M_Revisi.Controllers
             jurnal.Id = GenerateNextId();
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama");
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama");
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
             return View(jurnal);
         }
 
@@ -116,7 +117,7 @@ namespace LP2M_Revisi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Judulmakalah,Namajurnal,Issn,Volume,Nomor,Halamanawal,Halamanakhir,Url,Kategori,Status,Inputby,Inputdate,Editby,Editdate")] Jurnal jurnal)
+        public async Task<IActionResult> Create([Bind("Id,Judulmakalah,Namajurnal,Issn,Volume,Nomor,Halamanawal,Halamanakhir,Url,Kategori,Status,Inputby,Inputdate,Editby,Editdate")] Jurnal jurnal, string SelectedUserIds)
         {
             if (ModelState.IsValid)
             {
@@ -129,12 +130,30 @@ namespace LP2M_Revisi.Controllers
                 jurnal.Editdate = tgl;
                 jurnal.Status = 0;
                 jurnal.Id = GenerateNextId();
+                string[] selectedIdsArray = SelectedUserIds.Split(',');
+
+                foreach (var userId in selectedIdsArray)
+                {
+                    if (!string.IsNullOrEmpty(userId))
+                    {
+                        // Buat objek Detailbuku dan set nilainya
+                        var detailjurnal = new Detailjurnal
+                        {
+                            Idjurnal = jurnal.Id, // Sesuaikan dengan properti yang sesuai
+                            Idpengguna = userId,
+                        };
+
+                        // Tambahkan objek Detailbuku ke konteks
+                        _context.Detailjurnals.Add(detailjurnal);
+                    }
+                }
                 _context.Add(jurnal);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", jurnal.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", jurnal.Inputby);
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
             return View(jurnal);
         }
 
@@ -161,6 +180,7 @@ namespace LP2M_Revisi.Controllers
             }
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", jurnal.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", jurnal.Inputby);
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
             return View(jurnal);
         }
 
@@ -198,6 +218,7 @@ namespace LP2M_Revisi.Controllers
             }
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", jurnal.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", jurnal.Inputby);
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
             return View(jurnal);
         }
 

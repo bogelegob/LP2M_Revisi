@@ -118,6 +118,7 @@ namespace LP2M_Revisi.Controllers
             hakpaten.Id = GenerateNextId();
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama");
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama");
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
             return View(hakpaten);
         }
 
@@ -126,7 +127,7 @@ namespace LP2M_Revisi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Judul,Nopermohonan,TanggalPenerimaan,Status,Inputby,Inputdate,Editby,Editdate")] Hakpaten hakpaten)
+        public async Task<IActionResult> Create([Bind("Id,Judul,Nopermohonan,TanggalPenerimaan,Status,Inputby,Inputdate,Editby,Editdate")] Hakpaten hakpaten, string SelectedUserIds)
         {
             if (ModelState.IsValid)
             {
@@ -139,12 +140,30 @@ namespace LP2M_Revisi.Controllers
                 hakpaten.Editdate = tgl;
                 hakpaten.Status = 1;
                 hakpaten.Id = GenerateNextId();
+                string[] selectedIdsArray = SelectedUserIds.Split(',');
+
+                foreach (var userId in selectedIdsArray)
+                {
+                    if (!string.IsNullOrEmpty(userId))
+                    {
+                        // Buat objek Detailbuku dan set nilainya
+                        var detailhakpaten = new Detailhakpaten
+                        {
+                            Idhakpaten = hakpaten.Id, // Sesuaikan dengan properti yang sesuai
+                            Idpengguna = userId,
+                        };
+
+                        // Tambahkan objek Detailbuku ke konteks
+                        _context.Detailhakpatens.Add(detailhakpaten);
+                    }
+                }
                 _context.Add(hakpaten);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", hakpaten.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", hakpaten.Inputby);
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
             return View(hakpaten);
         }
 
@@ -172,6 +191,7 @@ namespace LP2M_Revisi.Controllers
             }
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Id", hakpaten.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Id", hakpaten.Inputby);
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
             return View(hakpaten);
         }
 
@@ -209,6 +229,7 @@ namespace LP2M_Revisi.Controllers
             }
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Id", hakpaten.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Id", hakpaten.Inputby);
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
             return View(hakpaten);
         }
 

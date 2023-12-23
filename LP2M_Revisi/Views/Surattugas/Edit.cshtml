@@ -34,8 +34,14 @@
                     <div class="form-group">
                         <label for="listPengguna" class="control-label">Pilih Pengguna</label>
                             <!-- Gunakan data pengguna yang dikirim dari controller untuk membuat dropdown -->
-                        <select id="listPengguna" asp-items="@ViewBag.ListPengguna" class="form-control"></select>
-                        <a id="btnTambahPengguna" class="btn btn-secondary">Tambah Pengguna</a>
+                        <select id="listPengguna" class="form-control">
+                            <option value="">-- Pilih Pengguna --</option>
+                            @foreach (var pengguna in ViewBag.ListPengguna)
+                            {
+                                <option value="@pengguna.Value">@pengguna.Text</option>
+                            }
+                        </select>
+                        @*<a id="btnTambahPengguna" class="btn btn-secondary">Tambah Pengguna</a>*@
                     </div>
                 </div>
 
@@ -72,7 +78,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         // Mendapatkan elemen-elemen HTML yang diperlukan
-        document.getElementById('btnTambahPengguna').addEventListener('click', function () {
+        document.getElementById('listPengguna').addEventListener('change', function () {
             var selectedOption = document.getElementById('listPengguna').options[document.getElementById('listPengguna').selectedIndex];
             var currentText = document.getElementById('selectedUsers');
             var currentId = document.getElementById('selectedUserIds');

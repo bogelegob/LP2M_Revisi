@@ -7,67 +7,85 @@
     Layout = ViewBag.Layout;
 }
 
-<h1>Tambah</h1>
+<form asp-action="Create" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="card">
+        <div class="card-header">
+            <label><b>Tambah Surat Tugas</b></label>
+        </div>
+        <div class="card-block">
+            <input asp-for="Id" class="form-control" type="hidden" value="@Model.Id" />
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Judulbuku" class="control-label">Judul</label>
+                        <input asp-for="Judulbuku" class="form-control" />
+                        <span asp-validation-for="Judulbuku" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Isbn" class="control-label">ISBN</label>
+                        <input asp-for="Isbn" class="form-control" />
+                        <span asp-validation-for="Isbn" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Penerbit" class="control-label">Penerbit</label>
+                        <input asp-for="Penerbit" class="form-control" />
+                        <span asp-validation-for="Penerbit" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label asp-for="Tahun" class="control-label"></label>
+                        <input asp-for="Tahun" class="form-control" />
+                        <span asp-validation-for="Tahun" class="text-danger"></span>
+                    </div>
+                </div>
+                <!-- Tambahkan select option dan tombol "Tambah Pengguna" -->
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="listPengguna" class="control-label">Pilih Pengguna</label>
+                        <select id="listPengguna" class="form-control">
+                            <option value="">-- Pilih Pengguna --</option>
+                            @foreach (var pengguna in ViewBag.ListPengguna)
+                            {
+                                <option value="@pengguna.Value">@pengguna.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
 
-<h4>Buku</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <input type="hidden" asp-for="Id" class="form-control" value="@Model.Id"/>
-                <span asp-validation-for="Id" class="text-danger"></span>
+                <!-- Tambahkan textarea untuk menampilkan data pengguna yang dipilih -->
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="selectedUsers" class="control-label">Data Pengguna yang Dipilih</label>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Nama Pengguna</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="selectedUsersTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Tambahkan input tersembunyi untuk menyimpan pengguna yang dipilih -->
+                <input type="hidden" id="selectedPenggunas" name="selectedPenggunas" />
+                <div class="form-group">
+                    <input type="hidden" id="selectedUserIds" name="SelectedUserIds" />
+                </div>
             </div>
             <div class="form-group">
-                <label asp-for="Judulbuku" class="control-label">Judul</label>
-                <input asp-for="Judulbuku" class="form-control" />
-                <span asp-validation-for="Judulbuku" class="text-danger"></span>
+                <button type="submit" class="btn btn-primary float-left">Create</button>
+                <a asp-action="Index" class="btn btn-secondary float-right">Back to List</a>
             </div>
-            <div class="form-group">
-                <label asp-for="Isbn" class="control-label">ISBN</label>
-                <input asp-for="Isbn" class="form-control" />
-                <span asp-validation-for="Isbn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Penerbit" class="control-label">Penerbit</label>
-                <input asp-for="Penerbit" class="form-control" />
-                <span asp-validation-for="Penerbit" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Tahun" class="control-label"></label>
-                <input asp-for="Tahun" class="form-control" />
-                <span asp-validation-for="Tahun" class="text-danger"></span>
-            </div>
-            <!-- Tambahkan select option dan tombol "Tambah Pengguna" -->
-            <div class="form-group">
-                <label for="listPengguna" class="control-label">Pilih Pengguna</label>
-                <!-- Gunakan data pengguna yang dikirim dari controller untuk membuat dropdown -->
-                <select id="listPengguna" asp-items="@ViewBag.ListPengguna" class="form-control">
-                </select>
-                <a id="btnTambahPengguna" class="btn btn-secondary">Tambah Pengguna</a>
-            </div>
-
-            <!-- Tambahkan textarea untuk menampilkan data pengguna yang dipilih -->
-            <div class="form-group">
-                <label for="selectedUsers" class="control-label">Data Pengguna yang Dipilih</label>
-                <textarea id="selectedUsers" class="form-control" rows="4" readonly></textarea>
-            </div>
-            <!-- Tambahkan input tersembunyi untuk menyimpan pengguna yang dipilih -->
-            <input type="hidden" id="selectedPenggunas" name="selectedPenggunas" />
-            <div class="form-group">
-                <input type="hidden" id="selectedUserIds" name="SelectedUserIds" />
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+</form>
 
 <!-- Tambahkan input tersembunyi untuk menyimpan pengguna yang dipilih -->
 <input type="hidden" id="selectedPenggunas" name="selectedPenggunas" />
@@ -77,19 +95,61 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script>
-        document.getElementById('btnTambahPengguna').addEventListener('click', function () {
-            var selectedOption = document.getElementById('listPengguna').options[document.getElementById('listPengguna').selectedIndex];
-            var currentText = document.getElementById('selectedUsers');
-            var currentId = document.getElementById('selectedUserIds');
-
-            // Update the textarea with the selected user's data
-            currentText.value += selectedOption.text + '\n';
-
-            // Update the selectedIdUsers input with the selected user's id
-            currentId.value += selectedOption.value + ',';
-        });
-    </script>
 }
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Mendapatkan elemen-elemen HTML yang diperlukan
+        document.getElementById('listPengguna').addEventListener('change', function () {
+            var selectedOption = document.getElementById('listPengguna').options[document.getElementById('listPengguna').selectedIndex];
+
+            // Check if the selected option has a value
+            if (selectedOption.value) {
+                var tableBody = document.getElementById('selectedUsersTableBody');
+
+                // Create a new row and cells
+                var row = tableBody.insertRow();
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+
+                // Set the cell values
+                cell1.innerHTML = selectedOption.text;
+
+                // Create a delete button in the second cell
+                var deleteButton = document.createElement('button');
+                deleteButton.innerHTML = 'Hapus';
+                deleteButton.className = 'btn btn-danger btn-sm';
+                deleteButton.addEventListener('click', function () {
+                    // Hapus baris ketika tombol hapus diklik
+                    tableBody.deleteRow(row.rowIndex);
+                });
+                cell2.appendChild(deleteButton);
+
+                // Set the value in the third cell (hidden column)
+                var hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'SelectedUserValues';
+                hiddenInput.value = selectedOption.value;
+                cell3.appendChild(hiddenInput);
+            }
+        });
+        document.querySelector('form').addEventListener('submit', function () {
+            updateSelectedUserIdsInput();
+        });
+
+        function updateSelectedUserIdsInput() {
+            var tableBody = document.getElementById('selectedUsersTableBody');
+            var selectedUserIdsInput = document.getElementById('selectedUserIds');
+
+            selectedUserIdsInput.value = '';
+
+            for (var i = 0; i < tableBody.rows.length; i++) {
+                var cell3 = tableBody.rows[i].cells[2];
+                var hiddenInput = cell3.querySelector('input[type="hidden"]');
+                selectedUserIdsInput.value += hiddenInput.value + ',';
+            }
+        }
+    });
+</script>
 
 
