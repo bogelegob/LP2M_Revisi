@@ -134,7 +134,7 @@
                 deleteButton.className = 'btn btn-danger btn-sm';
                 deleteButton.addEventListener('click', function () {
                     // Hapus baris ketika tombol hapus diklik
-                    tableBody.deleteRow(row.rowIndex);
+                    tableBody.deleteRow(row.rowIndex - 1);
                 });
                 cell2.appendChild(deleteButton);
 

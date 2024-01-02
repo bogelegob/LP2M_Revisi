@@ -5,204 +5,341 @@
     ViewData["Routing"] = "Surat Tugas";
     ViewData["Routing2"] = "Detail Surat Tugas";
     var status = Model.Status;
+    var keterangan = Model.Keterangan;
     Layout = ViewBag.Layout;
 }
 <style>
-    /* Styling tambahan untuk timeline */
+
+    .padding {
+        padding: 2rem
+    }
+
+    .w-32 {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: .85em
+    }
+
+    .tl-item .avatar {
+        z-index: 2
+    }
+
+    .circle {
+        border-radius: 500px
+    }
+
+    .gd-warning {
+        color: #fff;
+        border: none;
+        background: #f4c414 linear-gradient(45deg, #f4c414, #f45414)
+    }
+
     .timeline {
         position: relative;
-        max-width: 800px;
-        margin: 50px auto;
+        border-color: rgba(160, 175, 185, .15);
+        padding: 0;
+        margin: 0
     }
 
-    .timeline-item {
-        border-left: 2px solid #3498db;
-        margin-bottom: 40px;
-        padding-left: 40px;
+    .p-4 {
+        padding: 1.5rem !important
+    }
+
+    /*.block,
+    .card {
+        background: #fff;
+        border-width: 0;
+        border-radius: .25rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
+        margin-bottom: 1.5rem
+    }*/
+
+    .mb-4,
+    .my-4 {
+        margin-bottom: 1.5rem !important
+    }
+
+    .tl-item {
+        border-radius: 3px;
         position: relative;
-        background-color: #fff;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease-in-out;
+        display: -ms-flexbox;
+        display: flex
     }
 
-        .timeline-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        .tl-item > * {
+            padding: 10px
         }
 
-    .timeline-content {
-        padding: 20px;
-    }
-
-        .timeline-content h2 {
-            margin-top: 0;
-            color: #3498db;
+        .tl-item .avatar {
+            z-index: 2
         }
 
-        .timeline-content p {
-            margin-bottom: 10px;
-            line-height: 1.6;
+        .tl-item:last-child .tl-dot:after {
+            display: none
         }
 
-    .timeline-date {
-        display: block;
-        margin-top: 15px;
-        color: #888;
+        .tl-item.active .tl-dot:before {
+            border-color: #448bff;
+            box-shadow: 0 0 0 4px rgba(68, 139, 255, .2)
+        }
+
+        .tl-item:last-child .tl-dot:after {
+            display: none
+        }
+
+        .tl-item.active .tl-dot:before {
+            border-color: #448bff;
+            box-shadow: 0 0 0 4px rgba(68, 139, 255, .2)
+        }
+
+    .tl-dot {
+        position: relative;
+        border-color: rgba(160, 175, 185, .15)
     }
 
-    /* Garis dan panah untuk menunjukkan alur timeline */
-    .timeline::before {
-        content: '';
-        position: absolute;
-        width: 4px;
-        background-color: #ccc;
-        top: 0;
-        bottom: 0;
-        left: 50%;
-        margin-left: -2px;
+        .tl-dot:after,
+        .tl-dot:before {
+            content: '';
+            position: absolute;
+            border-color: inherit;
+            border-width: 2px;
+            border-style: solid;
+            border-radius: 50%;
+            width: 10px;
+            height: 10px;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%)
+        }
+
+        .tl-dot:after {
+            width: 0;
+            height: auto;
+            top: 25px;
+            bottom: -15px;
+            border-right-width: 0;
+            border-top-width: 0;
+            border-bottom-width: 0;
+            border-radius: 0
+        }
+
+    tl-item.active .tl-dot:before {
+        border-color: #448bff;
+        box-shadow: 0 0 0 4px rgba(68, 139, 255, .2)
     }
 
-    .timeline-item::after {
-        content: '';
-        position: absolute;
-        border-style: solid;
-        border-width: 8px 8px 8px 0;
-        border-color: transparent #fff transparent transparent;
-        right: -10px;
-        top: 15px;
+    .tl-dot {
+        position: relative;
+        border-color: rgba(160, 175, 185, .15)
     }
 
-    .timeline-item:nth-child(even)::after {
-        left: -10px;
-        right: auto;
-        border-width: 8px 0 8px 8px;
-        border-color: transparent transparent transparent #fff;
+        .tl-dot:after,
+        .tl-dot:before {
+            content: '';
+            position: absolute;
+            border-color: inherit;
+            border-width: 2px;
+            border-style: solid;
+            border-radius: 50%;
+            width: 10px;
+            height: 10px;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%)
+        }
+
+        .tl-dot:after {
+            width: 0;
+            height: auto;
+            top: 25px;
+            bottom: -15px;
+            border-right-width: 0;
+            border-top-width: 0;
+            border-bottom-width: 0;
+            border-radius: 0
+        }
+
+    .tl-content p:last-child {
+        margin-bottom: 0
+    }
+
+    .tl-date {
+        font-size: .85em;
+        margin-top: 2px;
+        min-width: 100px;
+        max-width: 100px
+    }
+
+    .avatar {
+        position: relative;
+        line-height: 1;
+        border-radius: 500px;
+        white-space: nowrap;
+        font-weight: 700;
+        border-radius: 100%;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-pack: center;
+        justify-content: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -ms-flex-negative: 0;
+        flex-shrink: 0;
+        border-radius: 500px;
+        box-shadow: 0 5px 10px 0 rgba(50, 50, 50, .15)
+    }
+
+    .b-warning {
+        border-color: #f4c414 !important;
+    }
+
+    .b-primary {
+        border-color: #448bff !important;
+    }
+
+    .b-danger {
+        border-color: #f54394 !important;
+    }
+
+    .card-block label {
+        font-size: 16px; 
     }
 
 </style>
-<h1>Details</h1>
-
-<div>
-    <h4>Surat tugas</h4>
-    <hr />
-    <table class="table table-bordered">
-        <tr>
-            <th>Nama Kegiatan</th>
-            <td>@Html.DisplayFor(model => model.Namakegiatan)</td>
-        </tr>
-        <tr>
-            <th>Masa Pelaksanaan</th>
-            <td>@Html.DisplayFor(model => model.Masapelaksanaan)</td>
-        </tr>
-        <tr>
-            <th>Bukti Pendukung</th>
-            <td>
-                @Html.DisplayFor(model => model.Namafile)
-                @if (!string.IsNullOrEmpty(Model.Namafile))
-                {
-                    <a asp-action="Download" asp-route-fileName="@Model.Namafile">Download</a>
-                }
-            </td>
-        </tr>
-        <tr>
-            <th>Status</th>
-            <td>
-                @if (status == 0)
-                {
-                    <span>belum diajukan</span>
-                }
-                else if (status == 1)
-                {
-                    <span>Menunggu Konfirmasi</span>
-                }
-                else if (status == 2)
-                {
-                    <span>Diterima</span>
-                }
-                else if (status == 3)
-                {
-                    <span>Ditolak</span>
-                }
-            </td>
-        </tr>
-        <tr>
-            <th>Keterangan</th>
-            <td>@Html.DisplayFor(model => model.Keterangan)</td>
-        </tr>
-        <tr>
-            <th>Tanggal Input</th>
-            <td>@Html.DisplayFor(model => model.Inputdate)</td>
-        </tr>
-        <tr>
-            <th>Tanggal Edit</th>
-            <td>@Html.DisplayFor(model => model.Editdate)</td>
-        </tr>
-        <tr>
-            <th>Surat Tugas</th>
-            <td>
-                @Html.DisplayFor(model => model.Namafilesurat)
-                @if (!string.IsNullOrEmpty(Model.Namafilesurat))
-                {
-                    <a asp-action="Download" asp-route-fileName="@Model.Namafilesurat">Download</a>
-                }
-            </td>
-        </tr>
-        <tr>
-            <th>Edit By</th>
-            <td>@Html.DisplayFor(model => model.EditbyNavigation.Nama)</td>
-        </tr>
-        <tr>
-            <th>Input By</th>
-            <td>@Html.DisplayFor(model => model.InputbyNavigation.Nama)</td>
-        </tr>
-    </table>
-</div>
-
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
-
-<div class="timeline">
-    <div class="timeline-item">
-        <div class="timeline-content">
-            <h2>Titik 1</h2>
-            <p>Pengajuan Surat Tugas</p>
-            <span class="timeline-date">@Html.DisplayFor(model => model.Inputdate)</span>
-        </div>
+<div class="card">
+    <div class="card-header">
+        <label><b>Detail Surat Tugas</b></label>
     </div>
-    <div class="timeline-item">
-        <div class="timeline-content">
-            <h2>Titik 2</h2>
-            @if (Model.Status == 2)
-            {
-                <p>Pengajuan Surat Tugas Diterima</p>
-                <span class="timeline-date">@Html.DisplayFor(model => model.Editdate)</span>
-            }
-            else if (Model.Status == 1)
-            {
-                <p>Belum Dikonfirmasi</p>
-            }
-            else
-            {
-                <p>Belum Diajukan</p>
-            }
-            
-            
-        </div>
-    </div>
-    @if (Model.Status == 2 && Model.tanggalselesai != null)
-    {
-        <div class="timeline-item">
-            <div class="timeline-content">
-                <h2>Titik 3</h2>
-                <p>Surat Tugas Diupload</p>
-                <span class="timeline-date">@Html.DisplayFor(model => model.tanggalselesai)</span>
+    <div class="card-block">
+        <div class="row">
+            <div class="col-lg-4">
+                <label><b>Nama Kegiatan</b></label><br />
+                <label>@Html.DisplayFor(model => model.Namakegiatan)</label>
+                <br />
+                <br />
+
+                <label><b>Bukti Pendukung</b></label><br />
+                <label>
+                    @if (!string.IsNullOrEmpty(Model.Namafile))
+                    {
+                        <a asp-action="Download" asp-route-fileName="@Model.Namafile">@Model.Namafile</a>
+                    }
+                </label>
+                <br />
+                <br />
+
+                <label><b>Keterangan</b></label><br />
+                <label>
+                    @if (keterangan == null)
+                    {
+                        <span>tidak ada</span>
+                    }
+                    else
+                    {
+                        <span>@keterangan</span>
+                    }
+                </label>
+                <br />
+                <br />
+            </div>
+            <div class="col-lg-4">
+                <label><b>Masa Pelaksanaan</b></label><br />
+                <label>@Html.DisplayFor(model => model.Masapelaksanaan)</label>
+                <br />
+                <br />
+
+                <label><b>Status</b></label><br />
+                <label>
+                    @if (status == 0)
+                    {
+                        <span>belum diajukan</span>
+                    }
+                    else if (status == 1)
+                    {
+                        <span>Menunggu Konfirmasi</span>
+                    }
+                    else if (status == 2)
+                    {
+                        <span>Diterima</span>
+                    }
+                    else if (status == 3)
+                    {
+                        <span>Ditolak</span>
+                    }
+                </label>
+                <br />
+                <br />
+                <label><b>Surat Tugas</b></label><br />
+                <label>
+                    @if (!string.IsNullOrEmpty(Model.Namafilesurat))
+                    {
+                        <a asp-action="Download" asp-route-fileName="@Model.Namafilesurat">@Model.Namafilesurat</a>
+                    }
+                    else
+                    {
+                        <span>Tidak ada Surat tugas</span>
+                    }
+                </label>
+                <br />
+                <br />
+            </div>
+            <div class="col-lg-4">
+                <div class="card-block">
+                    <div class="timeline">
+                            <div class="tl-item">
+                                <div class="tl-dot b-primary"></div>
+                                <div class="tl-content">
+                                    <p>Pengajuan Surat Tugas</p>
+                                    <span class="tl-date text-muted mt-1">@Html.DisplayFor(model => model.Inputdate)</span>
+                                </div>
+                            </div>
+                            <div class="tl-item">
+                                <div class="tl-dot b-primary"></div>
+                                <div class="tl-content">
+                                    @if (Model.Status == 2)
+                                    {
+                                        <p>Pengajuan Surat Tugas Diterima</p>
+                                        <span class="timeline-date">@Html.DisplayFor(model => model.Editdate)</span>
+                                    }
+                                    else if (Model.Status == 1)
+                                    {
+                                        <p>Belum Dikonfirmasi</p>
+                                    }
+                                    else
+                                    {
+                                        <p>Belum Diajukan</p>
+                                    }
+                                </div>
+                            </div>
+                        @if (Model.Status == 2 && Model.tanggalselesai != null)
+                        {
+                            <div class="tl-item">
+                                <div class="tl-dot b-primary"></div>
+                                <div class="tl-content">
+                                    <p>Surat Tugas Diupload</p>
+                                    <span class="tl-date text-muted mt-1">@Html.DisplayFor(model => model.tanggalselesai)</span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+
+                        }
+                    </div>
+                </div>
             </div>
         </div>
-    }
-    else
-    {
-        
-    }
+        <div class="form-group">
+            <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary float-left">Ubah</a>
+            <a asp-action="Index" class="btn btn-secondary float-right">Back to List</a>
+        </div>
+    </div>
 </div>
+
+@*<div class="page-content page-container" id="page-content">
+    <div class="padding">
+        <div class="row">
+        </div>
+    </div>
+</div>*@
+
