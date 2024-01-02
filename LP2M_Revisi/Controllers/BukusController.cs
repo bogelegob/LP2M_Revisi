@@ -192,8 +192,18 @@ namespace LP2M_Revisi.Controllers
             {
                 return NotFound();
             }
+            var detailbuku = await _context.Detailbukus
+            .Where(d => d.Idbuku == id)
+            .Select(d => d.Idpengguna)
+            .ToListAsync();
+            var penggunaDetails = await _context.Penggunas
+            .Where(p => detailbuku.Contains(p.Id))
+            .Select(p => new { Id = p.Id, Nama = p.Nama })
+            .ToListAsync();
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", buku.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", buku.Inputby);
+            ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
+            ViewBag.Detail = penggunaDetails;
             return View(buku);
         }
 
@@ -202,7 +212,7 @@ namespace LP2M_Revisi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Judulbuku,Isbn,Penerbit,Tahun,Status,Inputby,Inputdate,Editby,Editdate")] Buku buku)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Judulbuku,Isbn,Penerbit,Tahun,Status,Inputby,Inputdate,Editby,Editdate")] Buku buku, string SelectedUserIds)
         {
             if (id != buku.Id)
             {
@@ -213,6 +223,30 @@ namespace LP2M_Revisi.Controllers
             {
                 try
                 {
+                    string[] selectedIdsArray = SelectedUserIds.Split(',');
+
+                    var existingDetailsurats = await _context.Detailbukus
+                        .Where(d => d.Idbuku == buku.Id)
+                        .ToListAsync();
+
+                    _context.Detailbukus.RemoveRange(existingDetailsurats);
+                    await _context.SaveChangesAsync();
+
+                    // Add new Detailsurat entries based on the selected user IDs
+                    foreach (var userId in selectedIdsArray)
+                    {
+                        if (!string.IsNullOrEmpty(userId))
+                        {
+                            // Buat objek Detailbuku dan set nilainya
+                            var detailsurat = new Detailbuku
+                            {
+                                Idbuku = buku.Id,
+                                Idpengguna = userId,
+                            };
+                            // Tambahkan objek Detailbuku ke konteks
+                            _context.Detailbukus.Add(detailsurat);
+                        }
+                    }
                     _context.Update(buku);
                     await _context.SaveChangesAsync();
                 }

@@ -5,61 +5,135 @@
     ViewData["Routing"] = "Pengabdian Masyarakat";
     ViewData["Routing2"] = "Ubah Pengabdian Masyarakat";
     Layout = ViewBag.Layout;
+    var data = ViewBag.Detail;
 }
 
-<h1>Ubah</h1>
+<form asp-action="Edit" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="card">
+        <div class="card-header">
+            <label><b>Tambah Pengabdian Masyarakat</b></label>
+        </div>
+        <div class="card-block">
+            <div class="row">
+                <input type="hidden" asp-for="Id" />
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="Namakegiatan" class="control-label">Nama Kegiatan</label>
+                        <input asp-for="Namakegiatan" class="form-control" />
+                        <span asp-validation-for="Namakegiatan" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="Waktupelaksanaan" class="control-label">Waktu Pelaksanaan</label>
+                        <input asp-for="Waktupelaksanaan" class="form-control" type="date" />
+                        <span asp-validation-for="Waktupelaksanaan" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="Jumlahpenerima" class="control-label">Jumlah Penerima</label>
+                        <input asp-for="Jumlahpenerima" class="form-control" />
+                        <span asp-validation-for="Jumlahpenerima" class="text-danger"></span>
+                    </div>
+                </div>
+                <span id="fileValidationMessage" class="text-danger"></span>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="Surattugas" class="control-label">Surat Tugas</label>
+                        <input asp-for="Surattugas" class="form-control" type="file" />
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="Laporan" class="control-label">Laporan</label>
+                        <input asp-for="Laporan" class="form-control" type="file" />
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="Buktipendukung" class="control-label">Bukti Pendukung</label>
+                        <input asp-for="Buktipendukung" class="form-control" type="file" />
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="Mahasiswa" class="control-label">Mahasiswa</label>
+                        <input id="Mahasiswa" name="Mahasiswa" class="form-control" required />
+                        <button id="Mhs" name="Mhs">Kirim</button>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="Nim" class="control-label">Nim</label>
+                        <input id="Nim" name="Nim" class="form-control" type="number" />
+                        <button id="NM" name="NM">Kirim</button>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="Prodi" class="control-label">Prodi</label>
+                        <select id="Prodi" name="Prodi" class="form-control" asp-items="ViewBag.Prodi">
+                            <option value="">-- Pilih Prodi --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label for="Detail" class="control-label">Detail</label>
+                        <textarea id="Detail" name="Detail" class="form-control" readonly>@Model.MahasiswaProdiNim</textarea>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="listPengguna" class="control-label">Pilih Pengguna</label>
+                        <!-- Gunakan data pengguna yang dikirim dari controller untuk membuat dropdown -->
+                        <select id="listPengguna" class="form-control">
+                            <option value="">-- Pilih Pengguna --</option>
+                            @foreach (var pengguna in ViewBag.ListPengguna)
+                            {
+                                <option value="@pengguna.Value">@pengguna.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="selectedUsers" class="control-label">Data Pengguna yang Dipilih</label>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Nama Pengguna</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="selectedUsersTableBody">
+                                @foreach (var pengguna in data)
+                                {
+                                    <tr>
+                                        <td>@pengguna.Nama</td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Hapus</button>
+                                        </td>
+                                        <td><input type="hidden" name="SelectedUserValues" value="@pengguna.Id" /></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-<h4>Pengabdianmasyarakat</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Namakegiatan" class="control-label">Nama Kegiatan</label>
-                <input asp-for="Namakegiatan" class="form-control" />
-                <span asp-validation-for="Namakegiatan" class="text-danger"></span>
+                <div class="form-group">
+                    <input type="hidden" id="selectedUserIds" name="SelectedUserIds" />
+                </div>
             </div>
             <div class="form-group">
-                <label asp-for="Waktupelaksanaan" class="control-label">Waktu Pelaksanaan</label>
-                <input asp-for="Waktupelaksanaan" class="form-control" type="date" value="@Model.Waktupelaksanaan" />
-                <span asp-validation-for="Waktupelaksanaan" class="text-danger"></span>
+                <button type="submit" class="btn btn-primary float-left">Create</button>
+                <a asp-action="Index" class="btn btn-secondary float-right">Back to List</a>
             </div>
             <div class="form-group">
-                <label asp-for="Jumlahpenerima" class="control-label">Jumlah Penerima</label>
-                <input asp-for="Jumlahpenerima" class="form-control" />
-                <span asp-validation-for="Jumlahpenerima" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Surattugas" class="control-label">Surat Tugas</label>
-                <input asp-for="Surattugas" class="form-control" type="file"/>
-                <span asp-validation-for="Surattugas" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Laporan" class="control-label">Laporan</label>
-                <input asp-for="Laporan" class="form-control" type="file" />
-                <span asp-validation-for="Laporan" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Buktipendukung" class="control-label">Bukti Pendukung</label>
-                <input asp-for="Buktipendukung" class="form-control" type="file" />
-                <span asp-validation-for="Buktipendukung" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label for="Mahasiswa" class="control-label">Mahasiswa</label>
-                <input id="Mahasiswa" name="Mahasiswa" class="form-control" value="@ViewBag.Mahasiswa"/>
-            </div>
-            <div class="form-group">
-                <label for="Nim" class="control-label">Nim</label>
-                <input id="Nim" name="Nim" class="form-control" value="@ViewBag.Nim" />
-            </div>
-            <div class="form-group">
-                <label for="Prodi" class="control-label">Prodi</label>
-                <select id="Prodi" name="Prodi" class="form-control" asp-items="ViewBag.Prodi"></select>
-            </div>
-            <div class="form-group">
-                <input asp-for="MahasiswaProdiNim" class="form-control" type="hidden"/>
+                <input asp-for="MahasiswaProdiNim" class="form-control" type="hidden" />
                 <span asp-validation-for="MahasiswaProdiNim" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -74,34 +148,196 @@
                 <input asp-for="Inputdate" class="form-control" type="hidden" />
                 <span asp-validation-for="Inputdate" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+</form>
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function formatDataForTextarea(data) {
+
+            var dataArray = data.split(',');
+
+            // Membersihkan spasi ekstra di setiap elemen array
+            for (var i = 0; i < dataArray.length; i++) {
+                dataArray[i] = dataArray[i].trim();
+            }
+
+            // Membuat hasil yang diformat
+            var result = '';
+            for (var i = 0; i < dataArray.length; i++) {
+                // Menambahkan nilai yang telah dibersihkan ke hasil
+                result += dataArray[i] + ',';
+
+                // Jika sudah mencapai tiga elemen, tambahkan baris baru
+                if ((i + 1) % 3 === 0 && i < dataArray.length - 1) {
+                    result += '\n';
+                }
+            }
+            return result;
+        }
+
+        // Mendapatkan nilai dari Model dan memformatnya
+        var mahasiswaProdiNimValue = '@Model.MahasiswaProdiNim';
+        var formattedData = formatDataForTextarea(mahasiswaProdiNimValue);
+
+        // Mengatur nilai textarea dengan data yang sudah diformat
+        var detailTextarea = document.getElementById('Detail');
+        detailTextarea.value = formattedData;
+
+        function removeRow(row) {
+            var tableBody = document.getElementById('selectedUsersTableBody');
+            tableBody.deleteRow(row.rowIndex - 1);
+        }
+        document.getElementById('selectedUsersTableBody').addEventListener('click', function (event) {
+            if (event.target.tagName === 'BUTTON') {
+                removeRow(event.target.closest('tr'));
+            }
+        });
+        // Mendapatkan elemen-elemen HTML yang diperlukan
+        document.getElementById('listPengguna').addEventListener('change', function () {
+            var selectedOption = document.getElementById('listPengguna').options[document.getElementById('listPengguna').selectedIndex];
+
+            // Check if the selected option has a value
+            if (selectedOption.value) {
+                var tableBody = document.getElementById('selectedUsersTableBody');
+
+                // Create a new row and cells
+                var row = tableBody.insertRow();
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+
+                // Set the cell values
+                cell1.innerHTML = selectedOption.text;
+
+                // Create a delete button in the second cell
+                var deleteButton = document.createElement('button');
+                deleteButton.innerHTML = 'Hapus';
+                deleteButton.className = 'btn btn-danger btn-sm';
+                deleteButton.addEventListener('click', function () {
+                    // Hapus baris ketika tombol hapus diklik
+                    tableBody.deleteRow(row.rowIndex);
+                });
+                cell2.appendChild(deleteButton);
+
+                // Set the value in the third cell (hidden column)
+                var hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'SelectedUserValues';
+                hiddenInput.value = selectedOption.value;
+                cell3.appendChild(hiddenInput);
+            }
+        });
+    });
+    function updateSelectedUserIdsInput() {
+        var tableBody = document.getElementById('selectedUsersTableBody');
+        var selectedUserIdsInput = document.getElementById('selectedUserIds');
+
+        selectedUserIdsInput.value = '';
+
+        for (var i = 0; i < tableBody.rows.length; i++) {
+            var cell3 = tableBody.rows[i].cells[2];
+            var hiddenInput = cell3.querySelector('input[type="hidden"]');
+            selectedUserIdsInput.value += hiddenInput.value + ',';
+        }
+    }
     // Handling form submission
     document.querySelector('form').addEventListener('submit', function (e) {
         e.preventDefault();
+        updateSelectedUserIdsInput();
 
         // Get values from the form fields
         var mahasiswaValue = document.getElementById('Mahasiswa').value;
         var nimValue = document.getElementById('Nim').value;
         var prodiValue = document.getElementById('Prodi').value;
+        var detail = document.getElementById('Detail').value;
 
-        // Concatenate the values
-        var mahasiswaProdiNimValue = mahasiswaValue + '|' + nimValue + '|' + prodiValue;
+        var suratTugasFile = document.getElementById('Surattugas').files[0];
+        var laporanFile = document.getElementById('Laporan').files[0];
+        var buktiPendukungFile = document.getElementById('Buktipendukung').files[0];
 
+        if (!suratTugasFile && !laporanFile && !buktiPendukungFile) {
+            document.getElementById('fileValidationMessage').innerText = 'Harap isi setidaknya satu file.';
+            return;
+        } else {
+            document.getElementById('fileValidationMessage').innerText = ''; // Reset the message if files are selected
+        }
+
+        var concatenatedValues = detail;
+        concatenatedValues = concatenatedValues.replace(/,\s*$/, '');
         // Assign the concatenated value to the MahasiswaProdiNim field
-        document.getElementById('MahasiswaProdiNim').value = mahasiswaProdiNimValue;
+        document.getElementById('MahasiswaProdiNim').value = concatenatedValues;
 
         // Submit the form
         this.submit();
+    });
+
+    // Handling Mahasiswa button click
+    document.getElementById('Mhs').addEventListener('click', function (e) {
+        e.preventDefault();
+
+        // Get value from Mahasiswa field
+        var mahasiswaValue = document.getElementById('Mahasiswa').value;
+
+        // Get current value of Detail textarea
+        var currentDetailValue = document.getElementById('Detail').value;
+        var currentValues = currentDetailValue.split(',');
+        if (!currentDetailValue) {
+            var newDetailValue = mahasiswaValue + ',';
+        }
+        else {
+            if (currentValues.length >= 3) {
+                var newDetailValue = (currentDetailValue ? currentDetailValue + '\n' : '') + mahasiswaValue + ',';
+            } else {
+                var newDetailValue = mahasiswaValue + (currentDetailValue ? ',' + currentDetailValue : '');
+            }
+        }
+        // Assign the concatenated value to the Detail textarea
+        document.getElementById('Detail').value = newDetailValue;
+        document.getElementById('Mahasiswa').value = '';
+    });
+
+    // Handling Nim button click
+    document.getElementById('NM').addEventListener('click', function (e) {
+        e.preventDefault();
+
+        // Get value from Nim field
+        var nimValue = document.getElementById('Nim').value;
+
+        // Get current value of Detail textarea
+        var currentDetailValue = document.getElementById('Detail').value;
+
+        if (!currentDetailValue) {
+            // Check if Mahasiswa data is already present
+            var separator = currentDetailValue.includes(',') ? ',' : '';
+        } else {
+            var separator = '';
+        }
+        // Concatenate the values with |
+        var newDetailValue = currentDetailValue + (currentDetailValue ? separator + nimValue : nimValue);
+
+        // Assign the concatenated value to the Detail textarea
+        document.getElementById('Detail').value = newDetailValue;
+        document.getElementById('Nim').value = '';
+    });
+
+    // Handling Prodi dropdown change
+    document.getElementById('Prodi').addEventListener('change', function (e) {
+        // Get selected value from Prodi dropdown
+        //var prodiValue = this.value;
+        var prodiValue = this.options[this.selectedIndex].text;
+
+        // Get current value of Detail textarea
+        var currentDetailValue = document.getElementById('Detail').value;
+
+        // Check if Nim data is already present
+        var separator = currentDetailValue.includes(',') ? ',' : '';
+
+        // Concatenate the values with |
+        var newDetailValue = currentDetailValue + (currentDetailValue ? separator + prodiValue  : prodiValue);
+
+        // Assign the concatenated value to the Detail textarea
+        document.getElementById('Detail').value = newDetailValue;
     });
 </script>
 

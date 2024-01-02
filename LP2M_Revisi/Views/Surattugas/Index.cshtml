@@ -58,10 +58,10 @@
                         <label style="font-weight: bold;" for="ddSemester">Status</label>
                         <select name="ddSemester" id="ddSemester" class="form-control dropdown" style="min-width: 260px !important;">
                             <option value="">-- Semua --</option>
-                            <option value="Diterima">Diterima</option>
-                            <option value="Ditolak">Ditolak</option>
-                            <option value="Belum">Belum Diajukan</option>
-                            <option value="Konfirmasi">Menunggu Konfirmasi</option>
+                            <option value="2">Diterima</option>
+                            <option value="3">Ditolak</option>
+                            <option value="0">Belum Diajukan</option>
+                            <option value="1">Menunggu Konfirmasi</option>
                         </select>
                     </div>
                 </div>
@@ -169,18 +169,18 @@ else if (TempData["ErrorMessage"] != null)
             <td>
                 @if (item.Status == 0)
                 {
-                            <button class="btn btn-sm btn-success kirim-button" data-id="@item.Id">
-                                <i class="fa fa-paper-plane"></i>
-                            </button>
-                            <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@item.Id" title="Edit">
-                                <i class="fa fa-pencil-square-o"></i>
-                            </a>
-                            <a class="btn btn-sm btn-info btn-info-modal" asp-action="Details" asp-route-id="@item.Id" title="Detail">
-                                <i class="fa fa-info-circle"></i>
-                            </a>
-                            <a class="btn btn-sm btn-danger delete-button" asp-action="Delete" asp-route-id="@item.Id" title="Hapus">
-                                <i class="fa fa-trash-o"></i>
-                            </a>
+                    <button class="btn btn-sm btn-success kirim-button" data-id="@item.Id">
+                        <i class="fa fa-paper-plane"></i>
+                    </button>
+                    <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@item.Id" title="Edit">
+                        <i class="fa fa-pencil-square-o"></i>
+                    </a>
+                    <a class="btn btn-sm btn-info btn-info-modal" asp-action="Details" asp-route-id="@item.Id" title="Detail">
+                        <i class="fa fa-info-circle"></i>
+                    </a>
+                    <a class="btn btn-sm btn-danger delete-button" asp-action="Delete" asp-route-id="@item.Id" title="Hapus">
+                        <i class="fa fa-trash-o"></i>
+                    </a>
                 }
                 else
                 {
@@ -297,6 +297,10 @@ else if (TempData["ErrorMessage"] != null)
         $(".alert").on("click", ".close", function (e) {
             $(this).parent().hide();
         });
+    });
+    var dropdownMenu = document.querySelector('.dropdown-menu');
+    dropdownMenu.addEventListener('click', function (e) {
+        e.stopPropagation(); // Prevents the dropdown from closing when an item is clicked
     });
 
 </script>

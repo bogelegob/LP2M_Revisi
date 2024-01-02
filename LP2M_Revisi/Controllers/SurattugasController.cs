@@ -236,7 +236,7 @@ namespace LP2M_Revisi.Controllers
             {
                 ViewBag.Layout = "_Layout";
             }
-            Console.WriteLine("Ini mahhhhhhhhhhhhhhhhhhh");
+            
             // Pilihan pengguna untuk dropdown
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", surattuga.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", surattuga.Inputby);
@@ -280,10 +280,8 @@ namespace LP2M_Revisi.Controllers
             }
 
             var surattuga = await _context.Surattugas.FindAsync(id);
-            var detailsurats = await _context.Detailsurats
-            .Where(d => d.Idsurat == id)
-            .Select(d => d.Idpengguna)
-            .ToListAsync();
+            
+
             if (surattuga == null)
             {
                 return NotFound();
@@ -294,10 +292,22 @@ namespace LP2M_Revisi.Controllers
                 // Jika status bukan 0, misalnya status != 0 mengarahkan kembali ke halaman Index
                 return RedirectToAction(nameof(Index));
             }
+            var detailsurats = await _context.Detailsurats
+            .Where(d => d.Idsurat == id)
+            .Select(d => d.Idpengguna)
+            .ToListAsync();
+            var penggunaDetails = await _context.Penggunas
+            .Where(p => detailsurats.Contains(p.Id))
+            .Select(p => new { Id = p.Id, Nama = p.Nama })
+            .ToListAsync();
+            foreach (var pengguna in penggunaDetails)
+            {
+                Console.WriteLine($"ID: {pengguna.Id}, Nama: {pengguna.Nama}");
+            }
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", surattuga.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", surattuga.Inputby);
             ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
-            ViewData["Detail"] = new SelectList(_context.Detailsurats, "Idpengguna", "Idpengguna");
+            ViewBag.Detail = penggunaDetails;
             return View(surattuga);
         }
 
@@ -306,8 +316,9 @@ namespace LP2M_Revisi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Namakegiatan,Masapelaksanaan,Buktipendukung,Status,Inputby,Inputdate,Editby,Editdate,Surattugas")] Surattuga surattuga, IFormFile Buktipendukung)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Namakegiatan,Masapelaksanaan,Buktipendukung,Status,Inputby,Inputdate,Editby,Editdate,Surattugas")] Surattuga surattuga, IFormFile Buktipendukung, string SelectedUserIds)
         {
+
             if (ModelState.IsValid)
             {
                 try
@@ -324,6 +335,30 @@ namespace LP2M_Revisi.Controllers
                             await Buktipendukung.CopyToAsync(memoryStream);
                             // Menyimpan konten file sebagai byte array dalam properti Buktipendukung
                             surattuga.Buktipendukung = memoryStream.ToArray();
+                        }
+                    }
+                    string[] selectedIdsArray = SelectedUserIds.Split(',');
+
+                    var existingDetailsurats = await _context.Detailsurats
+                        .Where(d => d.Idsurat == surattuga.Id)
+                        .ToListAsync();
+
+                    _context.Detailsurats.RemoveRange(existingDetailsurats);
+                    await _context.SaveChangesAsync();
+
+                    // Add new Detailsurat entries based on the selected user IDs
+                    foreach (var userId in selectedIdsArray)
+                    {
+                        if (!string.IsNullOrEmpty(userId))
+                        {
+                            // Buat objek Detailbuku dan set nilainya
+                            var detailsurat = new Detailsurat
+                            {
+                                Idsurat = surattuga.Id,
+                                Idpengguna = userId,
+                            };
+                            // Tambahkan objek Detailbuku ke konteks
+                            _context.Detailsurats.Add(detailsurat);
                         }
                     }
                     _context.Update(surattuga);
@@ -352,6 +387,15 @@ namespace LP2M_Revisi.Controllers
             {
                 ViewBag.Layout = "_Layout";
             }
+            var detailsurats = await _context.Detailsurats
+            .Where(d => d.Idsurat == id)
+            .Select(d => d.Idpengguna)
+            .ToListAsync();
+            var penggunaDetails = await _context.Penggunas
+            .Where(p => detailsurats.Contains(p.Id))
+            .Select(p => new { Id = p.Id, Nama = p.Nama })
+            .ToListAsync();
+            ViewBag.Detail = penggunaDetails;
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", surattuga.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", surattuga.Inputby);
             ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");

@@ -189,6 +189,15 @@ namespace LP2M_Revisi.Controllers
             {
                 return NotFound();
             }
+            var detailbuku = await _context.Detailprosidings
+            .Where(d => d.Idprosiding == id)
+            .Select(d => d.Idpengguna)
+            .ToListAsync();
+            var penggunaDetails = await _context.Penggunas
+            .Where(p => detailbuku.Contains(p.Id))
+            .Select(p => new { Id = p.Id, Nama = p.Nama })
+            .ToListAsync();
+            ViewBag.Detail = penggunaDetails;
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Id", prosiding.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Id", prosiding.Inputby);
             ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
@@ -200,7 +209,7 @@ namespace LP2M_Revisi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Judulprogram,Judulpaper,Kategori,Penyelenggara,Waktuterbit,Tempatpelaksanaan,Keterangan,Status,Inputby,Inputdate,Editby,Editdate")] Prosiding prosiding)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Judulprogram,Judulpaper,Kategori,Penyelenggara,Waktuterbit,Tempatpelaksanaan,Keterangan,Status,Inputby,Inputdate,Editby,Editdate")] Prosiding prosiding, string SelectedUserIds)
         {
             if (id != prosiding.Id)
             {
@@ -211,6 +220,30 @@ namespace LP2M_Revisi.Controllers
             {
                 try
                 {
+                    string[] selectedIdsArray = SelectedUserIds.Split(',');
+
+                    var existingDetailsurats = await _context.Detailprosidings
+                        .Where(d => d.Idprosiding == prosiding.Id)
+                        .ToListAsync();
+
+                    _context.Detailprosidings.RemoveRange(existingDetailsurats);
+                    await _context.SaveChangesAsync();
+
+                    // Add new Detailsurat entries based on the selected user IDs
+                    foreach (var userId in selectedIdsArray)
+                    {
+                        if (!string.IsNullOrEmpty(userId))
+                        {
+                            // Buat objek Detailbuku dan set nilainya
+                            var detailsurat = new Detailprosiding
+                            {
+                                Idprosiding = prosiding.Id,
+                                Idpengguna = userId,
+                            };
+                            // Tambahkan objek Detailbuku ke konteks
+                            _context.Detailprosidings.Add(detailsurat);
+                        }
+                    }
                     _context.Update(prosiding);
                     await _context.SaveChangesAsync();
                 }
@@ -227,6 +260,15 @@ namespace LP2M_Revisi.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            var detailbuku = await _context.Detailprosidings
+            .Where(d => d.Idprosiding == id)
+            .Select(d => d.Idpengguna)
+            .ToListAsync();
+            var penggunaDetails = await _context.Penggunas
+            .Where(p => detailbuku.Contains(p.Id))
+            .Select(p => new { Id = p.Id, Nama = p.Nama })
+            .ToListAsync();
+            ViewBag.Detail = penggunaDetails;
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Id", prosiding.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Id", prosiding.Inputby);
             ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");

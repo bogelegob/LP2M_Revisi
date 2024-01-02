@@ -15,7 +15,6 @@
         </div>
         <div class="card-block">
              <div class="row">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input asp-for="Id" class="form-control" type="hidden" value="@Model.Id"/>
                 <div class="col-lg-4">
                     <div class="form-group">
@@ -89,9 +88,13 @@
                     <div class="form-group">
                         <label for="listPengguna" class="control-label">Pilih Pengguna</label>
                         <!-- Gunakan data pengguna yang dikirim dari controller untuk membuat dropdown -->
-                        <select id="listPengguna" asp-items="@ViewBag.ListPengguna" class="form-control"></select>
-                        <br>
-                        <a id="btnTambahPengguna" class="btn btn-secondary">Tambah Pengguna</a>
+                        <select id="listPengguna" class="form-control">
+                            <option value="">-- Pilih Pengguna --</option>
+                            @foreach (var pengguna in ViewBag.ListPengguna)
+                            {
+                                <option value="@pengguna.Value">@pengguna.Text</option>
+                            }
+                        </select>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -198,10 +201,11 @@
         }
 
         // Concatenate the values
-        var mahasiswaProdiNimValue = detail;
+        var concatenatedValues = detail;
+        concatenatedValues = concatenatedValues.replace(/,\s*$/, '').replace(/\n/g, ',');
 
         // Assign the concatenated value to the MahasiswaProdiNim field
-        document.getElementById('MahasiswaProdiNim').value = mahasiswaProdiNimValue;
+        document.getElementById('MahasiswaProdiNim').value = concatenatedValues;
 
         // Submit the form
         this.submit();
@@ -269,7 +273,7 @@
         var separator = currentDetailValue.includes(',') ? ',' : '';
 
         // Concatenate the values with |
-        var newDetailValue = currentDetailValue + (currentDetailValue ? separator + prodiValue + ',' : prodiValue + '|');
+        var newDetailValue = currentDetailValue + (currentDetailValue ? separator + prodiValue : prodiValue);
 
         // Assign the concatenated value to the Detail textarea
         document.getElementById('Detail').value = newDetailValue;

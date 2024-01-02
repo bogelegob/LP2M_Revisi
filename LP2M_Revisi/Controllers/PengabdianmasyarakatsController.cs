@@ -218,16 +218,25 @@ namespace LP2M_Revisi.Controllers
             {
                 return NotFound();
             }
-            string[] splittedData = pengabdianmasyarakat.MahasiswaProdiNim.Split('|');
+            string[] splittedData = pengabdianmasyarakat.MahasiswaProdiNim.Split(',');
+            var detailsurats = await _context.Detailpengabdians
+            .Where(d => d.Idpengabdian == id)
+            .Select(d => d.Idpengguna)
+            .ToListAsync();
+            var penggunaDetails = await _context.Penggunas
+            .Where(p => detailsurats.Contains(p.Id))
+            .Select(p => new { Id = p.Id, Nama = p.Nama })
+            .ToListAsync();
 
             // Masukkan masing-masing data ke ViewBag
             ViewBag.Mahasiswa = splittedData.Length > 0 ? splittedData[0] : "";
             ViewBag.Nim = splittedData.Length > 1 ? splittedData[1] : "";
-            ViewBag.Prodi = splittedData.Length > 2 ? splittedData[2] : "";
+            //ViewBag.Prodi = splittedData.Length > 2 ? splittedData[2] : "";
             ViewData["Prodi"] = new SelectList(_context.Prodis, "Id", "Nama", splittedData[2]);
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", pengabdianmasyarakat.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", pengabdianmasyarakat.Inputby);
             ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
+            ViewBag.Detail = penggunaDetails;
             return View(pengabdianmasyarakat);
         }
 
@@ -236,7 +245,7 @@ namespace LP2M_Revisi.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Namakegiatan,Waktupelaksanaan,Jumlahpenerima,Surattugas,Laporan,Buktipendukung,MahasiswaProdiNim,Status,Inputby,Inputdate,Editby,Editdate")] Pengabdianmasyarakat pengabdianmasyarakat, IFormFile Surattugas, IFormFile Laporan, IFormFile Buktipendukung)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Namakegiatan,Waktupelaksanaan,Jumlahpenerima,Surattugas,Laporan,Buktipendukung,MahasiswaProdiNim,Status,Inputby,Inputdate,Editby,Editdate")] Pengabdianmasyarakat pengabdianmasyarakat, IFormFile Surattugas, IFormFile Laporan, IFormFile Buktipendukung, string SelectedUserIds)
         {
             if (id != pengabdianmasyarakat.Id)
             {
@@ -279,6 +288,30 @@ namespace LP2M_Revisi.Controllers
                             pengabdianmasyarakat.Buktipendukung = memoryStream.ToArray();
                         }
                     }
+                    string[] selectedIdsArray = SelectedUserIds.Split(',');
+
+                    var existingDetailsurats = await _context.Detailpengabdians
+                        .Where(d => d.Idpengabdian == pengabdianmasyarakat.Id)
+                        .ToListAsync();
+
+                    _context.Detailpengabdians.RemoveRange(existingDetailsurats);
+                    await _context.SaveChangesAsync();
+
+                    // Add new Detailsurat entries based on the selected user IDs
+                    foreach (var userId in selectedIdsArray)
+                    {
+                        if (!string.IsNullOrEmpty(userId))
+                        {
+                            // Buat objek Detailbuku dan set nilainya
+                            var detailpengabdian = new Detailpengabdian
+                            {
+                                Idpengabdian = pengabdianmasyarakat.Id,
+                                Idpengguna = userId,
+                            };
+                            // Tambahkan objek Detailbuku ke konteks
+                            _context.Detailpengabdians.Add(detailpengabdian);
+                        }
+                    }
                     _context.Update(pengabdianmasyarakat);
                     await _context.SaveChangesAsync();
                 }
@@ -295,7 +328,15 @@ namespace LP2M_Revisi.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            string[] splittedData = pengabdianmasyarakat.MahasiswaProdiNim.Split('|');
+            string[] splittedData = pengabdianmasyarakat.MahasiswaProdiNim.Split(',');
+            var detailsurats = await _context.Detailpengabdians
+            .Where(d => d.Idpengabdian == id)
+            .Select(d => d.Idpengguna)
+            .ToListAsync();
+            var penggunaDetails = await _context.Penggunas
+            .Where(p => detailsurats.Contains(p.Id))
+            .Select(p => new { Id = p.Id, Nama = p.Nama })
+            .ToListAsync();
             ViewBag.Mahasiswa = splittedData.Length > 0 ? splittedData[0] : "";
             ViewBag.Nim = splittedData.Length > 1 ? splittedData[1] : "";
             ViewBag.Prodi = splittedData.Length > 2 ? splittedData[2] : "";
@@ -303,6 +344,7 @@ namespace LP2M_Revisi.Controllers
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", pengabdianmasyarakat.Editby);
             ViewData["Inputby"] = new SelectList(_context.Penggunas, "Id", "Nama", pengabdianmasyarakat.Inputby);
             ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
+            ViewBag.Detail = penggunaDetails;
             return View(pengabdianmasyarakat);
         }
 

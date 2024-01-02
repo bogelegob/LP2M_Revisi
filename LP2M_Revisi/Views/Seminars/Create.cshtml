@@ -7,67 +7,163 @@
     Layout = ViewBag.Layout;
 }
 
-<h1>Tambah</h1>
-
-<h4>Seminar</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<form asp-action="Create">
+    <div class="card">
+        <div class="card-header">
+            <label><b>Tambah Seminar</b></label>
+        </div>
+        <div class="card-block">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <input asp-for="Id" class="form-control" type="hidden" value="@Model.Id"/>
-                <span asp-validation-for="Id" class="text-danger"></span>
+            <input asp-for="Id" class="form-control" type="hidden" value="@Model.Id" />
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="Judulprogram" class="control-label">Judul Program</label>
+                        <input asp-for="Judulprogram" class="form-control" />
+                        <span asp-validation-for="Judulprogram" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="Judulpaper" class="control-label">Judul Paper</label>
+                        <input asp-for="Judulpaper" class="form-control" />
+                        <span asp-validation-for="Judulpaper" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="Kategori" class="control-label">Kategori</label>
+                        <select asp-for="Kategori" class="form-control">
+                            <option value="Internasional">Internasional</option>
+                            <option value="Nasional">Nasional</option>
+                        </select>
+                        <span asp-validation-for="Kategori" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="Penyelenggara" class="control-label"></label>
+                        <input asp-for="Penyelenggara" class="form-control" />
+                        <span asp-validation-for="Penyelenggara" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="Waktupelaksanaan" class="control-label">Waktu Pelaksanaan</label>
+                        <input asp-for="Waktupelaksanaan" class="form-control" />
+                        <span asp-validation-for="Waktupelaksanaan" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label asp-for="Tempatpelaksanaan" class="control-label">Tempat Pelaksanaan</label>
+                        <input asp-for="Tempatpelaksanaan" class="form-control" />
+                        <span asp-validation-for="Tempatpelaksanaan" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="listPengguna" class="control-label">Pilih Pengguna</label>
+                        <!-- Gunakan data pengguna yang dikirim dari controller untuk membuat dropdown -->
+                        <select id="listPengguna" class="form-control">
+                            <option value="">-- Pilih Pengguna --</option>
+                            @foreach (var pengguna in ViewBag.ListPengguna)
+                            {
+                                <option value="@pengguna.Value">@pengguna.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Tambahkan textarea untuk menampilkan data pengguna yang dipilih -->
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="selectedUsers" class="control-label">Data Pengguna yang Dipilih</label>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Nama Pengguna</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="selectedUsersTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label asp-for="Keterangan" class="control-label"></label>
+                        <input asp-for="Keterangan" class="form-control" />
+                        <span asp-validation-for="Keterangan" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="hidden" id="selectedUserIds" name="SelectedUserIds" />
+                </div>
             </div>
             <div class="form-group">
-                <label asp-for="Judulprogram" class="control-label">Judul Program</label>
-                <input asp-for="Judulprogram" class="form-control" />
-                <span asp-validation-for="Judulprogram" class="text-danger"></span>
+                <button type="submit" class="btn btn-primary float-left">Simpan</button>
+                <a asp-action="Index" class="btn btn-secondary float-right">Back to List</a>
             </div>
-            <div class="form-group">
-                <label asp-for="Judulpaper" class="control-label">Judul Paper</label>
-                <input asp-for="Judulpaper" class="form-control" />
-                <span asp-validation-for="Judulpaper" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Kategori" class="control-label">Kategori</label>
-                <select asp-for="Kategori" class="form-control">
-                    <option value="Internasional">Internasional</option>
-                    <option value="Nasional">Nasional</option>
-                </select>
-                <span asp-validation-for="Kategori" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Penyelenggara" class="control-label"></label>
-                <input asp-for="Penyelenggara" class="form-control" />
-                <span asp-validation-for="Penyelenggara" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Waktupelaksanaan" class="control-label">Waktu Pelaksanaan</label>
-                <input asp-for="Waktupelaksanaan" class="form-control" />
-                <span asp-validation-for="Waktupelaksanaan" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Tempatpelaksanaan" class="control-label">Tempat Pelaksanaan</label>
-                <input asp-for="Tempatpelaksanaan" class="form-control" />
-                <span asp-validation-for="Tempatpelaksanaan" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Keterangan" class="control-label"></label>
-                <input asp-for="Keterangan" class="form-control" />
-                <span asp-validation-for="Keterangan" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Mendapatkan elemen-elemen HTML yang diperlukan
+        document.getElementById('listPengguna').addEventListener('change', function () {
+            var selectedOption = document.getElementById('listPengguna').options[document.getElementById('listPengguna').selectedIndex];
 
+            // Check if the selected option has a value
+            if (selectedOption.value) {
+                var tableBody = document.getElementById('selectedUsersTableBody');
+
+                // Create a new row and cells
+                var row = tableBody.insertRow();
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+
+                // Set the cell values
+                cell1.innerHTML = selectedOption.text;
+
+                // Create a delete button in the second cell
+                var deleteButton = document.createElement('button');
+                deleteButton.innerHTML = 'Hapus';
+                deleteButton.className = 'btn btn-danger btn-sm';
+                deleteButton.addEventListener('click', function () {
+                    // Hapus baris ketika tombol hapus diklik
+                    tableBody.deleteRow(row.rowIndex);
+                });
+                cell2.appendChild(deleteButton);
+
+                // Set the value in the third cell (hidden column)
+                var hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'SelectedUserValues';
+                hiddenInput.value = selectedOption.value;
+                cell3.appendChild(hiddenInput);
+            }
+        });
+        document.querySelector('form').addEventListener('submit', function () {
+            updateSelectedUserIdsInput();
+        });
+
+        function updateSelectedUserIdsInput() {
+            var tableBody = document.getElementById('selectedUsersTableBody');
+            var selectedUserIdsInput = document.getElementById('selectedUserIds');
+
+            selectedUserIdsInput.value = '';
+
+            for (var i = 0; i < tableBody.rows.length; i++) {
+                var cell3 = tableBody.rows[i].cells[2];
+                var hiddenInput = cell3.querySelector('input[type="hidden"]');
+                selectedUserIdsInput.value += hiddenInput.value + ',';
+            }
+        }
+    });
+</script>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
