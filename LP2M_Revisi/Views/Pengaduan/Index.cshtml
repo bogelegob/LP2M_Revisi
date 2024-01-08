@@ -35,9 +35,9 @@
 <br>*@
 <div class="row mb-3">
     <div class="col-12 col-md-1">
-   
-            <button class="btn btn-sm btn-danger tolak-button" data-id="@ViewBag.pengguna">
-                <i class="fa fa-times"></i>
+
+        <button class="btn btn-sm btn-primary tolak-button" data-id="@ViewBag.pengguna">
+            <i class="fa fa-plus"></i>&nbsp;Tambah
             </button>
         
     </div>
@@ -182,9 +182,6 @@ else if (TempData["ErrorMessage"] != null)
                             <a class="btn btn-sm btn-danger delete-button" asp-action="Delete" asp-route-id="@item.Id" title="Hapus">
                                 <i class="fa fa-trash-o"></i>
                             </a>
-                            <button class="btn btn-sm btn-danger tolak-button" data-id="@item.pengguna">
-                                <i class="fa fa-times"></i>
-                            </button>
                 }
                 else
                 {
@@ -204,6 +201,57 @@ else if (TempData["ErrorMessage"] != null)
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="tolakModalLabel">Tambah Pengaduan - Masukkan Pengaduan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="alasan">Jenis Pengaduan:</label>
+                    <select class="form-control" id="jenispengaduan">
+                        <option value="">Pilih Jenis</option>
+                        <option value="edit">Edit</option>
+                        <option value="hapus">Hapus</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="alasan">Pengaduan Data:</label>
+                    <select class="form-control" id="datapengaduan">
+                        <option value="">Pilih Pengaduan</option>
+                        <option value="pengabdian">Pengabdian</option>
+                        <option value="prosiding">Prosiding</option>
+                        <option value="buku">Buku</option>
+                        <option value="jurnal">Jurnal</option>
+                        <option value="seminar">Seminar</option>
+                        <option value="hakcipta">Hak Cipta</option>
+                        <option value="hakpaten">Hak Paten</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="alasan">Data Mana :</label>
+                    <select class="form-control" id="databro">
+                        <option value="">Pilih Data</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="alasan">Alasan Pengaduan:</label>
+                    <textarea class="form-control" id="alasan" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="tolakBatal">Batal</button>
+                <button type="button" class="btn btn-danger" id="tolakSubmit">Buat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add this modal structure at the end of your HTML -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Pengaduan - Masukkan Pengaduan</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
