@@ -97,8 +97,11 @@ namespace LP2M_Revisi.Controllers
             {
                 ViewBag.Layout = "_Layout";
             }
+            Pengguna pengguna = new Pengguna();
+            pengguna.Id = GenerateNextId();
+
             ViewData["Prodi"] = new SelectList(_context.Prodis, "Id", "Nama");
-            return View();
+            return View(pengguna);
         }
 
         // POST: Penggunas/Create

@@ -2,17 +2,24 @@
 
 @{
     ViewData["Title"] = "Master Prodi";
-    ViewData["Routing"] = "Prodi";
+    ViewBag.Title = "Data Prodi";
     Layout = ViewBag.Layout;
 }
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
 <style>
     .border-container {
         border: 1px solid #ccc;
         border-radius: 10px;
         padding: 10px;
         display: inline-block;
+    }
+
+    #myTable th {
+        text-align: center;
     }
 </style>
 <div class="row mb-5">
@@ -32,37 +39,63 @@
     </div>
 </div>
 <br>
-<div class="row mb-3">
-    <div class="col-12 col-md-1">
-        <a asp-action="Create" class="btn btn-primary">
-            <i class="fa fa-plus"></i>&nbsp;Tambah
-        </a>
-    </div>
-    <div class="col-12 col-md-8">
+<div class="row">
+    <div class="col-lg-12">
         <div class="input-group">
-            <input id="cari" type="text" class="form-control" placeholder="Cari">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="button">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="fa fa-plus"></i>&nbsp;Tambah
+            </a>
+            <input name="cari" type="text" id="cari" class="form-control" placeholder="Pencarian" />
+            <span class="input-group-btn">
+                <a id="MainContent_linkCari" class="btn btn-secondary" href="#">
                     <i class="fa fa-search"></i>&nbsp;Cari
-                </button>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-md-3">
-        <div class="input-group">
-            <select class="form-control" id="filter">
-                <option value="all">Semua Kategori</option>
-                <option value="Tahun">Tahun</option>
-                <option value="Prodi">Bulan</option>
-            </select>
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="button">
+                </a>
+            </span>
+            <div class="input-group-btn">
+                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" fdprocessedid="63p3so">
                     <i class="fa fa-filter"></i>&nbsp;Filter
                 </button>
+                <div class="dropdown-menu dropdown-menu-right" style="padding: 20px; min-width: 300px !important;">
+                    <div class="form-group">
+                        <label style="font-weight: bold;" for="ddSemester">Status</label>
+                        <select name="ddSemester" id="ddSemester" class="form-control dropdown" style="min-width: 260px !important;">
+                            <option value="">-- Semua --</option>
+                            <option value="Diterima">Diterima</option>
+                            <option value="Ditolak">Ditolak</option>
+                            <option value="Belum">Belum Diajukan</option>
+                            <option value="Konfirmasi">Menunggu Konfirmasi</option>
+                        </select>
+                    </div>
+                </div>
             </div>
+            <span>
+                <a asp-action="ExportToExcel" class="btn btn-success">
+                    <i class="fa fa-file-excel"></i>&nbsp;Export
+                </a>
+            </span>
         </div>
     </div>
 </div>
+<br>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        @TempData["SuccessMessage"]
+    </div>
+}
+else if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <div style="overflow-x: auto; width: 100%;">
     <table id="myTable" class="table table-hover grid scrollstyle text-center" width="100%">
         <thead>
@@ -133,6 +166,20 @@
             }
         }
     }
+    $(document).ready(function () {
+        // Initialize DataTable
+        var table = $('#myTable').DataTable({
+            "pageLength": 10,
+            "lengthMenu": [10, 25, 50, 75, 100],
+            "searching": false,
+            "ordering": false,
+        });
+
+        // Call the updateTotalData function whenever the table is drawn
+        table.on('draw', function () {
+            updateTotalData();
+        });
+    });
 
     // Panggil fungsi saat halaman dimuat
     window.addEventListener('load', updateTotalData);

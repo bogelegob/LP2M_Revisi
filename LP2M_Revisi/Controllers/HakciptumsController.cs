@@ -329,12 +329,27 @@ namespace LP2M_Revisi.Controllers
                 return Problem("Entity set 'ApplicationDbContext.Hakcipta'  is null.");
             }
             var hakciptum = await _context.Hakcipta.FindAsync(id);
-            if (hakciptum != null)
+            var detailhakciptum = await _context.Detailhakciptas.Where(b => b.Idhakcipta == id).ToListAsync();
+
+            if (detailhakciptum.Any() || hakciptum != null)
             {
-                _context.Hakcipta.Remove(hakciptum);
+                if (detailhakciptum.Any())
+                {
+                    _context.Detailhakciptas.RemoveRange(detailhakciptum);
+                }
+                if (hakciptum != null)
+                {
+                    _context.Hakcipta.Remove(hakciptum);
+                }
+
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Data berhasil dihapus.";
             }
-            
-            await _context.SaveChangesAsync();
+            else
+            {
+                TempData["ErrorMessage"] = "Tidak ada data yang dihapus.";
+            }
             return RedirectToAction(nameof(Index));
         }
 

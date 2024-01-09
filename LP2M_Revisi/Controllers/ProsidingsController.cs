@@ -314,12 +314,27 @@ namespace LP2M_Revisi.Controllers
                 return Problem("Entity set 'ApplicationDbContext.Prosidings'  is null.");
             }
             var prosiding = await _context.Prosidings.FindAsync(id);
-            if (prosiding != null)
+            var detailprosiding = await _context.Detailprosidings.Where(b => b.Idprosiding == id).ToListAsync();
+
+            if (detailprosiding.Any() || prosiding != null)
             {
-                _context.Prosidings.Remove(prosiding);
+                if (detailprosiding.Any())
+                {
+                    _context.Detailprosidings.RemoveRange(detailprosiding);
+                }
+                if (prosiding != null)
+                {
+                    _context.Prosidings.Remove(prosiding);
+                }
+
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Data berhasil dihapus.";
             }
-            
-            await _context.SaveChangesAsync();
+            else
+            {
+                TempData["ErrorMessage"] = "Tidak ada data yang dihapus.";
+            }
             return RedirectToAction(nameof(Index));
         }
 

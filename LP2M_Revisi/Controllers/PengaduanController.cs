@@ -339,7 +339,7 @@ namespace LP2M_Revisi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> KirimConfirm(string id)
+        public async Task<IActionResult> KirimConfirm(int id)
         {
             var response = new { success = false, message = "Gagal mengirim Surat Tugas." };
 

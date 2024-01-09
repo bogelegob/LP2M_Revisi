@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Master Surat Tugas";
-    ViewData["Routing"] = "Surat Tugas";
+    ViewBag.Title = "Surat Tugas";
     Layout = ViewBag.Layout;
 }
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -58,10 +58,10 @@
                         <label style="font-weight: bold;" for="ddSemester">Status</label>
                         <select name="ddSemester" id="ddSemester" class="form-control dropdown" style="min-width: 260px !important;">
                             <option value="">-- Semua --</option>
-                            <option value="2">Diterima</option>
-                            <option value="3">Ditolak</option>
-                            <option value="0">Belum Diajukan</option>
-                            <option value="1">Menunggu Konfirmasi</option>
+                            <option value="Diterima">Diterima</option>
+                            <option value="Ditolak">Ditolak</option>
+                            <option value="Belum">Belum Diajukan</option>
+                            <option value="Konfirmasi">Menunggu Konfirmasi</option>
                         </select>
                     </div>
                 </div>
@@ -72,8 +72,9 @@
                 </a>
             </span>
         </div>
-    </div>
+    </div>
 </div>
+<br>
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success" role="alert">
@@ -285,7 +286,7 @@ else if (TempData["ErrorMessage"] != null)
                             }
                         },
                         error: function () {
-                            Swal.fire("Error!", "Terjadi kesalahan saat menghapus Laptop.", "error");
+                            Swal.fire("Error!", "Terjadi kesalahan saat mengirim surat tugas.", "error");
                         }
                     });
                 }

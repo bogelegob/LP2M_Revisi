@@ -313,12 +313,27 @@ namespace LP2M_Revisi.Controllers
                 return Problem("Entity set 'ApplicationDbContext.Hakpatens'  is null.");
             }
             var hakpaten = await _context.Hakpatens.FindAsync(id);
-            if (hakpaten != null)
+            var detailhakpaten = await _context.Detailhakpatens.Where(b => b.Idhakpaten == id).ToListAsync();
+
+            if (detailhakpaten.Any() || hakpaten != null)
             {
-                _context.Hakpatens.Remove(hakpaten);
+                if (detailhakpaten.Any())
+                {
+                    _context.Detailhakpatens.RemoveRange(detailhakpaten);
+                }
+                if (hakpaten != null)
+                {
+                    _context.Hakpatens.Remove(hakpaten);
+                }
+
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Data berhasil dihapus.";
             }
-            
-            await _context.SaveChangesAsync();
+            else
+            {
+                TempData["ErrorMessage"] = "Tidak ada data yang dihapus.";
+            }
             return RedirectToAction(nameof(Index));
         }
 

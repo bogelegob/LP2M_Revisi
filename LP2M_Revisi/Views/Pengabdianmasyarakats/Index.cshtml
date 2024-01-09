@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Master Pengabdian Masyarakat";
-    ViewData["Routing"] = "Pengabdian Masyarakat";
+    ViewBag.Title = "Data Pengabdian Masyarakat";
     Layout = ViewBag.Layout;
 }
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -86,7 +86,24 @@
     </div>
 </div>
 <br>
-
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        @TempData["SuccessMessage"]
+    </div>
+}
+else if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        @TempData["ErrorMessage"]
+    </div>
+}
 <div style="overflow-x: auto; width: 100%;">
     <table id="myTable" class="table table-hover grid scrollstyle text-center" width="100%">
         <thead>

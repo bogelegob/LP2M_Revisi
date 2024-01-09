@@ -386,12 +386,27 @@ namespace LP2M_Revisi.Controllers
                 return Problem("Entity set 'ApplicationDbContext.Pengabdianmasyarakats'  is null.");
             }
             var pengabdianmasyarakat = await _context.Pengabdianmasyarakats.FindAsync(id);
-            if (pengabdianmasyarakat != null)
+            var detailpengabdianmasyarakat = await _context.Detailpengabdians.Where(b => b.Idpengabdian == id).ToListAsync();
+
+            if (detailpengabdianmasyarakat.Any() || pengabdianmasyarakat != null)
             {
-                _context.Pengabdianmasyarakats.Remove(pengabdianmasyarakat);
+                if (detailpengabdianmasyarakat.Any())
+                {
+                    _context.Detailpengabdians.RemoveRange(detailpengabdianmasyarakat);
+                }
+                if (pengabdianmasyarakat != null)
+                {
+                    _context.Pengabdianmasyarakats.Remove(pengabdianmasyarakat);
+                }
+
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Data berhasil dihapus.";
             }
-            
-            await _context.SaveChangesAsync();
+            else
+            {
+                TempData["ErrorMessage"] = "Tidak ada data yang dihapus.";
+            }
             return RedirectToAction(nameof(Index));
         }
 

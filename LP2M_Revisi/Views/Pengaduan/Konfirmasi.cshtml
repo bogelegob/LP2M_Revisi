@@ -1,19 +1,19 @@
-﻿@model IEnumerable<LP2M_Revisi.Models.Surattuga>
+﻿@model IEnumerable<LP2M_Revisi.Models.Pengaduan>
 
 @{
-    ViewData["Title"] = "Master Surat Tugas";
-    ViewData["Routing"] = "Surat Tugas";
+    ViewData["Title"] = "Konfirmasi Pengaduan";
+    ViewBag.Title = "Konfirmasi Pengaduan";
     Layout = ViewBag.Layout;
 }
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@*<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- Referensi ke Bootstrap JS dan CSS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-
+*@
 <style>
     .border-container {
         border: 1px solid #ccc;
@@ -29,7 +29,7 @@
         </div>
         <div class="col-md-8">
             <div class="card-body">
-                <h5 class="card-title">Total Surat Tugas</h5>
+                <h5 class="card-title">Total Pengaduan</h5>
                 <div style="text-align:center;">
                     <span id="totalData" style="font-weight: bold;text-align: center;font-size: 40px;"></span>
                 </div>
@@ -38,38 +38,42 @@
     </div>
 </div>
 <br>
-<div class="row mb-3">
-    <div class="col-12 col-md-1">
-        <a asp-action="Create" class="btn btn-primary">
-            <i class="fa fa-plus"></i>&nbsp;Tambah
-        </a>
-    </div>
-    <div class="col-12 col-md-8">
+<div class="row">
+    <div class="col-lg-12">
         <div class="input-group">
-            <input id="cari" type="text" class="form-control" placeholder="Cari">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="button">
+            
+            <input name="cari" type="text" id="cari" class="form-control" placeholder="Pencarian" />
+            <span class="input-group-btn">
+                <a id="MainContent_linkCari" class="btn btn-secondary" href="#">
                     <i class="fa fa-search"></i>&nbsp;Cari
-                </button>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-md-3">
-        <div class="input-group">
-            <select class="form-control" id="filter">
-                <option value="all">Semua Kategori</option>
-                <option value="Tahun">Tahun</option>
-                <option value="Prodi">Prodi</option>
-                <option value="Judul">Judul</option>
-            </select>
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="button">
+                </a>
+            </span>
+            <div class="input-group-btn">
+                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" fdprocessedid="63p3so">
                     <i class="fa fa-filter"></i>&nbsp;Filter
                 </button>
+                <div class="dropdown-menu dropdown-menu-right" style="padding: 20px; min-width: 300px !important;">
+                    <div class="form-group">
+                        <label style="font-weight: bold;" for="ddSemester">Status</label>
+                        <select name="ddSemester" id="ddSemester" class="form-control dropdown" style="min-width: 260px !important;">
+                            <option value="">-- Semua --</option>
+                            <option value="Diterima">Diterima</option>
+                            <option value="Ditolak">Ditolak</option>
+                            <option value="Belum">Belum Diajukan</option>
+                            <option value="Konfirmasi">Menunggu Konfirmasi</option>
+                        </select>
+                    </div>
+                </div>
             </div>
+            <span>
+                <a asp-action="ExportToExcel" class="btn btn-success">
+                    <i class="fa fa-file-excel"></i>&nbsp;Export
+                </a>
+            </span>
         </div>
     </div>
 </div>
+<br>
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success" role="alert">
@@ -93,14 +97,14 @@ else if (TempData["ErrorMessage"] != null)
         <thead>
             <tr>
                 <th>
-                    Nama Kegiatan
+                    Nama Pengadu
                 </th>
                 <th>
-                    Masa Pelaksanaan
+                    Jenis Pengaduan
                 </th>
-                <th>
+                @*<th>
                     Bukti Pendukung
-                </th>
+                </th>*@
                 <th>
                     @Html.DisplayNameFor(model => model.Status)
                 </th>
@@ -111,14 +115,14 @@ else if (TempData["ErrorMessage"] != null)
                     Tanggal Edit
                 </th>
                 <th>
-                    Surat Tugas
+                    Keterangan
                 </th>
-                <th>
+                @*<th>
                     Edit By
                 </th>
                 <th>
                     Input By
-                </th>
+                </th>*@
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -127,16 +131,40 @@ else if (TempData["ErrorMessage"] != null)
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Namakegiatan)
+                        @Html.DisplayFor(modelItem => item.PenggunaNavigation.Nama)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Masapelaksanaan)
-                    </td>
-                    <td>
-                        @*@Html.DisplayFor(modelItem => item.Namafile)*@
-                        @if (!string.IsNullOrEmpty(item.Namafile))
+                        @if (item.buku != null)
                         {
-                            <a asp-action="Download" asp-route-fileName="@item.Namafile" class="fa fa-download"></a>
+                            <span>buku</span>
+                        }
+                        else if (item.prosiding != null)
+                        {
+                            <span>prosiding</span>
+                        }
+                        else if (item.hakcipta != null)
+                        {
+                            <span>hakcipta</span>
+                        }
+                        else if (item.hakpaten != null)
+                        {
+                            <span>hakpaten</span>
+                        }
+                        else if (item.jurnal != null)
+                        {
+                            <span>jurnal</span>
+                        }
+                        else if (item.seminar != null)
+                        {
+                            <span>seminar</span>
+                        }
+                        else if (item.pengabdian != null)
+                        {
+                            <span>pengabdian</span>
+                        }
+                        else
+                        {
+                            <span>Tidak Ada</span>
                         }
                     </td>
                     <td>
@@ -154,16 +182,16 @@ else if (TempData["ErrorMessage"] != null)
                         }
                         else
                         {
-                            <span>Sudah Konfirmasi</span>
+                            <span>Tidak ada Konfirmasi</span>
                         }
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Inputdate)
+                        @Html.DisplayFor(modelItem => item.createdate)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Editdate)
+                        @Html.DisplayFor(modelItem => item.updatedate)
                     </td>
-                    <td>
+                    @*<td>
                         @if (item.Surattugas == null)
                         {
                             <div>Belum ada surat Tugas</div>
@@ -172,12 +200,12 @@ else if (TempData["ErrorMessage"] != null)
                         {
                             @Html.DisplayFor(modelItem => item.Namafilesurat)
                         }
-                    </td>
-                    <td>
+                    </td>*@
+                    @*<td>
                         @Html.DisplayFor(modelItem => item.EditbyNavigation.Nama)
-                    </td>
+                    </td>*@
                     <td>
-                        @Html.DisplayFor(modelItem => item.InputbyNavigation.Nama)
+                        @Html.DisplayFor(modelItem => item.Keterangan)
                     </td>
                     <td>
                         @if (item.Status == 1)
@@ -189,13 +217,6 @@ else if (TempData["ErrorMessage"] != null)
                                 <i class="fa fa-times"></i>
                             </button>
                         }
-                        else if (item.Status == 2)
-                        {
-                            <button class="btn btn-sm btn-success terima-button" data-id="@item.Id">
-                                <i class="fa fa-user"></i>
-                            </button>
-                        }
-
                     </td>
                 </tr>
             }
@@ -355,7 +376,7 @@ else if (TempData["ErrorMessage"] != null)
 
                 // Lakukan aksi Tolak
                 $.ajax({
-                    url: "/Surattugas/terima/" + anggotaId,
+                    url: "/Pengaduan/terima/" + anggotaId,
                     type: "POST",
                     data: formData, // Kirim surat ke server
                     contentType: false,
@@ -410,7 +431,7 @@ else if (TempData["ErrorMessage"] != null)
 
                 // Lakukan aksi Tolak
                 $.ajax({
-                    url: "/Surattugas/Setuju/" + anggotaId,
+                    url: "/Pengaduan/Setuju/" + anggotaId,
                     type: "POST",
                     data: formData, // Kirim surat ke server
                     contentType: false,
@@ -461,7 +482,7 @@ else if (TempData["ErrorMessage"] != null)
 
                 // Lakukan aksi Tolak
                 $.ajax({
-                    url: "/Surattugas/Tolak/" + anggotaId,
+                    url: "/Pengaduan/Tolak/" + anggotaId,
                     type: "POST",
                     data: { alasan: alasan }, // Kirim alasan ke server
                     success: function (data) {

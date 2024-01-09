@@ -209,8 +209,12 @@
 
     <div class="polman-adjust5">
         <ol class="breadcrumb polman-breadcrumb">
-            <li class="breadcrumb-item"><a data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Menuju Hal @ViewData["Routing"]">@ViewData["Routing"]</a></li>
-            <li class="breadcrumb-item"><a data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Menuju Hal @ViewData["Routing2"]">@ViewData["Routing2"]</a></li>
+            @*<li class="breadcrumb-item"><a href='http://localhost/sso' data-toggle="tooltip" data-placement="bottom" title="Menuju Halaman SSO" data-original-title="Menuju Hal @ViewData["Routing"]">@ViewData["Routing"]</a></li>
+            *@
+            <li class="breadcrumb-item"><a href='http://localhost/sso' data-toggle="tooltip" data-placement="bottom" title="Menuju Halaman SSO">Sistem Informasi LP2M</a></li>
+            @*<li class="breadcrumb-item"><a data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Menuju Hal @ViewData["Routing2"]">@ViewData["Routing2"]</a></li>
+            *@
+            <li class="breadcrumb-item">@ViewBag.Title</li>
         </ol>
         <hr />
 

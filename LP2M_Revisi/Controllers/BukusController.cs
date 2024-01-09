@@ -305,13 +305,29 @@ namespace LP2M_Revisi.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.Bukus'  is null.");
             }
+            var detailbuku = await _context.Detailbukus.Where(b => b.Idbuku == id).ToListAsync();
             var buku = await _context.Bukus.FindAsync(id);
-            if (buku != null)
+
+            if (detailbuku.Any() || buku != null)
             {
-                _context.Bukus.Remove(buku);
+                if (detailbuku.Any())
+                {
+                    _context.Detailbukus.RemoveRange(detailbuku);
+                }
+                if (buku != null)
+                {
+                    _context.Bukus.Remove(buku);
+                }
+
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Data berhasil dihapus.";
             }
-            
-            await _context.SaveChangesAsync();
+            else
+            {
+                TempData["ErrorMessage"] = "Tidak ada data yang dihapus.";
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

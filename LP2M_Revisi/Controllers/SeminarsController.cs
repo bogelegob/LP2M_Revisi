@@ -314,12 +314,27 @@ namespace LP2M_Revisi.Controllers
                 return Problem("Entity set 'ApplicationDbContext.Seminars'  is null.");
             }
             var seminar = await _context.Seminars.FindAsync(id);
-            if (seminar != null)
+            var detailseminar = await _context.Detailseminars.Where(b => b.Idseminar == id).ToListAsync();
+
+            if (detailseminar.Any() || seminar != null)
             {
-                _context.Seminars.Remove(seminar);
+                if (detailseminar.Any())
+                {
+                    _context.Detailseminars.RemoveRange(detailseminar);
+                }
+                if (seminar != null)
+                {
+                    _context.Seminars.Remove(seminar);
+                }
+
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Data berhasil dihapus.";
             }
-            
-            await _context.SaveChangesAsync();
+            else
+            {
+                TempData["ErrorMessage"] = "Tidak ada data yang dihapus.";
+            }
             return RedirectToAction(nameof(Index));
         }
 

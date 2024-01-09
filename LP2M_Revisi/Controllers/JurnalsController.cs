@@ -305,12 +305,27 @@ namespace LP2M_Revisi.Controllers
                 return Problem("Entity set 'ApplicationDbContext.Jurnals'  is null.");
             }
             var jurnal = await _context.Jurnals.FindAsync(id);
-            if (jurnal != null)
+            var detailjurnal = await _context.Detailjurnals.Where(b => b.Idjurnal == id).ToListAsync();
+
+            if (detailjurnal.Any() || jurnal != null)
             {
-                _context.Jurnals.Remove(jurnal);
+                if (detailjurnal.Any())
+                {
+                    _context.Detailjurnals.RemoveRange(detailjurnal);
+                }
+                if (jurnal != null)
+                {
+                    _context.Jurnals.Remove(jurnal);
+                }
+
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Data berhasil dihapus.";
             }
-            
-            await _context.SaveChangesAsync();
+            else
+            {
+                TempData["ErrorMessage"] = "Tidak ada data yang dihapus.";
+            }
             return RedirectToAction(nameof(Index));
         }
 
