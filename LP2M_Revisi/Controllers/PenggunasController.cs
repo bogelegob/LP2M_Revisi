@@ -115,6 +115,7 @@ namespace LP2M_Revisi.Controllers
             {
                 _context.Add(pengguna);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Data berhasil ditambahkan.";
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Prodi"] = new SelectList(_context.Prodis, "Id", "Nama", pengguna.Prodi);
@@ -165,6 +166,7 @@ namespace LP2M_Revisi.Controllers
                 {
                     _context.Update(pengguna);
                     await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Data berhasil diedit.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -227,6 +229,7 @@ namespace LP2M_Revisi.Controllers
             }
             
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Data berhasil dihapus.";
             return RedirectToAction(nameof(Index));
         }
 

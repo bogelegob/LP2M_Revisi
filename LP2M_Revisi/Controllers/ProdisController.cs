@@ -89,6 +89,7 @@ namespace LP2M_Revisi.Controllers
             {
                 _context.Add(prodi);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Data berhasil ditambahkan.";
                 return RedirectToAction(nameof(Index));
             }
             return View(prodi);
@@ -137,6 +138,7 @@ namespace LP2M_Revisi.Controllers
                 {
                     _context.Update(prodi);
                     await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Data berhasil diedit.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -197,6 +199,7 @@ namespace LP2M_Revisi.Controllers
             }
             
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Data berhasil dihapus.";
             return RedirectToAction(nameof(Index));
         }
 

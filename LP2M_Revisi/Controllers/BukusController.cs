@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LP2M_Revisi.Models;
 using Newtonsoft.Json;
+using OfficeOpenXml;
 
 namespace LP2M_Revisi.Controllers
 {
@@ -160,7 +161,7 @@ namespace LP2M_Revisi.Controllers
                     }
                 }
                 await _context.SaveChangesAsync();
-
+                TempData["SuccessMessage"] = "Data berhasil ditambahkan.";
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
@@ -249,6 +250,7 @@ namespace LP2M_Revisi.Controllers
                     }
                     _context.Update(buku);
                     await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Data berhasil diedit.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -334,6 +336,93 @@ namespace LP2M_Revisi.Controllers
         private bool BukuExists(string id)
         {
           return (_context.Bukus?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        public async Task<IActionResult> ExportToExcel(string searchString, string statusFilter)
+        {
+            IQueryable<Buku> publikasibuku = _context.Bukus.Include(b => b.EditbyNavigation).Include(b => b.InputbyNavigation);
+            IQueryable<Detailbuku> detail = _context.Detailbukus.Include(b => b.IdpenggunaNavigation);
+            Pengguna penggunaModel;
+            string serializedModel = HttpContext.Session.GetString("Identity");
+            penggunaModel = JsonConvert.DeserializeObject<Pengguna>(serializedModel);
+
+            // Filter data sesuai pencarian
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                publikasibuku = publikasibuku.Where(b => b.Judulbuku.Contains(searchString)
+                                                         || b.Penerbit.Contains(searchString)
+                                                         );
+            }
+            // Filter data sesuai status
+            if (!string.IsNullOrEmpty(statusFilter))
+            {
+                publikasibuku = publikasibuku.Where(b => b.Status == Convert.ToInt32(statusFilter));
+            }
+
+            string Role = HttpContext.Session.GetString("selectedRole");
+            if (Role == "Karyawan")
+            {
+                publikasibuku = publikasibuku.Where(b => b.Inputby == penggunaModel.Id);
+            }
+
+            var publikasibukuList = await publikasibuku.ToListAsync();
+
+            // Create Excel package
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Publikasi Buku");
+
+                // Header
+                var headerRange = worksheet.Cells["A1:J1"];
+                headerRange.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+                worksheet.Cells["A1"].Value = "NO";
+                worksheet.Cells["B1"].Value = "Judul Buku";
+                worksheet.Cells["C1"].Value = "ISBN";
+                worksheet.Cells["D1"].Value = "Penerbit";
+                worksheet.Cells["E1"].Value = "Tahun";
+                worksheet.Cells["F1"].Value = "Tanggal Input";
+                worksheet.Cells["G1"].Value = "Created By";
+                worksheet.Cells["H1"].Value = "Penulis dan Editor";
+
+                int no = 1;
+                // Data
+                for (int i = 0; i < publikasibukuList.Count; i++)
+                {
+                    if (publikasibukuList[i].Id != null)
+                    {
+                        detail = detail.Where(b => b.Idbuku == publikasibukuList[i].Id);
+                    }
+                    var detailList = await detail.ToListAsync();
+
+                    worksheet.Cells[i + 2, 1].Value = no;
+                    worksheet.Cells[i + 2, 2].Value = publikasibukuList[i].Judulbuku;
+                    worksheet.Cells[i + 2, 3].Value = publikasibukuList[i].Isbn;
+                    worksheet.Cells[i + 2, 4].Value = publikasibukuList[i].Penerbit;
+                    worksheet.Cells[i + 2, 5].Value = publikasibukuList[i].Tahun;
+                    worksheet.Cells[i + 2, 6].Value = publikasibukuList[i].Inputdate;
+                    worksheet.Cells[i + 2, 7].Value = publikasibukuList[i].InputbyNavigation.Nama;
+                    for (int z = 0; z < detailList.Count; z++)
+                    {
+                        Console.WriteLine("asfesfgwrgvreagsttasgrthgsw "+detailList[z].IdpenggunaNavigation.Nama);
+                        worksheet.Cells[i + 2, 8].Value = worksheet.Cells[i + 2, 8].Value + detailList[z].IdpenggunaNavigation.Nama + ", ";
+                    }
+                    worksheet.Cells[i + 2, 1, i + 2, 8].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+                    worksheet.Cells[i + 2, 6].Style.Numberformat.Format = "dd-MMM-yyyy HH:mm:ss";
+                    no++;
+                }
+
+                // Auto fit columns
+                worksheet.Cells.AutoFitColumns();
+
+                // Convert to byte array
+                var excelBytes = package.GetAsByteArray();
+
+                // Set content type and file name
+                Response.Headers.Add("Content-Disposition", "attachment; filename=Publikasi Buku.xlsx");
+                return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            }
         }
     }
 }

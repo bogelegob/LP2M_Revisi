@@ -159,6 +159,7 @@ namespace LP2M_Revisi.Controllers
                     }
                 }
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Data berhasil ditambahkan.";
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Editby"] = new SelectList(_context.Penggunas, "Id", "Nama", seminar.Editby);
@@ -246,6 +247,7 @@ namespace LP2M_Revisi.Controllers
                     }
                     _context.Update(seminar);
                     await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Data berhasil diedit.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {

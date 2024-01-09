@@ -222,7 +222,7 @@ namespace LP2M_Revisi.Controllers
 
                 _context.Add(surattuga);
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Data berhasil disimpan!";
+                TempData["SuccessMessage"] = "Data berhasil ditambahkan!";
                 Console.WriteLine(TempData["SuccessMessage"]);
                 return RedirectToAction("Index");
             }
@@ -363,6 +363,7 @@ namespace LP2M_Revisi.Controllers
                     }
                     _context.Update(surattuga);
                     await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Data berhasil diedit.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -723,9 +724,5 @@ namespace LP2M_Revisi.Controllers
                 return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             }
         }
-
-
-
-
     }
 }

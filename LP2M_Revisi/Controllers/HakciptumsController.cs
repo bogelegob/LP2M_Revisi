@@ -167,6 +167,7 @@ namespace LP2M_Revisi.Controllers
                     }
                 }
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Data berhasil ditambahkan.";
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ListPengguna"] = new MultiSelectList(_context.Penggunas, "Id", "Nama");
@@ -253,6 +254,7 @@ namespace LP2M_Revisi.Controllers
                     }
                     _context.Update(hakciptum);
                     await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Data berhasil diedit.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {

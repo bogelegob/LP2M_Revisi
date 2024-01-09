@@ -212,7 +212,7 @@ namespace LP2M_Revisi.Controllers
 
                 _context.Add(pengaduan);
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Data berhasil disimpan!";
+                TempData["SuccessMessage"] = "Data berhasil ditambahkan!";
                 return RedirectToAction("Index");
             }
 
@@ -275,7 +275,7 @@ namespace LP2M_Revisi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> terima(string id)
+        public async Task<IActionResult> terima(int id)
         {
             var response = new { success = false, message = "Gagal Setujui Surat Tugas." };
 
@@ -305,7 +305,7 @@ namespace LP2M_Revisi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Tolak(string id, string alasan)
+        public async Task<IActionResult> Tolak(int id, string alasan)
         {
             var response = new { success = false, message = "Gagal Tolak Surat Tugas." };
 
@@ -329,7 +329,7 @@ namespace LP2M_Revisi.Controllers
             pengaduan.updatedate = tgl;
             // Mengubah status menjadi 'Diterima' (status 2)
             pengaduan.Status = 3;
-            pengaduan.Keterangan = alasan;
+            pengaduan.Keterangan = pengaduan.Keterangan + "Alasan nya adalah berikut: " + alasan;
 
             _context.Pengaduan.Update(pengaduan);
             await _context.SaveChangesAsync();
